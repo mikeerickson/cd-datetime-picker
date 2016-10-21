@@ -8,5 +8,5 @@ app.use(express.static(__dirname + '/public'));
 
 app.listen(port, function () {
   let uri = chalk.cyan(`http://localhost:${port}`);
-  console.log(`Server Running ${uri}...`);
+  console.log(`Server Running ${uri} ...`);
 });

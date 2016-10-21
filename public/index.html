@@ -2,52 +2,58 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>CodeDungeon DateTime Picker</title>
+    <title>Cirrus DateTime Picker</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/jquery.timepicker.css">
     <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="css/app.css">
 
   </head>
   <body ng-app="app">
     <div class="container" ng-controller="AppController as vm">
-      <h1>CodeDungeon DateTime Picker</h1>
+      <h1>Cirrus DateTime Picker</h1>
       <div class="datetime-picker">
         <form>
-          <date-time-picker ng-model="vm.dateTimeValue"></date-time-picker>
-          <date-time-picker ng-model="vm.dateTimeValue"></date-time-picker>
+          <div class="date-time-picker hide">
+            <date-time-picker ng-model="vm.dateTimeValue"> Loading... </date-time-picker>
+            <div class="clearfix">
+              <code>{{vm.dateTimeValue}}</code>
+            </div>
+          </div>
+
           <hr />
-          <div class="input-group" style="width: 140px; float: left;">
-            <input
-              type="text"
-              class="form-control date-picker"
-              ng-model="vm.dateValue"
-              ng-blur="vm.formatDateTimeDisplay()"
-            >
-            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-          </div>
-          <div class="input-group" style="width: 140px; padding-left: 5px; float: left;">
-            <input
-              type="text"
-              class="form-control time-picker"
-              time-format-mask
-              allow-suffix="true"
-              enable-mask="false"
-              ng-model="vm.timeValue"
-              ng-blur="vm.formatDateTimeDisplay()"
-            >
-            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-          </div>
-          <div>
-            <code>
-              {{ vm.dateTimeValue }}
-            </code>
-          </div>
-          <br />
-          <div>
-            <button ng-click="vm.isValidDate(vm.dateValue)">Validate Date</button>
-            <button ng-click="vm.isValidTime(vm.timeValue)">Validate Time</button>
-            <button ng-click="vm.updateTime()">Manually Update Date/Time</button>
+          <div class="sandbox">
+            <div class="input-group" style="width: 140px; float: left;">
+              <input
+                type="text"
+                class="form-control date-picker"
+                ng-model="vm.dateValue"
+                ng-blur="vm.formatDateTimeDisplay()"
+              >
+              <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+            <div class="input-group" style="width: 140px; padding-left: 5px;">
+              <input
+                type="text"
+                class="form-control time-picker"
+                time-format-mask
+                allow-suffix="true"
+                enable-mask="false"
+                ng-model="vm.timeValue"
+                ng-blur="vm.formatDateTimeDisplay()"
+              >
+              <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+            </div>
+            <div class="clearfix" style="margin-top: 10px;">
+              <code> {{ vm.dateTimeValue }} </code>
+            </div>
+            <br />
+            <div>
+              <button clas="button" ng-click="vm.isValidDate(vm.dateValue)">Validate Date</button>
+              <button ng-click="vm.isValidTime(vm.timeValue)">Validate Time</button>
+              <button ng-click="vm.updateTime()">Manually Update Date/Time</button>
+            </div>
           </div>
         </form>
       </div>

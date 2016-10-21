@@ -1,7 +1,13 @@
 'use strict';
 
-function dateTimePickerController() {
-  console.log('dateTimePickerController');
+DateTimePickerController.$inject = ['$scope']
+function DateTimePickerController($scope) {
+  var $dateTimeCtrl = this;
+  // var $dateTimeCtrl.dateValue = '';
+
+  $dateTimeCtrl.updateDateTime = function(e) {
+    $scope.datetimeValue = '10/31/2016';
+  };
 }
 function DateTimePickerDirective() {
   return {
@@ -11,14 +17,21 @@ function DateTimePickerDirective() {
       datetimeValue: '=ngModel'
     },
     link: DateTimePickerLinker,
-    controller: dateTimePickerController,
+    controller: DateTimePickerController,
+    controllerAs: '$dateTimeCtrl',
     template: ''
-              + '<div class="date-picker">'
-              + '<input type="text" class="date-picker">'
-              + '<input type="text" class="time-picker">'
-              + '<span>{{ datetimeValue }}</span>'
-              + '</div>'
+              + '<div class="cd-datetime-picker">'
+              +   '<div class="input-group" style="width: 140px; float: left;">'
+              +     '<input type="text" ng-model="$dateTimeCtrl.dateValue" ng-blur="$dateTimeCtrl.updateDateTime(this)" class="form-control date-picker">'
+              +     '<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>'
+              +   '</div>'
 
+              +   '<div class="input-group" style="width: 140px; padding-left: 5px; padding-right: 10px;">'
+              +     '<input type="text" class="form-control time-picker">'
+              +     '<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>'
+              +   '</div>'
+              + '</div>'
+              + '{{ datetimeValue }}'
   };
 }
 
