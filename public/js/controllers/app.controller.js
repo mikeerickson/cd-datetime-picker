@@ -8,7 +8,7 @@ function AppController($scope, $element, $attrs) {
 
   // override default datePicker options
   vm.dpOpts = {
-    autoclose: false, // true
+    autoclose: true, // true
     weekStart: 2  // 0
   };
 
@@ -23,12 +23,14 @@ function AppController($scope, $element, $attrs) {
   vm.dateTimeValue = moment(now).format(dateTimeDisplayFormat);
 
   // events
-  $scope.$on('updateDateTime', function (event, data) {
-    vm.dateValue = data.date;
-    vm.formatDateTimeDisplay(vm.dateValue, vm.timeValue);
+  $scope.$on('dp.updateDateTime', function (event, data) {
+    vm.dateValue = data.dateValue;
+    vm.timeValue = data.timeValue;
+    vm.dateTimeValue = vm.formatDateTimeDisplay(vm.dateValue, vm.timeValue);
+    console.log(vm.dateTimeValue);
   });
 
-  // functions
+  // application functions
   vm.updateTime = function (timeVal) {
     vm.dateValue = '1966-10-15';
     vm.timeValue = '14:30';
@@ -42,9 +44,10 @@ function AppController($scope, $element, $attrs) {
       vm.timeValue = dt.format('h:mm A');
       vm.dateValue = dt.format('MM/DD/YYYY');
       vm.dateTimeValue = dt.format(dateTimeDisplayFormat);
+      return vm.dateTimeValue;
     }
     else {
-      return true;
+      return 'Invalid Date';
     }
   };
 

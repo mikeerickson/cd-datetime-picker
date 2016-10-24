@@ -1,5 +1,7 @@
 'use strict';
 
+// TODO: This is a test item
+
 angular.module('cd-datetime-picker', [])
   .directive('datetimePicker', DateTimePickerDirective);
 
@@ -21,18 +23,27 @@ function DateTimePickerController($scope, $element, $attrs) {
     $dateTimeCtrl.dateValue = evt.target.value;
     let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
     $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
+    $scope.$emit('dp.updateDateTime', {dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue});
   };
 
   $dateTimeCtrl.onTimeBlur = (evt) => {
     $dateTimeCtrl.timeValue = evt.target.value;
     let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
     $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
+    $scope.$emit('dp.updateDateTime', {dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue});
   };
 
-  $scope.$on('db.dateChange', (evt, value) => {
+  $scope.$on('dp.dateChange', (evt, value) => {
     $dateTimeCtrl.dateValue = value.dateValue;
     let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
     $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
+
+    // broadcast datetime change to controller
+    $scope.$emit('dp.updateDateTime', {
+      dateValue: $dateTimeCtrl.dateValue,
+      timeValue: $dateTimeCtrl.timeValue
+    });
+
   });
 }
 
@@ -96,7 +107,7 @@ function DateTimePickerLinker(scope, element, attrs, ngModel) {
 
   // attach event listener triggered when date change occurs
   $(this.dp).datepicker().on('changeDate', (evt) => {
-    scope.$broadcast('db.dateChange', {dateValue: evt.target.value});
+    scope.$broadcast('dp.dateChange', {dateValue: evt.target.value});
   });
 
 }
