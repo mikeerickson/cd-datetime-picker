@@ -5,8 +5,8 @@ angular.module('cd-datetime-picker', [])
 
 DateTimePickerController.$inject = ['$scope', '$element', '$attrs'];
 function DateTimePickerController($scope, $element, $attrs) {
-  var $dateTimeCtrl = this;
-  var _DATETIMEVALUEFORMAT = 'LLLL';
+  let $dateTimeCtrl = this;
+  let _DATETIMEVALUEFORMAT = 'LLLL';
 
   $dateTimeCtrl.dpShow = $scope.dpShow === undefined || $scope.dpShow;
   $dateTimeCtrl.tpShow = $scope.tpShow === undefined || $scope.tpShow;
@@ -18,20 +18,20 @@ function DateTimePickerController($scope, $element, $attrs) {
   $dateTimeCtrl.timeValue = dateTimeUtils.getTime($scope.datetimeValue);
 
   $dateTimeCtrl.onDateBlur = (evt) => {
-    $dateTimeCtrl.dateValue = e.target.value;
-    var dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
+    $dateTimeCtrl.dateValue = evt.target.value;
+    let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
     $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
   };
 
   $dateTimeCtrl.onTimeBlur = (evt) => {
-    $dateTimeCtrl.timeValue = e.target.value;
-    var dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
+    $dateTimeCtrl.timeValue = evt.target.value;
+    let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
     $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
   };
 
-  $scope.$on('db.dateChange', (e, value) => {
+  $scope.$on('db.dateChange', (evt, value) => {
     $dateTimeCtrl.dateValue = value.dateValue;
-    var dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
+    let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
     $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
   });
 }
@@ -67,34 +67,36 @@ function DateTimePickerDirective() {
 
 function DateTimePickerLinker(scope, element, attrs, ngModel) {
 
-  var dpDefaultOpts = {
+  let dpDefaultOpts = {
     todayBtn: 'linked',
     autoclose: true,
     todayHighlight: true,
     weekStart: 0
   };
 
-  var tpDefaultOpts = {
+  let tpDefaultOpts = {
     'scrollDefault': 'now',
     'timeFormat': 'g:i A',
     'step': 15
   };
 
   // picker option defaults
-  var dpOpts = angular.extend(dpDefaultOpts, scope.dpOptions);
-  var tpOpts = angular.extend(tpDefaultOpts, scope.tpOptions);
+  let dpOpts = angular.extend(dpDefaultOpts, scope.dpOptions);
+  let tpOpts = angular.extend(tpDefaultOpts, scope.tpOptions);
 
   // setup date and time pickers
   this.tp = $(element).find('input.time-picker').timepicker(tpOpts);
   this.dp = $(element).find('input.date-picker').datepicker(dpOpts);
 
-  var defaultDate = dateTimeUtils.getDate(scope.datetimeValue);
-  var defaultTime = dateTimeUtils.getTime(scope.datetimeValue);
+  let defaultDate = dateTimeUtils.getDate(scope.datetimeValue);
+  let defaultTime = dateTimeUtils.getTime(scope.datetimeValue);
 
+  // set control default date (supplyed by ng-model)
   $(this.dp).datepicker('setDate', defaultDate);
 
   // attach event listener triggered when date change occurs
   $(this.dp).datepicker().on('changeDate', (evt) => {
-    scope.$broadcast('db.dateChange', {dateValue: e.target.value});
+    scope.$broadcast('db.dateChange', {dateValue: evt.target.value});
   });
+
 }

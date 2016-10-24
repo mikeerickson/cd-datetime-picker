@@ -1,37 +1,37 @@
 
-  var dateTimeUtils = {
+  let dateTimeUtils = {
 
     getMonth: (datetime) => {
-      var dt = new Date(datetime);
+      let dt = new Date(datetime);
       return dt.getMonth() + 1;
     },
 
     getDay: (datetime) => {
-      var dt = new Date(datetime);
+      let dt = new Date(datetime);
       return dt.getDate();
     },
 
     getYear: (datetime) => {
-      var dt = new Date(datetime);
+      let dt = new Date(datetime);
       return dt.getFullYear();
     },
 
     getHours: (datetime) => {
       if (typeof datetime !== 'string') { return null; }
-      var dt = new Date(datetime);
+      let dt = new Date(datetime);
       return dt.getHours();
     },
 
     getMinutes: (datetime) => {
       if (typeof datetime !== 'string') { return null; }
-      var dt = new Date(datetime);
+      let dt = new Date(datetime);
       return dt.getMinutes();
     },
 
     getTime: (datetime) => {
-        var hours = parseInt(dateTimeUtils.getHours(datetime));
-        var mins = parseInt(dateTimeUtils.getMinutes(datetime));
-        var ampm = 'am';
+        let hours = parseInt(dateTimeUtils.getHours(datetime));
+        let mins = parseInt(dateTimeUtils.getMinutes(datetime));
+        let ampm = 'am';
 
         if (hours > 12) {
           hours -= 12;
@@ -55,28 +55,28 @@
     },
 
     getDate: (datetime) => {
-      var mon = parseInt(dateTimeUtils.getMonth(datetime));
-      var day = parseInt(dateTimeUtils.getDay(datetime));
-      var year = parseInt(dateTimeUtils.getYear(datetime));
+      let mon = parseInt(dateTimeUtils.getMonth(datetime));
+      let day = parseInt(dateTimeUtils.getDay(datetime));
+      let year = parseInt(dateTimeUtils.getYear(datetime));
       return dateTimeUtils.addZero(mon) + '/' + dateTimeUtils.addZero(day) + '/' + year;
     },
 
     isValidTime: (value) => {
-      var timeValue = value.toUpperCase().replace(' ',':');
-      var ampm = 'AM';
-      var isValidTime = true;
+      let timeValue = value.toUpperCase().replace(' ',':');
+      let ampm = 'AM';
+      let isValidTime = true;
 
       if (typeof timeValue !== 'undefined') {
-        var parts = timeValue.split(':');
+        let parts = timeValue.split(':');
         if (parts.length === 0) {
-          var timeValue24 = parseInt(timeValue);
+          let timeValue24 = parseInt(timeValue);
           if ((timeValue > 0) && (timeValue <= 2359)) {
             isValidTime = true;
           }
         }
 
-        var hours = parseInt(parts[0]);
-        var mins = parseInt(parts[1]);
+        let hours = parseInt(parts[0]);
+        let mins = parseInt(parts[1]);
         ampm = parts.length > 1 ? parts[2] : ampm;
 
         if (hours > 12) {

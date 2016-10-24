@@ -1,14 +1,14 @@
 
 AppController.$inject = ['$scope','$element','$attrs'];
 function AppController($scope, $element, $attrs) {
-  var vm = this;
+  let vm = this;
 
-  var dateTimeDisplayFormat = 'LLLL'; // eg Thursday, October 20, 2016 12:56 PM
-  var pivotYear = 1950;
+  let dateTimeDisplayFormat = 'LLLL'; // eg Thursday, October 20, 2016 12:56 PM
+  let pivotYear = 1950;
 
   // override default datePicker options
   vm.dpOpts = {
-    autoClose: false, // true
+    autoclose: false, // true
     weekStart: 2  // 0
   };
 
@@ -17,7 +17,7 @@ function AppController($scope, $element, $attrs) {
     step: 5 // default 15
   };
 
-  var now = new Date();
+  let now = new Date();
   vm.timeValue = moment(now).format('h:mm A');
   vm.dateValue = moment(now).format('MM/DD/YYYY');
   vm.dateTimeValue = moment(now).format(dateTimeDisplayFormat);
@@ -36,8 +36,8 @@ function AppController($scope, $element, $attrs) {
   };
 
   vm.formatDateTimeDisplay = function (dateValue, timeValue) {
-    var dt = moment(dateValue + ' ' + timeValue);
-    var isValid = (dt.isValid() && (parseInt(dt.format('YYYY')) >= pivotYear));
+    let dt = moment(dateValue + ' ' + timeValue);
+    let isValid = (dt.isValid() && (parseInt(dt.format('YYYY')) >= pivotYear));
     if (isValid) {
       vm.timeValue = dt.format('h:mm A');
       vm.dateValue = dt.format('MM/DD/YYYY');
@@ -47,5 +47,5 @@ function AppController($scope, $element, $attrs) {
       return true;
     }
   };
-  
+
 }
