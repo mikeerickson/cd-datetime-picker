@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -15,21 +15,21 @@
       <h1>Cirrus DateTime Picker</h1>
       <div class="datetime-picker">
         <form>
-          <div class="date-time-picker hide">
-            <date-time-picker ng-model="vm.dateTimeValue"> Loading... </date-time-picker>
+          <div class="date-time-picker">
+            <date-time-picker tp-options="vm.tpOpts" dp-options="vm.dpOpts" ng-model="vm.dateTimeValue" ></date-time-picker>
+            <br />
             <div class="clearfix">
               <code>{{vm.dateTimeValue}}</code>
             </div>
           </div>
-
           <hr />
-          <div class="sandbox">
+          <div class="sandbox hide">
             <div class="input-group" style="width: 140px; float: left;">
               <input
                 type="text"
                 class="form-control date-picker"
                 ng-model="vm.dateValue"
-                ng-blur="vm.formatDateTimeDisplay()"
+                ng-blur="vm.formatDateTimeDisplay(vm.dateValue, vm.timeValue)"
               >
               <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
             </div>
@@ -41,7 +41,7 @@
                 allow-suffix="true"
                 enable-mask="false"
                 ng-model="vm.timeValue"
-                ng-blur="vm.formatDateTimeDisplay()"
+                ng-blur="vm.formatDateTimeDisplay(vm.dateValue, vm.timeValue)"
               >
               <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
             </div>
@@ -69,7 +69,7 @@
     <script src="js/controllers/app.controller.js"></script>
     <script src="js/utils/date-time.utils.js"></script>
     <script src="js/directives/time-format-mask.directive.js"></script>
-    <script src="js/directives/date-time-picker.directive.js"></script>
+    <script src="js/directives/cd-datetime-picker/datetime-picker.directive.js"></script>
 
     <script src="js/app.js"></script>
 
