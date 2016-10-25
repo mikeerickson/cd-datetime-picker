@@ -1,6 +1,7 @@
 'use strict';
 
-// TODO: This is a test item
+// TODO: Refactor so this uses browserify so we can make sure it will work with CI
+// TODO: Also test with webpack
 
 angular.module('cd-datetime-picker', [])
   .directive('datetimePicker', DateTimePickerDirective);

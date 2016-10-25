@@ -4,10 +4,12 @@
   "description": "angular-datetime-picker",
   "main": "index.js",
   "scripts": {
+    "pre-build": "npm run test && npm run eslint",
     "test": "mocha",
     "eslint": "eslint \"./**/*.js\"",
     "start": "node server.js",
-    "serve": "lite-server"
+    "serve": "lite-server",
+    "todo": "./node_modules/.bin/leasot \"./**/*.js\" --ignore \"./node_modules/**/*\",\"./public/vendor/**/*\" --tags error,info || true"
   },
   "keywords": [
     "angular",
@@ -30,9 +32,17 @@
     "moment": "^2.15.1"
   },
   "devDependencies": {
+    "cd-utils": "^0.14.2",
     "chai": "^3.5.0",
     "eslint": "3.8.1",
+    "gulp": "^3.9.1",
+    "gulp-ignore": "^2.0.1",
+    "gulp-messenger": "^0.24.0",
+    "gulp-todo": "^5.0.0",
+    "leasot": "^4.2.0",
     "lite-server": "^2.2.2",
-    "mocha": "^3.1.2"
+    "mocha": "^3.1.2",
+    "moment": "^2.15.2",
+    "require-dir": "^0.3.1"
   }
 }
