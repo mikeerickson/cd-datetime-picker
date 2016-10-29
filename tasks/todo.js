@@ -19,17 +19,30 @@ let openReport = (args.indexOf('--open') >= 0) || (config.todo.openReport && (ut
 
 msg.init({logToFile: true, timestamp: true, showPipeFile: false});
 
-gulp.task('todo', () => {
-  return gulp.src(config.todo.src)
-    .on('error', handleErrors)
-    .pipe(exclude(config.todo.exclude))
-    .pipe(todo())
-    .pipe(gulp.dest('./'))
-    .on('end', function (){
-      if (openReport) {
-        console.log('this is not ready yet');
-        // utils.displayMarkdownInTerminal(config.todo.output);
-      }
+// gulp.task('todo', () => {
+//   return gulp.src(config.todo.src, {base: './'})
+//     .on('error', handleErrors)
+//     .pipe(exclude(config.todo.exclude))
+//     .pipe(todo({
+//       'reporter': 'table',
+//       'tags': 'todo,fixme,bug,review,note'
+//     }))
+//     .pipe(gulp.dest('./'))
+//     .on('end', function (){
+//       if (openReport) {
+//         console.log('this is not ready yet');
+//         // utils.displayMarkdownInTerminal(config.todo.output);
+//       }
+//     })
+//     .pipe(msg.flush.success('*** ' + config.todo.output + ' created @ ' + utils.timestamp() + ' ***'));
+// });
+
+gulp.task('todo', function () {
+    gulp.src('../**/*.js', {
+        base: './'
     })
-    .pipe(msg.flush.success('*** ' + config.todo.output + ' created @ ' + utils.timestamp() + ' ***'));
+        .pipe(todo({
+            reporter: 'table'
+        }))
+        .pipe(gulp.dest('./'));
 });

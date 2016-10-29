@@ -1210,7 +1210,7 @@
 			if (seconds === null) {
 				return null;
 			} else if (typeof settings.step !== "number") {
-				// TODO: nearest fit irregular steps
+				// TODO:90 nearest fit irregular steps
 				return seconds;
 			} else {
 				var offset = seconds % (settings.step*60); // step is in minutes

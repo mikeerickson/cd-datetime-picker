@@ -27,7 +27,7 @@ module.exports = {
       './tasks/**/*.js',
       './test/**/*.spec.js',
     ],
-    exclude: ['logs', './dist','./node_modules','./public/vendor'],
+    exclude: ['logs', './dist','./node_modules','./public/vendor/**/*'],
     output: './TODO.md'
   }
 

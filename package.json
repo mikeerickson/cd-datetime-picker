@@ -1,6 +1,6 @@
 {
   "name": "cd-datetime-picker",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "angular-datetime-picker",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "eslint": "eslint \"./**/*.js\"",
     "start": "node server.js",
     "serve": "lite-server",
-    "todo": "./node_modules/.bin/leasot \"./**/*.js\" --ignore \"./node_modules/**/*\",\"./public/vendor/**/*\" --tags error,info || true"
+    "todo": "./node_modules/.bin/leasot \"./**/*.js\" --ignore \"./{node_modules,public/vendor}/**/*\" --tags error,info,fixme,review,bug,note,feature || true"
   },
   "keywords": [
     "angular",
@@ -29,7 +29,7 @@
     "eslint": "^3.8.1",
     "express": "^4.14.0",
     "jquery": "2.2.4",
-    "moment": "^2.15.1"
+    "moment": "^2.15.2"
   },
   "devDependencies": {
     "cd-utils": "^0.14.2",
@@ -38,11 +38,10 @@
     "gulp": "^3.9.1",
     "gulp-ignore": "^2.0.1",
     "gulp-messenger": "^0.24.0",
-    "gulp-todo": "^5.0.0",
+    "gulp-todo": "^5.1.0",
     "leasot": "^4.2.0",
     "lite-server": "^2.2.2",
     "mocha": "^3.1.2",
-    "moment": "^2.15.2",
     "require-dir": "^0.3.1"
   }
 }
