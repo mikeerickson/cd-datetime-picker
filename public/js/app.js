@@ -7,7 +7,6 @@
 * ================================================================================================
 */
 
-const app = angular.module('app',['cd-datetime-picker']);
-  app.directive('timeFormatMask', TimeFormatMaskDirective);
-  app.controller('AppController', AppController);
-  app.directive('dateTimePicker', DateTimePickerDirective);
+angular.module('app',['cd-datetime-picker'])
+  .controller('AppController', AppController)
+  .directive('dateTimePicker', DateTimePickerDirective)

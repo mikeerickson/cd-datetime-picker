@@ -37,9 +37,6 @@
               <input
                 type="text"
                 class="form-control time-picker"
-                time-format-mask
-                allow-suffix="true"
-                enable-mask="false"
                 ng-model="vm.timeValue"
                 ng-blur="vm.formatDateTimeDisplay(vm.dateValue, vm.timeValue)"
               >
@@ -71,7 +68,6 @@
 
     <!-- ci directives -->
     <script src="js/directives/cd-datetime-picker/utils/datetime.utils.js"></script>
-    <script src="js/directives/cd-datetime-picker/time-format-mask.directive.js"></script>
     <script src="js/directives/cd-datetime-picker/datetime-picker.directive.js"></script>
 
     <!-- demo files -->
