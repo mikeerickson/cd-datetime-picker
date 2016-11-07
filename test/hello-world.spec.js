@@ -1,7 +1,7 @@
-var expect = require('chai').expect;
+var assert = require('assert');
 
 describe('perform mocha test', function () {
   it('should pass', function () {
-    expect(true).to.be.true;
+    assert(true);
   });
 });
