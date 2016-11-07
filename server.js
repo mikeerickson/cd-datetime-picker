@@ -1,5 +1,3 @@
-// TODO: This is a todo
-
 var express = require('express');
 var chalk = require('chalk');
 
@@ -9,6 +7,6 @@ var port = process.env.PORT || 3000;
 app.use(express.static(__dirname + '/public'));
 
 app.listen(port, function () {
-  let uri = chalk.cyan(`http://localhost:${port}`);
+  let uri = chalk.cyan.bold(`http://localhost:${port}`);
   console.log(`Server Running ${uri} ...`);
 });

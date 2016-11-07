@@ -17,10 +17,10 @@ function AppController($scope, $element, $attrs) {
     step: 5 // default 15
   };
 
-  let now = new Date();
-  vm.timeValue = moment(now).format('h:mm A');
-  vm.dateValue = moment(now).format('MM/DD/YYYY');
-  vm.dateTimeValue = moment(now).format(dateTimeDisplayFormat);
+  vm.dateTime      = new Date();
+  vm.timeValue     = moment(vm.dateTime).format('h:mm A');
+  vm.dateValue     = moment(vm.dateTime).format('MM/DD/YYYY');
+  vm.dateTimeValue = moment(vm.dateTime).format(dateTimeDisplayFormat);
 
   // events
   $scope.$on('dp.updateDateTime', function (event, data) {
