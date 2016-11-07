@@ -9,4 +9,4 @@
 
 angular.module('app',['cd-datetime-picker'])
   .controller('AppController', AppController)
-  .directive('dateTimePicker', DateTimePickerDirective)
+  .directive('dateTimePicker', DateTimePickerDirective);
