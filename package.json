@@ -10,7 +10,7 @@
     "lint": "npm run eslint",
     "start": "node server.js",
     "serve": "lite-server",
-    "todo": "./node_modules/.bin/leasot \"./**/*.js\" --ignore \"./{src/lib,node_modules,public/vendor}/**/*\" --tags error,info,fixme,review,bug,note,feature || true"
+    "todo": "./node_modules/.bin/leasot \"./src/**/*.js\" --ignore \"./src/lib/**/*.js\" --tags error,info,fixme,review,bug,note,feature || true"
   },
   "keywords": [
     "angular",
@@ -48,6 +48,7 @@
     "raw-loader": "^0.5.1",
     "require-dir": "^0.3.1",
     "style-loader": "^0.13.1",
+    "todo-webpack-plugin": "^1.5.0",
     "webpack": "^1.13.3",
     "webpack-shell-plugin": "^0.4.3"
   }

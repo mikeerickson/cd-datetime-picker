@@ -1,6 +1,8 @@
 var webpack              = require('webpack');
 var path                 = require('path');
 const WebpackShellPlugin = require('webpack-shell-plugin');
+const TodoWebpackPlugin  = require('todo-webpack-plugin');
+
 module.exports = {
   devtool: 'sourcemap',
   context: __dirname + '/src',
@@ -20,6 +22,13 @@ module.exports = {
   },
   plugins: [
     // new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}})
-    new WebpackShellPlugin({onBuildEnd:['gulp build']})
+    new WebpackShellPlugin({onBuildEnd:['gulp build']}),
+
+    new TodoWebpackPlugin({
+      console:  true,
+      suppressFileOutput: true,
+      tags: ['todo','error','fixme','bug','info','note']
+    }),
+
   ]
 };
