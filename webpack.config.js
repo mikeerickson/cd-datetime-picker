@@ -21,7 +21,10 @@ module.exports = {
     ]
   },
   plugins: [
+    
+    // enabling this hoses the datetime controller bind ($dateTimeCtrl)
     // new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}})
+
     new WebpackShellPlugin({onBuildEnd:['gulp build']}),
 
     new TodoWebpackPlugin({
