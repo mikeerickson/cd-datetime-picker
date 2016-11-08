@@ -1,6 +1,7 @@
 
 AppController.$inject = ['$scope','$element','$attrs'];
 function AppController($scope, $element, $attrs) {
+
   let vm = this;
 
   let dateTimeDisplayFormat = 'LLLL'; // eg Thursday, October 20, 2016 12:56 PM
@@ -17,7 +18,7 @@ function AppController($scope, $element, $attrs) {
     step: 5 // default 15
   };
 
-  vm.dateTime      = new Date();
+  vm.dateTime      = new Date('2016-10-15 2:30 PM');
   vm.timeValue     = moment(vm.dateTime).format('h:mm A');
   vm.dateValue     = moment(vm.dateTime).format('MM/DD/YYYY');
   vm.dateTimeValue = moment(vm.dateTime).format(dateTimeDisplayFormat);

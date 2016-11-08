@@ -13,6 +13,3 @@
 
 angular.module('app',['ci-datetime-picker'])
   .controller('AppController', AppController);
-
-$('.date-picker').datepicker();
-$('.time-picker').timepicker();

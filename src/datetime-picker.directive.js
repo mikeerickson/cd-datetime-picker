@@ -3,8 +3,9 @@
 var dateTimeUtils = require('./utils/datetime.utils.js');
 var template      = require('./datetime-picker.template.html');
 
-// import '!style!css!./datetime-picker.css';
 require('./datetime-picker.css');
+require('./lib/timepicker.css');
+require('./lib/datepicker.css');
 
 angular.module('ci-datetime-picker', [])
   .directive('ciDateTimePicker', DateTimePickerDirective);
