@@ -1,10 +1,17 @@
 'use strict';
 
-angular.module('cd-datetime-picker', [])
-  .directive('datetimePicker', DateTimePickerDirective);
+var dateTimeUtils = require('./utils/datetime.utils.js');
+var template      = require('./datetime-picker.template.html');
+
+// import '!style!css!./datetime-picker.css';
+require('./datetime-picker.css');
+
+angular.module('ci-datetime-picker', [])
+  .directive('ciDateTimePicker', DateTimePickerDirective);
 
 DateTimePickerController.$inject = ['$scope', '$element', '$attrs'];
 function DateTimePickerController($scope, $element, $attrs) {
+
   let $dateTimeCtrl = this;
   let _DATETIMEVALUEFORMAT = 'LLLL';
 
@@ -59,18 +66,7 @@ function DateTimePickerDirective() {
     link: DateTimePickerLinker,
     controller: DateTimePickerController,
     controllerAs: '$dateTimeCtrl',
-    template: ''
-              + '<div class="cd-datetime-picker">'
-              +   '<div ng-show={{$dateTimeCtrl.dpShow}} class="input-group cd-datetime-picker-date" style="width: 140px; float: left;">'
-              +     '<input class="form-control date-picker" type="text" ng-model="$dateTimeCtrl.dateValue" ng-blur="$dateTimeCtrl.onDateBlur($event)" class="form-control date-picker">'
-              +     '<span class="input-group-addon date-picker"><i class="glyphicon glyphicon-calendar"></i></span>'
-              +   '</div>'
-
-              +   '<div ng-show={{$dateTimeCtrl.tpShow}} class="input-group cd-datetime-picker-time" style="width: 140px; padding-left: 5px; padding-right: 10px;">'
-              +     '<input type="text" class="form-control time-picker" ng-model="$dateTimeCtrl.timeValue" ng-blur="$dateTimeCtrl.onTimeBlur($event)">'
-              +     '<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>'
-              +   '</div>'
-              + '</div>'
+    template: template
   };
 }
 
@@ -98,7 +94,7 @@ function DateTimePickerLinker(scope, element, attrs, ngModel) {
   this.dp = $(element).find('input.date-picker').datepicker(dpOpts);
 
   let defaultDate = dateTimeUtils.getDate(scope.datetimeValue);
-  let defaultTime = dateTimeUtils.getTime(scope.datetimeValue);
+  let defaultTime = dateTimeUtils.getTime(scope.datetimeValue);  // this does not seem to be used anywhere
 
   // set control default date (supplyed by ng-model)
   $(this.dp).datepicker('setDate', defaultDate);

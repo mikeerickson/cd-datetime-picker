@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Cirrus DateTime Picker</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/jquery.timepicker.css">
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="css/app.css">
+
+  </head>
+  <body ng-app="app">
+    <div class="container" ng-controller="AppController as vm">
+      <h1>Cirrus DateTime Picker</h1>
+      <div class="datetime-picker">
+        <form>
+          <div class="date-time-picker">
+            <ci-date-time-picker tp-options="vm.tpOpts" dp-options="vm.dpOpts" ng-model="vm.dateTimeValue" ></ci-date-time-picker>
+            <br />
+            <div class="clearfix">
+              <code>{{vm.dateTimeValue}}</code>
+            </div>
+          </div>
+          <hr />
+          <div class="sandbox hide">
+            <div class="input-group" style="width: 140px; float: left;">
+              <input
+                type="text"
+                class="form-control date-picker"
+                ng-model="vm.dateValue"
+                ng-blur="vm.formatDateTimeDisplay(vm.dateValue, vm.timeValue)"
+              >
+              <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+            <div class="input-group" style="width: 140px; padding-left: 5px;">
+              <input
+                type="text"
+                class="form-control time-picker"
+                ng-model="vm.timeValue"
+                ng-blur="vm.formatDateTimeDisplay(vm.dateValue, vm.timeValue)"
+              >
+              <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+            </div>
+            <div class="clearfix" style="margin-top: 10px;">
+              <code> {{ vm.dateTimeValue }} </code>
+            </div>
+            <br />
+            <div>
+              <button clas="button" ng-click="vm.isValidDate(vm.dateValue)">Validate Date</button>
+              <button ng-click="vm.isValidTime(vm.timeValue)">Validate Time</button>
+              <button ng-click="vm.updateTime()">Manually Update Date/Time</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- vendor dependencies -->
+    <script src="vendor/jquery.min.js"></script>
+    <script src="vendor/angular.min.js"></script>
+    <script src="vendor/bootstrap.min.js"></script>
+    <script src="vendor/moment.min.js"></script>
+
+    <!-- vendor sub-dependencies -->
+    <script src="vendor/jquery.timepicker.js"></script>
+    <script src="vendor/bootstrap-datepicker.js"></script>
+
+    <!-- ci directives -->
+    <script src="../dist/bundle.js"></script>
+
+    <!-- demo files -->
+    <script src="js/controllers/app.controller.js"></script>
+    <script src="js/app.js"></script>
+
+  </body>
+</html>
