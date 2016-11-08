@@ -1,4 +1,4 @@
-var gulp    = require('gulp')
+var gulp    = require('gulp');
 var notify_ = require('gulp-notify');
 
 notify_.logLevel(0);

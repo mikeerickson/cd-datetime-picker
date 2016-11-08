@@ -22,4 +22,4 @@ module.exports = {
     // new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}})
     new WebpackShellPlugin({onBuildEnd:['gulp build']})
   ]
-}
+};

@@ -7,9 +7,10 @@
     "pre-build": "npm run test && npm run eslint",
     "test": "mocha",
     "eslint": "eslint \"./**/*.js\"",
+    "lint": "npm run eslint",
     "start": "node server.js",
     "serve": "lite-server",
-    "todo": "./node_modules/.bin/leasot \"./**/*.js\" --ignore \"./{node_modules,public/vendor}/**/*\" --tags error,info,fixme,review,bug,note,feature || true"
+    "todo": "./node_modules/.bin/leasot \"./**/*.js\" --ignore \"./{src/lib,node_modules,public/vendor}/**/*\" --tags error,info,fixme,review,bug,note,feature || true"
   },
   "keywords": [
     "angular",

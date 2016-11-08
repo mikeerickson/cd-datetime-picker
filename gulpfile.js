@@ -1,4 +1,4 @@
-var gulp       = require('gulp')
+var gulp       = require('gulp');
 var msg        = require('gulp-messenger');
 var requireDir = require('require-dir');
 
