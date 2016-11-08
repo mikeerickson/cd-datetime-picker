@@ -1,6 +1,7 @@
 /node_modules/
 npm-debug.log
-logs
+yarn-error.log
+/logs/
 TODO.md
 todo.json
 .imdone

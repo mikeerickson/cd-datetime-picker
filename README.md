@@ -3,6 +3,7 @@
 # Configuration
 
 - Include Dependencies
+  - Requires angular, bootstrap, jquery (jqlite is not supported) and moment.js
 
   ```javascript
     <!-- vendor dependencies -->
@@ -11,12 +12,8 @@
     <script src="vendor/bootstrap.min.js"></script>
     <script src="vendor/moment.min.js"></script>
 
-    <!-- vendor sub-dependencies -->
-    <script src="vendor/jquery.timepicker.js"></script>
-    <script src="vendor/bootstrap-datepicker.js"></script>
-
     <!-- ci directives -->
-    <script src="js/directives/cd-datetime-picker/datetime-picker.directive.js"></script>
+    <script src="build/datetime-picker.directive.min.js"></script>
   ```
 
  - Setup controller
