@@ -95,22 +95,44 @@ function DateTimePickerLinker(scope, element, attrs, ngModel) {
   let tpOpts = angular.extend(tpDefaultOpts, scope.tpOptions);
 
   // setup date and time pickers
-  this.tp = $(element).find('input.time-picker').timepicker(tpOpts);
-  this.dp = $(element).find('input.date-picker').datepicker(dpOpts);
+  let tp = $(element).find('input.time-picker');
+  let dp = $(element).find('input.date-picker');
+  tp.timepicker(tpOpts);
+  dp.datepicker(dpOpts);
+
+  // setup click handler if time-icon is clicked
+  $(element).find('span.time-picker-icon')
+    .on('click', function () {
+      tp.timepicker('show');
+    });
+
+  // setup click handler if date-icon is clicked
+  $(element).find('span.date-picker-icon')
+    .on('click', function () {
+      dp.datepicker('show');
+    });
 
   let defaultDate = dateTimeUtils.getDate(scope.datetimeValue);
   let defaultTime = dateTimeUtils.getTime(scope.datetimeValue);  // this does not seem to be used anywhere
 
   // set control default date (supplyed by ng-model)
-  $(this.dp).datepicker('setDate', defaultDate);
+  dp.datepicker('setDate', defaultDate);
 
   // attach event listener triggered when date change occurs
-  $(this.dp).datepicker().on('changeDate', (evt) => {
+  dp.datepicker().on('changeDate', (evt) => {
     scope.$broadcast('dp.dateChange', {dateValue: evt.target.value});
   });
 
-  ngModel.$render(function (value) {
-    console.log('what goes here');
-  });
+  ngModel.$render = function () {
+
+    var dateValue = dateTimeUtils.getDate(ngModel.$viewValue);
+    var timeValue = dateTimeUtils.getTime(ngModel.$viewValue);
+
+    scope.$dateTimeCtrl.timeValue = timeValue;
+    scope.$dateTimeCtrl.dateValue = dateValue;
+
+    dp.datepicker('setDate', dateValue);
+
+  };
 
 }

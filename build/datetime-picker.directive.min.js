@@ -139,23 +139,42 @@
 	  let tpOpts = angular.extend(tpDefaultOpts, scope.tpOptions);
 	
 	  // setup date and time pickers
-	  this.tp = $(element).find('input.time-picker').timepicker(tpOpts);
-	  this.dp = $(element).find('input.date-picker').datepicker(dpOpts);
+	  let tp = $(element).find('input.time-picker');
+	  let dp = $(element).find('input.date-picker');
+	  tp.timepicker(tpOpts);
+	  dp.datepicker(dpOpts);
+	
+	  // setup click handler if time-icon is clicked
+	  $(element).find('span.time-picker-icon').on('click', function () {
+	    tp.timepicker('show');
+	  });
+	
+	  // setup click handler if date-icon is clicked
+	  $(element).find('span.date-picker-icon').on('click', function () {
+	    dp.datepicker('show');
+	  });
 	
 	  let defaultDate = dateTimeUtils.getDate(scope.datetimeValue);
 	  let defaultTime = dateTimeUtils.getTime(scope.datetimeValue); // this does not seem to be used anywhere
 	
 	  // set control default date (supplyed by ng-model)
-	  $(this.dp).datepicker('setDate', defaultDate);
+	  dp.datepicker('setDate', defaultDate);
 	
 	  // attach event listener triggered when date change occurs
-	  $(this.dp).datepicker().on('changeDate', evt => {
+	  dp.datepicker().on('changeDate', evt => {
 	    scope.$broadcast('dp.dateChange', { dateValue: evt.target.value });
 	  });
 	
-	  ngModel.$render(function (value) {
-	    console.log('what goes here');
-	  });
+	  ngModel.$render = function () {
+	
+	    var dateValue = dateTimeUtils.getDate(ngModel.$viewValue);
+	    var timeValue = dateTimeUtils.getTime(ngModel.$viewValue);
+	
+	    scope.$dateTimeCtrl.timeValue = timeValue;
+	    scope.$dateTimeCtrl.dateValue = dateValue;
+	
+	    dp.datepicker('setDate', dateValue);
+	  };
 	}
 
 /***/ },
@@ -180,17 +199,11 @@
 	  },
 	
 	  getHours: datetime => {
-	    if (typeof datetime !== 'string') {
-	      return null;
-	    }
 	    let dt = new Date(datetime);
 	    return dt.getHours();
 	  },
 	
 	  getMinutes: datetime => {
-	    if (typeof datetime !== 'string') {
-	      return null;
-	    }
 	    let dt = new Date(datetime);
 	    return dt.getMinutes();
 	  },
@@ -274,7 +287,7 @@
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = "<!DOCTYPE html>\n<div class=\"ci-datetime-picker\">\n  <div ng-show=\"{{$dateTimeCtrl.dpShow}}\" class=\"input-group ci-datetime-picker-date\" style=\"width: 140px; float: left;\">\n    <input class=\"form-control date-picker\" type=\"text\" ng-model=\"$dateTimeCtrl.dateValue\" ng-blur=\"$dateTimeCtrl.onDateBlur($event)\" class=\"form-control date-picker\">\n    <span class=\"input-group-addon date-picker\"><i class=\"glyphicon glyphicon-calendar\"></i></span>\n  </div>\n\n  <div ng-show=\"{{$dateTimeCtrl.tpShow}}\" class=\"input-group ci-datetime-picker-time\" style=\"width: 140px; padding-left: 5px; padding-right: 10px;\">\n    <input type=\"text\" class=\"form-control time-picker\" ng-model=\"$dateTimeCtrl.timeValue\" ng-blur=\"$dateTimeCtrl.onTimeBlur($event)\">\n    <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-time\"></i></span>\n  </div>\n</div>\n"
+	module.exports = "<!DOCTYPE html>\n<div class=\"ci-datetime-picker\">\n  <div ng-show=\"{{$dateTimeCtrl.dpShow}}\" class=\"input-group ci-datetime-picker-date\" style=\"width: 140px; float: left;\">\n    <input class=\"form-control date-picker\" type=\"text\" ng-model=\"$dateTimeCtrl.dateValue\" ng-blur=\"$dateTimeCtrl.onDateBlur($event)\">\n    <span class=\"input-group-addon date-picker-icon\"><i class=\"glyphicon glyphicon-calendar\"></i></span>\n  </div>\n\n  <div ng-show=\"{{$dateTimeCtrl.tpShow}}\" class=\"input-group ci-datetime-picker-time\" style=\"width: 140px; padding-left: 5px; padding-right: 10px;\">\n    <input type=\"text\" class=\"form-control time-picker\" ng-model=\"$dateTimeCtrl.timeValue\" ng-blur=\"$dateTimeCtrl.onTimeBlur($event)\">\n    <span class=\"input-group-addon time-picker-icon\"><i class=\"glyphicon glyphicon-time\"></i></span>\n  </div>\n</div>\n"
 
 /***/ },
 /* 3 */

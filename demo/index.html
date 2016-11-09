@@ -14,11 +14,13 @@
       <div class="datetime-picker">
         <form>
           <div class="date-time-picker">
-            <ci-date-time-picker tp-options="vm.tpOpts" dp-options="vm.dpOpts" ng-model="vm.dateTimeValue" ></ci-date-time-picker>
+            <ci-date-time-picker tp-options="vm.tpOpts" dp-options="vm.dpOpts" ng-model="vm.dateTime" ></ci-date-time-picker>
             <br />
             <div class="clearfix">
-              <code>{{vm.dateTimeValue}}</code>
+              <code>Formatted DateTimeValue: {{vm.dateTimeValue}}</code><br/>
+              <code>JS Datetime: {{vm.dateTime}}</code><br/>
               <button class="btn btn-primary" ng-click="vm.updateTime();">Update</button>
+              <button class="btn btn-primary" ng-click="vm.randomDateTime();">Random</button>
             </div>
           </div>
           <hr />

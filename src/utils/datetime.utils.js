@@ -16,13 +16,11 @@ let dateTimeUtils = {
   },
 
   getHours: (datetime) => {
-    if (typeof datetime !== 'string') { return null; }
     let dt = new Date(datetime);
     return dt.getHours();
   },
 
   getMinutes: (datetime) => {
-    if (typeof datetime !== 'string') { return null; }
     let dt = new Date(datetime);
     return dt.getMinutes();
   },
