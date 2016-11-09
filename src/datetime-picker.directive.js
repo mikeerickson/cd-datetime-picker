@@ -32,6 +32,11 @@ function DateTimePickerController($scope, $element, $attrs) {
     $scope.$emit('dp.updateDateTime', {dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue});
   };
 
+  $dateTimeCtrl.onDateKeyUp = (evt) => {
+    // perform natural language lookup here?
+    // how to update this value
+  };
+
   $dateTimeCtrl.onTimeBlur = (evt) => {
     $dateTimeCtrl.timeValue = evt.target.value;
     let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
@@ -53,7 +58,8 @@ function DateTimePickerController($scope, $element, $attrs) {
   });
 
   $scope.$on('destroy', function () {
-    console.log('destroyed');
+    $(element).find('span.time-picker-icon').unbind('click');
+    $(element).find('span.date-picker-icon').unbind('click');
   });
 }
 

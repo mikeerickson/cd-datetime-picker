@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <div class="ci-datetime-picker">
   <div ng-show="{{$dateTimeCtrl.dpShow}}" class="input-group ci-datetime-picker-date" style="width: 140px; float: left;">
-    <input class="form-control date-picker" type="text" ng-model="$dateTimeCtrl.dateValue" ng-blur="$dateTimeCtrl.onDateBlur($event)">
+    <input type="text"
+      class="form-control date-picker"
+      ng-model="$dateTimeCtrl.dateValue"
+      ng-blur="$dateTimeCtrl.onDateBlur($event)"
+      ng-keyup="$dateTimeCtrl.onDateKeyUp($event)"
+    >
     <span class="input-group-addon date-picker-icon"><i class="glyphicon glyphicon-calendar"></i></span>
   </div>
 
   <div ng-show="{{$dateTimeCtrl.tpShow}}" class="input-group ci-datetime-picker-time" style="width: 140px; padding-left: 5px; padding-right: 10px;">
-    <input type="text" class="form-control time-picker" ng-model="$dateTimeCtrl.timeValue" ng-blur="$dateTimeCtrl.onTimeBlur($event)">
+    <input type="text"
+      class="form-control time-picker"
+      ng-model="$dateTimeCtrl.timeValue"
+      ng-blur="$dateTimeCtrl.onTimeBlur($event)"
+    >
     <span class="input-group-addon time-picker-icon"><i class="glyphicon glyphicon-time"></i></span>
   </div>
 </div>
