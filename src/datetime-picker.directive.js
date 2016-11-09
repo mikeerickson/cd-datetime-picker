@@ -51,6 +51,10 @@ function DateTimePickerController($scope, $element, $attrs) {
     });
 
   });
+
+  $scope.$on('destroy', function () {
+    console.log('destroyed');
+  });
 }
 
 function DateTimePickerDirective() {
@@ -58,10 +62,10 @@ function DateTimePickerDirective() {
     restrict: 'E',
     require: '^ngModel',
     scope: {
-      dpOptions: '=',
-      tpOptions: '=',
-      dpShow: '=',
-      tpShow: '=',
+      dpOptions: '<',
+      tpOptions: '<',
+      dpShow: '<',
+      tpShow: '<',
       datetimeValue: '=ngModel'
     },
     link: DateTimePickerLinker,
