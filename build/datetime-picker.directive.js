@@ -152,6 +152,10 @@
 	  $(this.dp).datepicker().on('changeDate', evt => {
 	    scope.$broadcast('dp.dateChange', { dateValue: evt.target.value });
 	  });
+	
+	  ngModel.$render(function (value) {
+	    console.log('what goes here');
+	  });
 	}
 
 /***/ },
