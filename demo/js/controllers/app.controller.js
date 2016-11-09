@@ -18,7 +18,8 @@ function AppController($scope, $element, $attrs) {
     step: 5 // default 15
   };
 
-  vm.dateTime      = new Date('2016-10-15 2:30 PM');
+  // vm.dateTime      = new Date('2016-10-15 2:30 PM');
+  vm.dateTime      = new Date();
   vm.timeValue     = moment(vm.dateTime).format('h:mm A');
   vm.dateValue     = moment(vm.dateTime).format('MM/DD/YYYY');
   vm.dateTimeValue = moment(vm.dateTime).format(dateTimeDisplayFormat);
