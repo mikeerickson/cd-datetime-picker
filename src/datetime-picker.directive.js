@@ -40,10 +40,7 @@ function DateTimePickerController($scope, $element, $attrs) {
   };
 
   $dateTimeCtrl.onDateKeyUp = (evt) => {
-    // let dtResult = Sugar.Date.create(evt.target.value);
-    // if (dateTimeUtils.isValidDate(dtResult)) {
-    //   $(evt.target).val(dateTimeUtils.getDate(dtResult));
-    // }
+    console.log(evt);
   };
 
   $dateTimeCtrl.onTimeBlur = (evt) => {
