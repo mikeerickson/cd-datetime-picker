@@ -54,7 +54,7 @@
 	__webpack_require__(393);
 	__webpack_require__(395);
 	
-	angular.module('ci-datetime-picker', []).directive('ciDateTimePicker', DateTimePickerDirective);
+	angular.module('ci-datetime-picker', []).directive('ciDatetimePicker', DateTimePickerDirective);
 	
 	DateTimePickerController.$inject = ['$scope', '$element', '$attrs'];
 	function DateTimePickerController($scope, $element, $attrs) {
@@ -137,7 +137,7 @@
 	    autoclose: true,
 	    todayHighlight: true,
 	    weekStart: 0,
-	    forceParse: false // this is required to support human entry 
+	    forceParse: false // this is required to support human entry
 	  };
 	
 	  let tpDefaultOpts = {
