@@ -46,8 +46,8 @@
 
 	'use strict';
 	
-	const Sugar = __webpack_require__(1);
-	const dateTimeUtils = __webpack_require__(387);
+	const dateTimeUtils = __webpack_require__(1);
+	const Sugar = __webpack_require__(2);
 	const template = __webpack_require__(388);
 	
 	__webpack_require__(389);
@@ -137,7 +137,7 @@
 	    autoclose: true,
 	    todayHighlight: true,
 	    weekStart: 0,
-	    forceParse: false
+	    forceParse: false // this is required to support human entry 
 	  };
 	
 	  let tpDefaultOpts = {
@@ -201,12 +201,128 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	const Sugar = __webpack_require__(2);
 	
-	__webpack_require__(2);
-	__webpack_require__(340);
+	let dateTimeUtils = {
 	
-	module.exports = __webpack_require__(4);
+	  getMonth: datetime => {
+	    let dt = new Date(datetime);
+	    return dt.getMonth() + 1;
+	  },
+	
+	  getDay: datetime => {
+	    let dt = new Date(datetime);
+	    return dt.getDate();
+	  },
+	
+	  getYear: datetime => {
+	    let dt = new Date(datetime);
+	    return dt.getFullYear();
+	  },
+	
+	  getHours: datetime => {
+	    let dt = new Date(datetime);
+	    return dt.getHours();
+	  },
+	
+	  getMinutes: datetime => {
+	    let dt = new Date(datetime);
+	    return dt.getMinutes();
+	  },
+	
+	  getTime: datetime => {
+	    let hours = parseInt(dateTimeUtils.getHours(datetime));
+	    let mins = parseInt(dateTimeUtils.getMinutes(datetime));
+	    let ampm = 'am';
+	
+	    if (hours > 12) {
+	      hours -= 12;
+	      ampm = 'pm';
+	    }
+	
+	    if (hours === 12) {
+	      ampm = 'pm';
+	    }
+	
+	    if (hours === 0) {
+	      hours = 12;
+	    }
+	
+	    if (hours > 24) {
+	      hours = 0;
+	      ampm = 'am';
+	    }
+	
+	    return hours + ':' + dateTimeUtils.addZero(mins) + ' ' + ampm.toUpperCase();
+	  },
+	
+	  getDate: datetime => {
+	    let mon = parseInt(dateTimeUtils.getMonth(datetime));
+	    let day = parseInt(dateTimeUtils.getDay(datetime));
+	    let year = parseInt(dateTimeUtils.getYear(datetime));
+	    return dateTimeUtils.addZero(mon) + '/' + dateTimeUtils.addZero(day) + '/' + year;
+	  },
+	
+	  isValidTime: value => {
+	    let timeValue = value.toUpperCase().replace(' ', ':');
+	    let ampm = 'AM';
+	    let isValidTime = true;
+	
+	    if (/nan/i.test(value)) {
+	      return false;
+	    }
+	
+	    if (typeof timeValue !== 'undefined') {
+	      let parts = timeValue.split(':');
+	      if (parts.length === 0) {
+	        let timeValue24 = parseInt(timeValue);
+	        if (timeValue > 0 && timeValue <= 2359) {
+	          isValidTime = true;
+	        }
+	      }
+	
+	      let hours = parseInt(parts[0]);
+	      let mins = parseInt(parts[1]);
+	      ampm = parts.length > 1 ? parts[2] : ampm;
+	
+	      if (hours > 12) {
+	        hours -= hours;
+	        ampm = 'PM';
+	      }
+	      if (hours > 12 || mins > 59) {
+	        isValidTime = false;
+	      }
+	    }
+	
+	    return isValidTime;
+	  },
+	
+	  isValidDate: datetime => {
+	    // this needs further validation but this will suffice for now
+	    if (!datetime) {
+	      return false;
+	    }
+	    var dt = new Date(datetime);
+	    return !isNaN(dt);
+	  },
+	
+	  addZero: val => {
+	    if (val < 10) {
+	      val = '0' + val;
+	    }
+	    return val;
+	  },
+	
+	  convertHumanDate: val => {
+	    let dtResult = Sugar.Date.create(val);
+	    if (!isNaN(dtResult)) {
+	      return dtResult;
+	    }
+	    return null;
+	  }
+	};
+	
+	module.exports = dateTimeUtils;
 
 /***/ },
 /* 2 */
@@ -214,18 +330,28 @@
 
 	'use strict';
 	
-	// Static Methods
 	__webpack_require__(3);
-	__webpack_require__(63);
-	__webpack_require__(109);
-	__webpack_require__(111);
+	__webpack_require__(341);
+	
+	module.exports = __webpack_require__(5);
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	// Static Methods
+	__webpack_require__(4);
+	__webpack_require__(64);
+	__webpack_require__(110);
 	__webpack_require__(112);
 	__webpack_require__(113);
 	__webpack_require__(114);
+	__webpack_require__(115);
 	
 	// Instance Methods
-	__webpack_require__(115);
-	__webpack_require__(122);
+	__webpack_require__(116);
 	__webpack_require__(123);
 	__webpack_require__(124);
 	__webpack_require__(125);
@@ -306,7 +432,7 @@
 	__webpack_require__(200);
 	__webpack_require__(201);
 	__webpack_require__(202);
-	__webpack_require__(210);
+	__webpack_require__(203);
 	__webpack_require__(211);
 	__webpack_require__(212);
 	__webpack_require__(213);
@@ -314,7 +440,7 @@
 	__webpack_require__(215);
 	__webpack_require__(216);
 	__webpack_require__(217);
-	__webpack_require__(222);
+	__webpack_require__(218);
 	__webpack_require__(223);
 	__webpack_require__(224);
 	__webpack_require__(225);
@@ -331,7 +457,7 @@
 	__webpack_require__(236);
 	__webpack_require__(237);
 	__webpack_require__(238);
-	__webpack_require__(257);
+	__webpack_require__(239);
 	__webpack_require__(258);
 	__webpack_require__(259);
 	__webpack_require__(260);
@@ -341,11 +467,11 @@
 	__webpack_require__(264);
 	__webpack_require__(265);
 	__webpack_require__(266);
-	__webpack_require__(270);
+	__webpack_require__(267);
 	__webpack_require__(271);
 	__webpack_require__(272);
 	__webpack_require__(273);
-	__webpack_require__(276);
+	__webpack_require__(274);
 	__webpack_require__(277);
 	__webpack_require__(278);
 	__webpack_require__(279);
@@ -365,7 +491,7 @@
 	__webpack_require__(293);
 	__webpack_require__(294);
 	__webpack_require__(295);
-	__webpack_require__(297);
+	__webpack_require__(296);
 	__webpack_require__(298);
 	__webpack_require__(299);
 	__webpack_require__(300);
@@ -384,9 +510,9 @@
 	__webpack_require__(313);
 	__webpack_require__(314);
 	__webpack_require__(315);
-	__webpack_require__(318);
+	__webpack_require__(316);
 	__webpack_require__(319);
-	__webpack_require__(321);
+	__webpack_require__(320);
 	__webpack_require__(322);
 	__webpack_require__(323);
 	__webpack_require__(324);
@@ -403,21 +529,22 @@
 	__webpack_require__(335);
 	__webpack_require__(336);
 	__webpack_require__(337);
+	__webpack_require__(338);
 	
 	// Accessors
-	__webpack_require__(338);
 	__webpack_require__(339);
+	__webpack_require__(340);
 	
-	module.exports = __webpack_require__(4);
+	module.exports = __webpack_require__(5);
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    LocaleHelpers = __webpack_require__(5);
+	var Sugar = __webpack_require__(5),
+	    LocaleHelpers = __webpack_require__(6);
 	
 	var localeManager = LocaleHelpers.localeManager;
 	
@@ -432,7 +559,7 @@
 	module.exports = Sugar.Date.addLocale;
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*
@@ -1314,14 +1441,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var LazyLoadedLocales = __webpack_require__(6),
-	    AmericanEnglishDefinition = __webpack_require__(13),
-	    getNewLocale = __webpack_require__(15);
+	var LazyLoadedLocales = __webpack_require__(7),
+	    AmericanEnglishDefinition = __webpack_require__(14),
+	    getNewLocale = __webpack_require__(16);
 	
 	var English, localeManager;
 	
@@ -1393,14 +1520,14 @@
 	};
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var BritishEnglishDefinition = __webpack_require__(7),
-	    AmericanEnglishDefinition = __webpack_require__(13),
-	    CanadianEnglishDefinition = __webpack_require__(14);
+	var BritishEnglishDefinition = __webpack_require__(8),
+	    AmericanEnglishDefinition = __webpack_require__(14),
+	    CanadianEnglishDefinition = __webpack_require__(15);
 	
 	var LazyLoadedLocales = {
 	  'en-US': AmericanEnglishDefinition,
@@ -1412,12 +1539,12 @@
 	module.exports = LazyLoadedLocales;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getEnglishVariant = __webpack_require__(8);
+	var getEnglishVariant = __webpack_require__(9);
 	
 	var BritishEnglishDefinition = getEnglishVariant({
 	  'short':  '{dd}/{MM}/{yyyy}',
@@ -1430,14 +1557,14 @@
 	module.exports = BritishEnglishDefinition;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var EnglishLocaleBaseDefinition = __webpack_require__(9),
-	    simpleMerge = __webpack_require__(10),
-	    simpleClone = __webpack_require__(12);
+	var EnglishLocaleBaseDefinition = __webpack_require__(10),
+	    simpleMerge = __webpack_require__(11),
+	    simpleClone = __webpack_require__(13);
 	
 	function getEnglishVariant(v) {
 	  return simpleMerge(simpleClone(EnglishLocaleBaseDefinition), v);
@@ -1446,7 +1573,7 @@
 	module.exports = getEnglishVariant;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1517,12 +1644,12 @@
 	module.exports = EnglishLocaleBaseDefinition;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var coreUtilityAliases = __webpack_require__(11);
+	var coreUtilityAliases = __webpack_require__(12);
 	
 	var forEachProperty = coreUtilityAliases.forEachProperty;
 	
@@ -1536,12 +1663,12 @@
 	module.exports = simpleMerge;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
 	module.exports = {
 	  hasOwn: Sugar.util.hasOwn,
@@ -1554,12 +1681,12 @@
 	};
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var simpleMerge = __webpack_require__(10);
+	var simpleMerge = __webpack_require__(11);
 	
 	function simpleClone(obj) {
 	  return simpleMerge({}, obj);
@@ -1568,12 +1695,12 @@
 	module.exports = simpleClone;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getEnglishVariant = __webpack_require__(8);
+	var getEnglishVariant = __webpack_require__(9);
 	
 	var AmericanEnglishDefinition = getEnglishVariant({
 	  'mdy': true,
@@ -1590,12 +1717,12 @@
 	module.exports = AmericanEnglishDefinition;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getEnglishVariant = __webpack_require__(8);
+	var getEnglishVariant = __webpack_require__(9);
 	
 	var CanadianEnglishDefinition = getEnglishVariant({
 	  'short':  '{yyyy}-{MM}-{dd}',
@@ -1608,34 +1735,34 @@
 	module.exports = CanadianEnglishDefinition;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var LOCALE_ARRAY_FIELDS = __webpack_require__(16),
-	    ISODefaults = __webpack_require__(17),
-	    ParsingTokens = __webpack_require__(18),
-	    CoreParsingFormats = __webpack_require__(19),
-	    LocalizedParsingTokens = __webpack_require__(20),
-	    map = __webpack_require__(21),
-	    filter = __webpack_require__(22),
-	    forEach = __webpack_require__(23),
-	    isDefined = __webpack_require__(27),
-	    commaSplit = __webpack_require__(28),
-	    classChecks = __webpack_require__(30),
-	    isUndefined = __webpack_require__(38),
-	    mathAliases = __webpack_require__(39),
-	    simpleMerge = __webpack_require__(10),
-	    getOrdinalSuffix = __webpack_require__(40),
-	    getRegNonCapturing = __webpack_require__(41),
-	    coreUtilityAliases = __webpack_require__(11),
-	    getArrayWithOffset = __webpack_require__(42),
-	    iterateOverDateUnits = __webpack_require__(43),
-	    arrayToRegAlternates = __webpack_require__(53),
-	    fullwidthNumberHelpers = __webpack_require__(55),
-	    getAdjustedUnitForNumber = __webpack_require__(58),
-	    getParsingTokenWithSuffix = __webpack_require__(62);
+	var LOCALE_ARRAY_FIELDS = __webpack_require__(17),
+	    ISODefaults = __webpack_require__(18),
+	    ParsingTokens = __webpack_require__(19),
+	    CoreParsingFormats = __webpack_require__(20),
+	    LocalizedParsingTokens = __webpack_require__(21),
+	    map = __webpack_require__(22),
+	    filter = __webpack_require__(23),
+	    forEach = __webpack_require__(24),
+	    isDefined = __webpack_require__(28),
+	    commaSplit = __webpack_require__(29),
+	    classChecks = __webpack_require__(31),
+	    isUndefined = __webpack_require__(39),
+	    mathAliases = __webpack_require__(40),
+	    simpleMerge = __webpack_require__(11),
+	    getOrdinalSuffix = __webpack_require__(41),
+	    getRegNonCapturing = __webpack_require__(42),
+	    coreUtilityAliases = __webpack_require__(12),
+	    getArrayWithOffset = __webpack_require__(43),
+	    iterateOverDateUnits = __webpack_require__(44),
+	    arrayToRegAlternates = __webpack_require__(54),
+	    fullwidthNumberHelpers = __webpack_require__(56),
+	    getAdjustedUnitForNumber = __webpack_require__(59),
+	    getParsingTokenWithSuffix = __webpack_require__(63);
 	
 	var getOwn = coreUtilityAliases.getOwn,
 	    forEachProperty = coreUtilityAliases.forEachProperty,
@@ -2132,7 +2259,7 @@
 	module.exports = getNewLocale;
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2146,7 +2273,7 @@
 	module.exports = LOCALE_ARRAY_FIELDS;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2157,7 +2284,7 @@
 	};
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2235,7 +2362,7 @@
 	module.exports = ParsingTokens;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2271,7 +2398,7 @@
 	module.exports = CoreParsingFormats;
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2308,7 +2435,7 @@
 	module.exports = LocalizedParsingTokens;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2327,7 +2454,7 @@
 	module.exports = map;
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2346,12 +2473,12 @@
 	module.exports = filter;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var iterateOverSparseArray = __webpack_require__(24);
+	var iterateOverSparseArray = __webpack_require__(25);
 	
 	function forEach(arr, fn) {
 	  for (var i = 0, len = arr.length; i < len; i++) {
@@ -2365,12 +2492,12 @@
 	module.exports = forEach;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getSparseArrayIndexes = __webpack_require__(25);
+	var getSparseArrayIndexes = __webpack_require__(26);
 	
 	function iterateOverSparseArray(arr, fn, fromIndex, loop) {
 	  var indexes = getSparseArrayIndexes(arr, fromIndex, loop), index;
@@ -2384,12 +2511,12 @@
 	module.exports = iterateOverSparseArray;
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var isArrayIndex = __webpack_require__(26);
+	var isArrayIndex = __webpack_require__(27);
 	
 	function getSparseArrayIndexes(arr, fromIndex, loop, fromRight) {
 	  var indexes = [], i;
@@ -2412,7 +2539,7 @@
 	module.exports = getSparseArrayIndexes;
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2424,7 +2551,7 @@
 	module.exports = isArrayIndex;
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2436,12 +2563,12 @@
 	module.exports = isDefined;
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var CommonChars = __webpack_require__(29);
+	var CommonChars = __webpack_require__(30);
 	
 	var HALF_WIDTH_COMMA = CommonChars.HALF_WIDTH_COMMA;
 	
@@ -2452,7 +2579,7 @@
 	module.exports = commaSplit;
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2468,17 +2595,17 @@
 	};
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var NATIVE_TYPES = __webpack_require__(31),
-	    forEach = __webpack_require__(23),
-	    isClass = __webpack_require__(32),
-	    spaceSplit = __webpack_require__(33),
-	    isPlainObject = __webpack_require__(34),
-	    coreUtilityAliases = __webpack_require__(11);
+	var NATIVE_TYPES = __webpack_require__(32),
+	    forEach = __webpack_require__(24),
+	    isClass = __webpack_require__(33),
+	    spaceSplit = __webpack_require__(34),
+	    isPlainObject = __webpack_require__(35),
+	    coreUtilityAliases = __webpack_require__(12);
 	
 	var classToString = coreUtilityAliases.classToString;
 	
@@ -2610,7 +2737,7 @@
 	};
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2618,12 +2745,12 @@
 	module.exports = 'Boolean Number String Date RegExp Function Array Error Set Map';
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var coreUtilityAliases = __webpack_require__(11);
+	var coreUtilityAliases = __webpack_require__(12);
 	
 	var classToString = coreUtilityAliases.classToString;
 	
@@ -2637,7 +2764,7 @@
 	module.exports = isClass;
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2649,15 +2776,15 @@
 	module.exports = spaceSplit;
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var isClass = __webpack_require__(32),
-	    isObjectType = __webpack_require__(35),
-	    hasOwnEnumeratedProperties = __webpack_require__(36),
-	    hasValidPlainObjectPrototype = __webpack_require__(37);
+	var isClass = __webpack_require__(33),
+	    isObjectType = __webpack_require__(36),
+	    hasOwnEnumeratedProperties = __webpack_require__(37),
+	    hasValidPlainObjectPrototype = __webpack_require__(38);
 	
 	function isPlainObject(obj, className) {
 	  return isObjectType(obj) &&
@@ -2669,7 +2796,7 @@
 	module.exports = isPlainObject;
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2681,12 +2808,12 @@
 	module.exports = isObjectType;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var coreUtilityAliases = __webpack_require__(11);
+	var coreUtilityAliases = __webpack_require__(12);
 	
 	var hasOwn = coreUtilityAliases.hasOwn;
 	
@@ -2708,12 +2835,12 @@
 	module.exports = hasOwnEnumeratedProperties;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var coreUtilityAliases = __webpack_require__(11);
+	var coreUtilityAliases = __webpack_require__(12);
 	
 	var hasOwn = coreUtilityAliases.hasOwn;
 	
@@ -2736,7 +2863,7 @@
 	module.exports = hasValidPlainObjectPrototype;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2748,7 +2875,7 @@
 	module.exports = isUndefined;
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2764,7 +2891,7 @@
 	};
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2785,7 +2912,7 @@
 	module.exports = getOrdinalSuffix;
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2803,7 +2930,7 @@
 	module.exports = getRegNonCapturing;
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2819,14 +2946,14 @@
 	module.exports = getArrayWithOffset;
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DateUnits = __webpack_require__(44),
-	    DateUnitIndexes = __webpack_require__(52),
-	    isUndefined = __webpack_require__(38);
+	var DateUnits = __webpack_require__(45),
+	    DateUnitIndexes = __webpack_require__(53),
+	    isUndefined = __webpack_require__(39);
 	
 	var YEAR_INDEX = DateUnitIndexes.YEAR_INDEX;
 	
@@ -2845,12 +2972,12 @@
 	module.exports = iterateOverDateUnits;
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getDaysInMonth = __webpack_require__(45);
+	var getDaysInMonth = __webpack_require__(46);
 	
 	var DateUnits = [
 	  {
@@ -2918,14 +3045,14 @@
 	module.exports = DateUnits;
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getYear = __webpack_require__(46),
-	    getMonth = __webpack_require__(51),
-	    callDateGet = __webpack_require__(47);
+	var getYear = __webpack_require__(47),
+	    getMonth = __webpack_require__(52),
+	    callDateGet = __webpack_require__(48);
 	
 	function getDaysInMonth(d) {
 	  return 32 - callDateGet(new Date(getYear(d), getMonth(d), 32), 'Date');
@@ -2934,12 +3061,12 @@
 	module.exports = getDaysInMonth;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var callDateGet = __webpack_require__(47);
+	var callDateGet = __webpack_require__(48);
 	
 	function getYear(d) {
 	  return callDateGet(d, 'FullYear');
@@ -2948,12 +3075,12 @@
 	module.exports = getYear;
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _utc = __webpack_require__(48);
+	var _utc = __webpack_require__(49);
 	
 	function callDateGet(d, method) {
 	  return d['get' + (_utc(d) ? 'UTC' : '') + method]();
@@ -2962,23 +3089,23 @@
 	module.exports = callDateGet;
 
 /***/ },
-/* 48 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var privatePropertyAccessor = __webpack_require__(49);
-	
-	module.exports = privatePropertyAccessor('utc');
-
-/***/ },
 /* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var PRIVATE_PROP_PREFIX = __webpack_require__(50),
-	    coreUtilityAliases = __webpack_require__(11);
+	var privatePropertyAccessor = __webpack_require__(50);
+	
+	module.exports = privatePropertyAccessor('utc');
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var PRIVATE_PROP_PREFIX = __webpack_require__(51),
+	    coreUtilityAliases = __webpack_require__(12);
 	
 	var setProperty = coreUtilityAliases.setProperty;
 	
@@ -2996,7 +3123,7 @@
 	module.exports = privatePropertyAccessor;
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3004,12 +3131,12 @@
 	module.exports = '_sugar_';
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var callDateGet = __webpack_require__(47);
+	var callDateGet = __webpack_require__(48);
 	
 	function getMonth(d) {
 	  return callDateGet(d, 'Month');
@@ -3018,7 +3145,7 @@
 	module.exports = getMonth;
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3032,13 +3159,13 @@
 	};
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var map = __webpack_require__(21),
-	    escapeRegExp = __webpack_require__(54);
+	var map = __webpack_require__(22),
+	    escapeRegExp = __webpack_require__(55);
 	
 	function arrayToRegAlternates(arr) {
 	  var joined = arr.join('');
@@ -3055,12 +3182,12 @@
 	module.exports = arrayToRegAlternates;
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var classChecks = __webpack_require__(30);
+	var classChecks = __webpack_require__(31);
 	
 	var isString = classChecks.isString;
 	
@@ -3072,14 +3199,14 @@
 	module.exports = escapeRegExp;
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var CommonChars = __webpack_require__(29),
-	    chr = __webpack_require__(56),
-	    allCharsReg = __webpack_require__(57);
+	var CommonChars = __webpack_require__(30),
+	    chr = __webpack_require__(57),
+	    allCharsReg = __webpack_require__(58);
 	
 	var HALF_WIDTH_ZERO = CommonChars.HALF_WIDTH_ZERO,
 	    FULL_WIDTH_ZERO = CommonChars.FULL_WIDTH_ZERO,
@@ -3115,7 +3242,7 @@
 	};
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3123,7 +3250,7 @@
 	module.exports = String.fromCharCode;
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3135,14 +3262,14 @@
 	module.exports = allCharsReg;
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var trunc = __webpack_require__(59),
-	    withPrecision = __webpack_require__(60),
-	    getAdjustedUnit = __webpack_require__(61);
+	var trunc = __webpack_require__(60),
+	    withPrecision = __webpack_require__(61),
+	    getAdjustedUnit = __webpack_require__(62);
 	
 	function getAdjustedUnitForNumber(ms) {
 	  return getAdjustedUnit(ms, function(unit) {
@@ -3153,12 +3280,12 @@
 	module.exports = getAdjustedUnitForNumber;
 
 /***/ },
-/* 59 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var mathAliases = __webpack_require__(39);
+	var mathAliases = __webpack_require__(40);
 	
 	var ceil = mathAliases.ceil,
 	    floor = mathAliases.floor;
@@ -3171,12 +3298,12 @@
 	module.exports = trunc;
 
 /***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var mathAliases = __webpack_require__(39);
+	var mathAliases = __webpack_require__(40);
 	
 	var abs = mathAliases.abs,
 	    pow = mathAliases.pow,
@@ -3192,13 +3319,13 @@
 	module.exports = withPrecision;
 
 /***/ },
-/* 61 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var mathAliases = __webpack_require__(39),
-	    iterateOverDateUnits = __webpack_require__(43);
+	var mathAliases = __webpack_require__(40),
+	    iterateOverDateUnits = __webpack_require__(44);
 	
 	var abs = mathAliases.abs;
 	
@@ -3217,13 +3344,13 @@
 	module.exports = getAdjustedUnit;
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var LocalizedParsingTokens = __webpack_require__(20),
-	    getRegNonCapturing = __webpack_require__(41);
+	var LocalizedParsingTokens = __webpack_require__(21),
+	    getRegNonCapturing = __webpack_require__(42);
 	
 	function getParsingTokenWithSuffix(field, src, suffix) {
 	  var token = LocalizedParsingTokens[field];
@@ -3240,15 +3367,15 @@
 	module.exports = getParsingTokenWithSuffix;
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    createDate = __webpack_require__(64);
+	var Sugar = __webpack_require__(5),
+	    createDate = __webpack_require__(65);
 	
-	__webpack_require__(106);
+	__webpack_require__(107);
 	
 	Sugar.Date.defineStatic({
 	
@@ -3261,12 +3388,12 @@
 	module.exports = Sugar.Date.create;
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getExtendedDate = __webpack_require__(65);
+	var getExtendedDate = __webpack_require__(66);
 	
 	function createDate(d, options, forceClone) {
 	  return getExtendedDate(null, d, options, forceClone).date;
@@ -3275,37 +3402,37 @@
 	module.exports = createDate;
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var MINUTES = __webpack_require__(66),
-	    ParsingTokens = __webpack_require__(18),
-	    LocaleHelpers = __webpack_require__(5),
-	    DateUnitIndexes = __webpack_require__(52),
-	    _utc = __webpack_require__(48),
-	    trunc = __webpack_require__(59),
-	    forEach = __webpack_require__(23),
-	    tzOffset = __webpack_require__(67),
-	    resetTime = __webpack_require__(68),
-	    isDefined = __webpack_require__(27),
-	    setWeekday = __webpack_require__(73),
-	    updateDate = __webpack_require__(77),
-	    getNewDate = __webpack_require__(78),
-	    isUndefined = __webpack_require__(38),
-	    classChecks = __webpack_require__(30),
-	    advanceDate = __webpack_require__(98),
-	    simpleClone = __webpack_require__(12),
-	    isObjectType = __webpack_require__(35),
-	    moveToEndOfUnit = __webpack_require__(99),
-	    deleteDateParam = __webpack_require__(101),
-	    coreUtilityAliases = __webpack_require__(11),
-	    getParsingTokenValue = __webpack_require__(102),
-	    moveToBeginningOfUnit = __webpack_require__(103),
-	    iterateOverDateParams = __webpack_require__(94),
-	    getYearFromAbbreviation = __webpack_require__(104),
-	    iterateOverHigherDateParams = __webpack_require__(105);
+	var MINUTES = __webpack_require__(67),
+	    ParsingTokens = __webpack_require__(19),
+	    LocaleHelpers = __webpack_require__(6),
+	    DateUnitIndexes = __webpack_require__(53),
+	    _utc = __webpack_require__(49),
+	    trunc = __webpack_require__(60),
+	    forEach = __webpack_require__(24),
+	    tzOffset = __webpack_require__(68),
+	    resetTime = __webpack_require__(69),
+	    isDefined = __webpack_require__(28),
+	    setWeekday = __webpack_require__(74),
+	    updateDate = __webpack_require__(78),
+	    getNewDate = __webpack_require__(79),
+	    isUndefined = __webpack_require__(39),
+	    classChecks = __webpack_require__(31),
+	    advanceDate = __webpack_require__(99),
+	    simpleClone = __webpack_require__(13),
+	    isObjectType = __webpack_require__(36),
+	    moveToEndOfUnit = __webpack_require__(100),
+	    deleteDateParam = __webpack_require__(102),
+	    coreUtilityAliases = __webpack_require__(12),
+	    getParsingTokenValue = __webpack_require__(103),
+	    moveToBeginningOfUnit = __webpack_require__(104),
+	    iterateOverDateParams = __webpack_require__(95),
+	    getYearFromAbbreviation = __webpack_require__(105),
+	    iterateOverHigherDateParams = __webpack_require__(106);
 	
 	var isNumber = classChecks.isNumber,
 	    isString = classChecks.isString,
@@ -3712,7 +3839,7 @@
 	module.exports = getExtendedDate;
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3720,7 +3847,7 @@
 	module.exports = 60 * 1000;
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3732,13 +3859,13 @@
 	module.exports = tzOffset;
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DateUnitIndexes = __webpack_require__(52),
-	    setUnitAndLowerToEdge = __webpack_require__(69);
+	var DateUnitIndexes = __webpack_require__(53),
+	    setUnitAndLowerToEdge = __webpack_require__(70);
 	
 	var HOURS_INDEX = DateUnitIndexes.HOURS_INDEX;
 	
@@ -3749,15 +3876,15 @@
 	module.exports = resetTime;
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var isDefined = __webpack_require__(27),
-	    classChecks = __webpack_require__(30),
-	    callDateSet = __webpack_require__(70),
-	    walkUnitDown = __webpack_require__(71);
+	var isDefined = __webpack_require__(28),
+	    classChecks = __webpack_require__(31),
+	    callDateSet = __webpack_require__(71),
+	    walkUnitDown = __webpack_require__(72);
 	
 	var isFunction = classChecks.isFunction;
 	
@@ -3776,13 +3903,13 @@
 	module.exports = setUnitAndLowerToEdge;
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _utc = __webpack_require__(48),
-	    callDateGet = __webpack_require__(47);
+	var _utc = __webpack_require__(49),
+	    callDateGet = __webpack_require__(48);
 	
 	function callDateSet(d, method, value, safe) {
 	  // "Safe" denotes not setting the date if the value is the same as what is
@@ -3801,13 +3928,13 @@
 	module.exports = callDateSet;
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DateUnits = __webpack_require__(44),
-	    getLowerUnitIndex = __webpack_require__(72);
+	var DateUnits = __webpack_require__(45),
+	    getLowerUnitIndex = __webpack_require__(73);
 	
 	function walkUnitDown(unitIndex, fn) {
 	  while (unitIndex >= 0) {
@@ -3821,12 +3948,12 @@
 	module.exports = walkUnitDown;
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DateUnitIndexes = __webpack_require__(52);
+	var DateUnitIndexes = __webpack_require__(53);
 	
 	var HOURS_INDEX = DateUnitIndexes.HOURS_INDEX,
 	    DAY_INDEX = DateUnitIndexes.DAY_INDEX,
@@ -3845,16 +3972,16 @@
 	module.exports = getLowerUnitIndex;
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var setDate = __webpack_require__(74),
-	    getDate = __webpack_require__(75),
-	    getWeekday = __webpack_require__(76),
-	    classChecks = __webpack_require__(30),
-	    mathAliases = __webpack_require__(39);
+	var setDate = __webpack_require__(75),
+	    getDate = __webpack_require__(76),
+	    getWeekday = __webpack_require__(77),
+	    classChecks = __webpack_require__(31),
+	    mathAliases = __webpack_require__(40);
 	
 	var isNumber = classChecks.isNumber,
 	    abs = mathAliases.abs;
@@ -3878,12 +4005,12 @@
 	module.exports = setWeekday;
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var callDateSet = __webpack_require__(70);
+	var callDateSet = __webpack_require__(71);
 	
 	function setDate(d, val) {
 	  callDateSet(d, 'Date', val);
@@ -3892,12 +4019,12 @@
 	module.exports = setDate;
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var callDateGet = __webpack_require__(47);
+	var callDateGet = __webpack_require__(48);
 	
 	function getDate(d) {
 	  return callDateGet(d, 'Date');
@@ -3906,12 +4033,12 @@
 	module.exports = getDate;
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var callDateGet = __webpack_require__(47);
+	var callDateGet = __webpack_require__(48);
 	
 	function getWeekday(d) {
 	  return callDateGet(d, 'Day');
@@ -3920,27 +4047,27 @@
 	module.exports = getWeekday;
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DateUnits = __webpack_require__(44),
-	    DateUnitIndexes = __webpack_require__(52),
-	    trunc = __webpack_require__(59),
-	    setDate = __webpack_require__(74),
-	    getDate = __webpack_require__(75),
-	    getMonth = __webpack_require__(51),
-	    getNewDate = __webpack_require__(78),
-	    setWeekday = __webpack_require__(73),
-	    mathAliases = __webpack_require__(39),
-	    callDateGet = __webpack_require__(47),
-	    classChecks = __webpack_require__(30),
-	    resetLowerUnits = __webpack_require__(85),
-	    getLowerUnitIndex = __webpack_require__(72),
-	    getHigherUnitIndex = __webpack_require__(86),
-	    callDateSetWithWeek = __webpack_require__(87),
-	    iterateOverDateParams = __webpack_require__(94);
+	var DateUnits = __webpack_require__(45),
+	    DateUnitIndexes = __webpack_require__(53),
+	    trunc = __webpack_require__(60),
+	    setDate = __webpack_require__(75),
+	    getDate = __webpack_require__(76),
+	    getMonth = __webpack_require__(52),
+	    getNewDate = __webpack_require__(79),
+	    setWeekday = __webpack_require__(74),
+	    mathAliases = __webpack_require__(40),
+	    callDateGet = __webpack_require__(48),
+	    classChecks = __webpack_require__(31),
+	    resetLowerUnits = __webpack_require__(86),
+	    getLowerUnitIndex = __webpack_require__(73),
+	    getHigherUnitIndex = __webpack_require__(87),
+	    callDateSetWithWeek = __webpack_require__(88),
+	    iterateOverDateParams = __webpack_require__(95);
 	
 	var DAY_INDEX = DateUnitIndexes.DAY_INDEX,
 	    WEEK_INDEX = DateUnitIndexes.WEEK_INDEX,
@@ -4097,12 +4224,12 @@
 	module.exports = updateDate;
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _dateOptions = __webpack_require__(79);
+	var _dateOptions = __webpack_require__(80);
 	
 	function getNewDate() {
 	  return _dateOptions('newDateInternal')();
@@ -4111,26 +4238,26 @@
 	module.exports = getNewDate;
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DATE_OPTIONS = __webpack_require__(80),
-	    namespaceAliases = __webpack_require__(82),
-	    defineOptionsAccessor = __webpack_require__(83);
+	var DATE_OPTIONS = __webpack_require__(81),
+	    namespaceAliases = __webpack_require__(83),
+	    defineOptionsAccessor = __webpack_require__(84);
 	
 	var sugarDate = namespaceAliases.sugarDate;
 	
 	module.exports = defineOptionsAccessor(sugarDate, DATE_OPTIONS);
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var defaultNewDate = __webpack_require__(81);
+	var defaultNewDate = __webpack_require__(82);
 	
 	var DATE_OPTIONS = {
 	  'newDateInternal': defaultNewDate
@@ -4139,7 +4266,7 @@
 	module.exports = DATE_OPTIONS;
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4151,12 +4278,12 @@
 	module.exports = defaultNewDate;
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
 	module.exports = {
 	  sugarObject: Sugar.Object,
@@ -4169,14 +4296,14 @@
 	};
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var simpleClone = __webpack_require__(12),
-	    defineAccessor = __webpack_require__(84),
-	    coreUtilityAliases = __webpack_require__(11);
+	var simpleClone = __webpack_require__(13),
+	    defineAccessor = __webpack_require__(85),
+	    coreUtilityAliases = __webpack_require__(12);
 	
 	var forEachProperty = coreUtilityAliases.forEachProperty;
 	
@@ -4211,12 +4338,12 @@
 	module.exports = defineOptionsAccessor;
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var coreUtilityAliases = __webpack_require__(11);
+	var coreUtilityAliases = __webpack_require__(12);
 	
 	var setProperty = coreUtilityAliases.setProperty;
 	
@@ -4227,13 +4354,13 @@
 	module.exports = defineAccessor;
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getLowerUnitIndex = __webpack_require__(72),
-	    setUnitAndLowerToEdge = __webpack_require__(69);
+	var getLowerUnitIndex = __webpack_require__(73),
+	    setUnitAndLowerToEdge = __webpack_require__(70);
 	
 	function resetLowerUnits(d, unitIndex) {
 	  return setUnitAndLowerToEdge(d, getLowerUnitIndex(unitIndex));
@@ -4242,12 +4369,12 @@
 	module.exports = resetLowerUnits;
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DateUnitIndexes = __webpack_require__(52);
+	var DateUnitIndexes = __webpack_require__(53);
 	
 	var DAY_INDEX = DateUnitIndexes.DAY_INDEX,
 	    MONTH_INDEX = DateUnitIndexes.MONTH_INDEX;
@@ -4259,13 +4386,13 @@
 	module.exports = getHigherUnitIndex;
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var callDateSet = __webpack_require__(70),
-	    setISOWeekNumber = __webpack_require__(88);
+	var callDateSet = __webpack_require__(71),
+	    setISOWeekNumber = __webpack_require__(89);
 	
 	function callDateSetWithWeek(d, method, value, safe) {
 	  if (method === 'ISOWeek') {
@@ -4278,23 +4405,23 @@
 	module.exports = callDateSetWithWeek;
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var ISODefaults = __webpack_require__(17),
-	    getDate = __webpack_require__(75),
-	    setDate = __webpack_require__(74),
-	    setYear = __webpack_require__(89),
-	    getYear = __webpack_require__(46),
-	    getMonth = __webpack_require__(51),
-	    setMonth = __webpack_require__(90),
-	    cloneDate = __webpack_require__(91),
-	    getWeekday = __webpack_require__(76),
-	    setWeekday = __webpack_require__(73),
-	    classChecks = __webpack_require__(30),
-	    moveToFirstDayOfWeekYear = __webpack_require__(92);
+	var ISODefaults = __webpack_require__(18),
+	    getDate = __webpack_require__(76),
+	    setDate = __webpack_require__(75),
+	    setYear = __webpack_require__(90),
+	    getYear = __webpack_require__(47),
+	    getMonth = __webpack_require__(52),
+	    setMonth = __webpack_require__(91),
+	    cloneDate = __webpack_require__(92),
+	    getWeekday = __webpack_require__(77),
+	    setWeekday = __webpack_require__(74),
+	    classChecks = __webpack_require__(31),
+	    moveToFirstDayOfWeekYear = __webpack_require__(93);
 	
 	var isNumber = classChecks.isNumber,
 	    ISO_FIRST_DAY_OF_WEEK = ISODefaults.ISO_FIRST_DAY_OF_WEEK,
@@ -4317,12 +4444,12 @@
 	module.exports = setISOWeekNumber;
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var callDateSet = __webpack_require__(70);
+	var callDateSet = __webpack_require__(71);
 	
 	function setYear(d, val) {
 	  callDateSet(d, 'FullYear', val);
@@ -4331,12 +4458,12 @@
 	module.exports = setYear;
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var callDateSet = __webpack_require__(70);
+	var callDateSet = __webpack_require__(71);
 	
 	function setMonth(d, val) {
 	  callDateSet(d, 'Month', val);
@@ -4345,12 +4472,12 @@
 	module.exports = setMonth;
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _utc = __webpack_require__(48);
+	var _utc = __webpack_require__(49);
 	
 	function cloneDate(d) {
 	  // Rhino environments have a bug where new Date(d) truncates
@@ -4363,15 +4490,15 @@
 	module.exports = cloneDate;
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DateUnitIndexes = __webpack_require__(52),
-	    setDate = __webpack_require__(74),
-	    setUnitAndLowerToEdge = __webpack_require__(69),
-	    moveToBeginningOfWeek = __webpack_require__(93);
+	var DateUnitIndexes = __webpack_require__(53),
+	    setDate = __webpack_require__(75),
+	    setUnitAndLowerToEdge = __webpack_require__(70),
+	    moveToBeginningOfWeek = __webpack_require__(94);
 	
 	var MONTH_INDEX = DateUnitIndexes.MONTH_INDEX;
 	
@@ -4384,14 +4511,14 @@
 	module.exports = moveToFirstDayOfWeekYear;
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var setWeekday = __webpack_require__(73),
-	    getWeekday = __webpack_require__(76),
-	    mathAliases = __webpack_require__(39);
+	var setWeekday = __webpack_require__(74),
+	    getWeekday = __webpack_require__(77),
+	    mathAliases = __webpack_require__(40);
 	
 	var floor = mathAliases.floor;
 	
@@ -4403,15 +4530,15 @@
 	module.exports = moveToBeginningOfWeek;
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DateUnitIndexes = __webpack_require__(52),
-	    isDefined = __webpack_require__(27),
-	    getDateParam = __webpack_require__(95),
-	    iterateOverDateUnits = __webpack_require__(43);
+	var DateUnitIndexes = __webpack_require__(53),
+	    isDefined = __webpack_require__(28),
+	    getDateParam = __webpack_require__(96),
+	    iterateOverDateUnits = __webpack_require__(44);
 	
 	var DAY_INDEX = DateUnitIndexes.DAY_INDEX;
 	
@@ -4440,13 +4567,13 @@
 	module.exports = iterateOverDateParams;
 
 /***/ },
-/* 95 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getDateParamKey = __webpack_require__(96),
-	    coreUtilityAliases = __webpack_require__(11);
+	var getDateParamKey = __webpack_require__(97),
+	    coreUtilityAliases = __webpack_require__(12);
 	
 	var getOwn = coreUtilityAliases.getOwn;
 	
@@ -4457,12 +4584,12 @@
 	module.exports = getDateParam;
 
 /***/ },
-/* 96 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getOwnKey = __webpack_require__(97);
+	var getOwnKey = __webpack_require__(98);
 	
 	function getDateParamKey(params, key) {
 	  return getOwnKey(params, key) ||
@@ -4473,12 +4600,12 @@
 	module.exports = getDateParamKey;
 
 /***/ },
-/* 97 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var coreUtilityAliases = __webpack_require__(11);
+	var coreUtilityAliases = __webpack_require__(12);
 	
 	var hasOwn = coreUtilityAliases.hasOwn;
 	
@@ -4491,12 +4618,12 @@
 	module.exports = getOwnKey;
 
 /***/ },
-/* 98 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var updateDate = __webpack_require__(77);
+	var updateDate = __webpack_require__(78);
 	
 	function advanceDate(d, unit, num, reset) {
 	  var set = {};
@@ -4507,16 +4634,16 @@
 	module.exports = advanceDate;
 
 /***/ },
-/* 99 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var LocaleHelpers = __webpack_require__(5),
-	    DateUnitIndexes = __webpack_require__(52),
-	    moveToEndOfWeek = __webpack_require__(100),
-	    getLowerUnitIndex = __webpack_require__(72),
-	    setUnitAndLowerToEdge = __webpack_require__(69);
+	var LocaleHelpers = __webpack_require__(6),
+	    DateUnitIndexes = __webpack_require__(53),
+	    moveToEndOfWeek = __webpack_require__(101),
+	    getLowerUnitIndex = __webpack_require__(73),
+	    setUnitAndLowerToEdge = __webpack_require__(70);
 	
 	var WEEK_INDEX = DateUnitIndexes.WEEK_INDEX,
 	    localeManager = LocaleHelpers.localeManager;
@@ -4531,14 +4658,14 @@
 	module.exports = moveToEndOfUnit;
 
 /***/ },
-/* 100 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var setWeekday = __webpack_require__(73),
-	    getWeekday = __webpack_require__(76),
-	    mathAliases = __webpack_require__(39);
+	var setWeekday = __webpack_require__(74),
+	    getWeekday = __webpack_require__(77),
+	    mathAliases = __webpack_require__(40);
 	
 	var ceil = mathAliases.ceil;
 	
@@ -4551,12 +4678,12 @@
 	module.exports = moveToEndOfWeek;
 
 /***/ },
-/* 101 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getDateParamKey = __webpack_require__(96);
+	var getDateParamKey = __webpack_require__(97);
 	
 	function deleteDateParam(params, key) {
 	  delete params[getDateParamKey(params, key)];
@@ -4565,7 +4692,7 @@
 	module.exports = deleteDateParam;
 
 /***/ },
-/* 102 */
+/* 103 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4590,16 +4717,16 @@
 	module.exports = getParsingTokenValue;
 
 /***/ },
-/* 103 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var LocaleHelpers = __webpack_require__(5),
-	    DateUnitIndexes = __webpack_require__(52),
-	    getLowerUnitIndex = __webpack_require__(72),
-	    moveToBeginningOfWeek = __webpack_require__(93),
-	    setUnitAndLowerToEdge = __webpack_require__(69);
+	var LocaleHelpers = __webpack_require__(6),
+	    DateUnitIndexes = __webpack_require__(53),
+	    getLowerUnitIndex = __webpack_require__(73),
+	    moveToBeginningOfWeek = __webpack_require__(94),
+	    setUnitAndLowerToEdge = __webpack_require__(70);
 	
 	var WEEK_INDEX = DateUnitIndexes.WEEK_INDEX,
 	    localeManager = LocaleHelpers.localeManager;
@@ -4614,13 +4741,13 @@
 	module.exports = moveToBeginningOfUnit;
 
 /***/ },
-/* 104 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getYear = __webpack_require__(46),
-	    mathAliases = __webpack_require__(39);
+	var getYear = __webpack_require__(47),
+	    mathAliases = __webpack_require__(40);
 	
 	var abs = mathAliases.abs;
 	
@@ -4642,13 +4769,13 @@
 	module.exports = getYearFromAbbreviation;
 
 /***/ },
-/* 105 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DateUnitIndexes = __webpack_require__(52),
-	    iterateOverDateParams = __webpack_require__(94);
+	var DateUnitIndexes = __webpack_require__(53),
+	    iterateOverDateParams = __webpack_require__(95);
 	
 	var DAY_INDEX = DateUnitIndexes.DAY_INDEX,
 	    YEAR_INDEX = DateUnitIndexes.YEAR_INDEX;
@@ -4660,24 +4787,24 @@
 	module.exports = iterateOverHigherDateParams;
 
 /***/ },
-/* 106 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var setDateChainableConstructor = __webpack_require__(107);
-	
-	setDateChainableConstructor();
-
-/***/ },
 /* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var createDate = __webpack_require__(64),
-	    namespaceAliases = __webpack_require__(82),
-	    setChainableConstructor = __webpack_require__(108);
+	var setDateChainableConstructor = __webpack_require__(108);
+	
+	setDateChainableConstructor();
+
+/***/ },
+/* 108 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var createDate = __webpack_require__(65),
+	    namespaceAliases = __webpack_require__(83),
+	    setChainableConstructor = __webpack_require__(109);
 	
 	var sugarDate = namespaceAliases.sugarDate;
 	
@@ -4688,7 +4815,7 @@
 	module.exports = setDateChainableConstructor;
 
 /***/ },
-/* 108 */
+/* 109 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4702,14 +4829,14 @@
 	module.exports = setChainableConstructor;
 
 /***/ },
-/* 109 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    LocaleHelpers = __webpack_require__(5),
-	    getKeys = __webpack_require__(110);
+	var Sugar = __webpack_require__(5),
+	    LocaleHelpers = __webpack_require__(6),
+	    getKeys = __webpack_require__(111);
 	
 	var localeManager = LocaleHelpers.localeManager;
 	
@@ -4724,7 +4851,7 @@
 	module.exports = Sugar.Date.getAllLocaleCodes;
 
 /***/ },
-/* 110 */
+/* 111 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4736,13 +4863,13 @@
 	module.exports = getKeys;
 
 /***/ },
-/* 111 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    LocaleHelpers = __webpack_require__(5);
+	var Sugar = __webpack_require__(5),
+	    LocaleHelpers = __webpack_require__(6);
 	
 	var localeManager = LocaleHelpers.localeManager;
 	
@@ -4757,13 +4884,13 @@
 	module.exports = Sugar.Date.getAllLocales;
 
 /***/ },
-/* 112 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    LocaleHelpers = __webpack_require__(5);
+	var Sugar = __webpack_require__(5),
+	    LocaleHelpers = __webpack_require__(6);
 	
 	var localeManager = LocaleHelpers.localeManager;
 	
@@ -4778,13 +4905,13 @@
 	module.exports = Sugar.Date.getLocale;
 
 /***/ },
-/* 113 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    LocaleHelpers = __webpack_require__(5);
+	var Sugar = __webpack_require__(5),
+	    LocaleHelpers = __webpack_require__(6);
 	
 	var localeManager = LocaleHelpers.localeManager;
 	
@@ -4799,13 +4926,13 @@
 	module.exports = Sugar.Date.removeLocale;
 
 /***/ },
-/* 114 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    LocaleHelpers = __webpack_require__(5);
+	var Sugar = __webpack_require__(5),
+	    LocaleHelpers = __webpack_require__(6);
 	
 	var localeManager = LocaleHelpers.localeManager;
 	
@@ -4820,26 +4947,16 @@
 	module.exports = Sugar.Date.setLocale;
 
 /***/ },
-/* 115 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(116);
-	
-	module.exports = Sugar.Number.day;
-
-/***/ },
 /* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var buildNumberUnitMethods = __webpack_require__(117);
+	var Sugar = __webpack_require__(5);
 	
-	buildNumberUnitMethods();
+	__webpack_require__(117);
+	
+	module.exports = Sugar.Number.day;
 
 /***/ },
 /* 117 */
@@ -4847,12 +4964,22 @@
 
 	'use strict';
 	
-	var DateUnits = __webpack_require__(44),
-	    createDate = __webpack_require__(64),
-	    mathAliases = __webpack_require__(39),
-	    advanceDate = __webpack_require__(98),
-	    namespaceAliases = __webpack_require__(82),
-	    defineInstanceSimilar = __webpack_require__(118);
+	var buildNumberUnitMethods = __webpack_require__(118);
+	
+	buildNumberUnitMethods();
+
+/***/ },
+/* 118 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var DateUnits = __webpack_require__(45),
+	    createDate = __webpack_require__(65),
+	    mathAliases = __webpack_require__(40),
+	    advanceDate = __webpack_require__(99),
+	    namespaceAliases = __webpack_require__(83),
+	    defineInstanceSimilar = __webpack_require__(119);
 	
 	var sugarNumber = namespaceAliases.sugarNumber,
 	    round = mathAliases.round;
@@ -4885,13 +5012,13 @@
 	module.exports = buildNumberUnitMethods;
 
 /***/ },
-/* 118 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var methodDefineAliases = __webpack_require__(119),
-	    collectSimilarMethods = __webpack_require__(121);
+	var methodDefineAliases = __webpack_require__(120),
+	    collectSimilarMethods = __webpack_require__(122);
 	
 	var defineInstance = methodDefineAliases.defineInstance;
 	
@@ -4902,12 +5029,12 @@
 	module.exports = defineInstanceSimilar;
 
 /***/ },
-/* 119 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var wrapNamespace = __webpack_require__(120);
+	var wrapNamespace = __webpack_require__(121);
 	
 	module.exports = {
 	  alias: wrapNamespace('alias'),
@@ -4920,7 +5047,7 @@
 	};
 
 /***/ },
-/* 120 */
+/* 121 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4934,14 +5061,14 @@
 	module.exports = wrapNamespace;
 
 /***/ },
-/* 121 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var forEach = __webpack_require__(23),
-	    spaceSplit = __webpack_require__(33),
-	    classChecks = __webpack_require__(30);
+	var forEach = __webpack_require__(24),
+	    spaceSplit = __webpack_require__(34),
+	    classChecks = __webpack_require__(31);
 	
 	var isString = classChecks.isString;
 	
@@ -4959,28 +5086,16 @@
 	module.exports = collectSimilarMethods;
 
 /***/ },
-/* 122 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(116);
-	
-	module.exports = Sugar.Number.dayAfter;
-
-/***/ },
 /* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.dayAgo;
+	module.exports = Sugar.Number.dayAfter;
 
 /***/ },
 /* 124 */
@@ -4988,11 +5103,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.dayBefore;
+	module.exports = Sugar.Number.dayAgo;
 
 /***/ },
 /* 125 */
@@ -5000,11 +5115,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.dayFromNow;
+	module.exports = Sugar.Number.dayBefore;
 
 /***/ },
 /* 126 */
@@ -5012,11 +5127,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.days;
+	module.exports = Sugar.Number.dayFromNow;
 
 /***/ },
 /* 127 */
@@ -5024,11 +5139,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.daysAfter;
+	module.exports = Sugar.Number.days;
 
 /***/ },
 /* 128 */
@@ -5036,11 +5151,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.daysAgo;
+	module.exports = Sugar.Number.daysAfter;
 
 /***/ },
 /* 129 */
@@ -5048,11 +5163,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.daysBefore;
+	module.exports = Sugar.Number.daysAgo;
 
 /***/ },
 /* 130 */
@@ -5060,11 +5175,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.daysFromNow;
+	module.exports = Sugar.Number.daysBefore;
 
 /***/ },
 /* 131 */
@@ -5072,8 +5187,20 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    LocaleHelpers = __webpack_require__(5);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(117);
+	
+	module.exports = Sugar.Number.daysFromNow;
+
+/***/ },
+/* 132 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5),
+	    LocaleHelpers = __webpack_require__(6);
 	
 	var localeManager = LocaleHelpers.localeManager;
 	
@@ -5088,28 +5215,16 @@
 	module.exports = Sugar.Number.duration;
 
 /***/ },
-/* 132 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(116);
-	
-	module.exports = Sugar.Number.hour;
-
-/***/ },
 /* 133 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.hourAfter;
+	module.exports = Sugar.Number.hour;
 
 /***/ },
 /* 134 */
@@ -5117,11 +5232,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.hourAgo;
+	module.exports = Sugar.Number.hourAfter;
 
 /***/ },
 /* 135 */
@@ -5129,11 +5244,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.hourBefore;
+	module.exports = Sugar.Number.hourAgo;
 
 /***/ },
 /* 136 */
@@ -5141,11 +5256,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.hourFromNow;
+	module.exports = Sugar.Number.hourBefore;
 
 /***/ },
 /* 137 */
@@ -5153,11 +5268,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.hours;
+	module.exports = Sugar.Number.hourFromNow;
 
 /***/ },
 /* 138 */
@@ -5165,11 +5280,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.hoursAfter;
+	module.exports = Sugar.Number.hours;
 
 /***/ },
 /* 139 */
@@ -5177,11 +5292,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.hoursAgo;
+	module.exports = Sugar.Number.hoursAfter;
 
 /***/ },
 /* 140 */
@@ -5189,11 +5304,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.hoursBefore;
+	module.exports = Sugar.Number.hoursAgo;
 
 /***/ },
 /* 141 */
@@ -5201,11 +5316,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.hoursFromNow;
+	module.exports = Sugar.Number.hoursBefore;
 
 /***/ },
 /* 142 */
@@ -5213,11 +5328,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.millisecond;
+	module.exports = Sugar.Number.hoursFromNow;
 
 /***/ },
 /* 143 */
@@ -5225,11 +5340,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.millisecondAfter;
+	module.exports = Sugar.Number.millisecond;
 
 /***/ },
 /* 144 */
@@ -5237,11 +5352,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.millisecondAgo;
+	module.exports = Sugar.Number.millisecondAfter;
 
 /***/ },
 /* 145 */
@@ -5249,11 +5364,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.millisecondBefore;
+	module.exports = Sugar.Number.millisecondAgo;
 
 /***/ },
 /* 146 */
@@ -5261,11 +5376,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.millisecondFromNow;
+	module.exports = Sugar.Number.millisecondBefore;
 
 /***/ },
 /* 147 */
@@ -5273,11 +5388,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.milliseconds;
+	module.exports = Sugar.Number.millisecondFromNow;
 
 /***/ },
 /* 148 */
@@ -5285,11 +5400,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.millisecondsAfter;
+	module.exports = Sugar.Number.milliseconds;
 
 /***/ },
 /* 149 */
@@ -5297,11 +5412,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.millisecondsAgo;
+	module.exports = Sugar.Number.millisecondsAfter;
 
 /***/ },
 /* 150 */
@@ -5309,11 +5424,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.millisecondsBefore;
+	module.exports = Sugar.Number.millisecondsAgo;
 
 /***/ },
 /* 151 */
@@ -5321,11 +5436,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.millisecondsFromNow;
+	module.exports = Sugar.Number.millisecondsBefore;
 
 /***/ },
 /* 152 */
@@ -5333,11 +5448,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.minute;
+	module.exports = Sugar.Number.millisecondsFromNow;
 
 /***/ },
 /* 153 */
@@ -5345,11 +5460,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.minuteAfter;
+	module.exports = Sugar.Number.minute;
 
 /***/ },
 /* 154 */
@@ -5357,11 +5472,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.minuteAgo;
+	module.exports = Sugar.Number.minuteAfter;
 
 /***/ },
 /* 155 */
@@ -5369,11 +5484,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.minuteBefore;
+	module.exports = Sugar.Number.minuteAgo;
 
 /***/ },
 /* 156 */
@@ -5381,11 +5496,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.minuteFromNow;
+	module.exports = Sugar.Number.minuteBefore;
 
 /***/ },
 /* 157 */
@@ -5393,11 +5508,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.minutes;
+	module.exports = Sugar.Number.minuteFromNow;
 
 /***/ },
 /* 158 */
@@ -5405,11 +5520,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.minutesAfter;
+	module.exports = Sugar.Number.minutes;
 
 /***/ },
 /* 159 */
@@ -5417,11 +5532,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.minutesAgo;
+	module.exports = Sugar.Number.minutesAfter;
 
 /***/ },
 /* 160 */
@@ -5429,11 +5544,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.minutesBefore;
+	module.exports = Sugar.Number.minutesAgo;
 
 /***/ },
 /* 161 */
@@ -5441,11 +5556,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.minutesFromNow;
+	module.exports = Sugar.Number.minutesBefore;
 
 /***/ },
 /* 162 */
@@ -5453,11 +5568,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.month;
+	module.exports = Sugar.Number.minutesFromNow;
 
 /***/ },
 /* 163 */
@@ -5465,11 +5580,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.monthAfter;
+	module.exports = Sugar.Number.month;
 
 /***/ },
 /* 164 */
@@ -5477,11 +5592,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.monthAgo;
+	module.exports = Sugar.Number.monthAfter;
 
 /***/ },
 /* 165 */
@@ -5489,11 +5604,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.monthBefore;
+	module.exports = Sugar.Number.monthAgo;
 
 /***/ },
 /* 166 */
@@ -5501,11 +5616,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.monthFromNow;
+	module.exports = Sugar.Number.monthBefore;
 
 /***/ },
 /* 167 */
@@ -5513,11 +5628,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.months;
+	module.exports = Sugar.Number.monthFromNow;
 
 /***/ },
 /* 168 */
@@ -5525,11 +5640,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.monthsAfter;
+	module.exports = Sugar.Number.months;
 
 /***/ },
 /* 169 */
@@ -5537,11 +5652,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.monthsAgo;
+	module.exports = Sugar.Number.monthsAfter;
 
 /***/ },
 /* 170 */
@@ -5549,11 +5664,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.monthsBefore;
+	module.exports = Sugar.Number.monthsAgo;
 
 /***/ },
 /* 171 */
@@ -5561,11 +5676,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.monthsFromNow;
+	module.exports = Sugar.Number.monthsBefore;
 
 /***/ },
 /* 172 */
@@ -5573,11 +5688,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.second;
+	module.exports = Sugar.Number.monthsFromNow;
 
 /***/ },
 /* 173 */
@@ -5585,11 +5700,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.secondAfter;
+	module.exports = Sugar.Number.second;
 
 /***/ },
 /* 174 */
@@ -5597,11 +5712,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.secondAgo;
+	module.exports = Sugar.Number.secondAfter;
 
 /***/ },
 /* 175 */
@@ -5609,11 +5724,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.secondBefore;
+	module.exports = Sugar.Number.secondAgo;
 
 /***/ },
 /* 176 */
@@ -5621,11 +5736,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.secondFromNow;
+	module.exports = Sugar.Number.secondBefore;
 
 /***/ },
 /* 177 */
@@ -5633,11 +5748,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.seconds;
+	module.exports = Sugar.Number.secondFromNow;
 
 /***/ },
 /* 178 */
@@ -5645,11 +5760,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.secondsAfter;
+	module.exports = Sugar.Number.seconds;
 
 /***/ },
 /* 179 */
@@ -5657,11 +5772,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.secondsAgo;
+	module.exports = Sugar.Number.secondsAfter;
 
 /***/ },
 /* 180 */
@@ -5669,11 +5784,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.secondsBefore;
+	module.exports = Sugar.Number.secondsAgo;
 
 /***/ },
 /* 181 */
@@ -5681,11 +5796,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.secondsFromNow;
+	module.exports = Sugar.Number.secondsBefore;
 
 /***/ },
 /* 182 */
@@ -5693,11 +5808,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.week;
+	module.exports = Sugar.Number.secondsFromNow;
 
 /***/ },
 /* 183 */
@@ -5705,11 +5820,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.weekAfter;
+	module.exports = Sugar.Number.week;
 
 /***/ },
 /* 184 */
@@ -5717,11 +5832,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.weekAgo;
+	module.exports = Sugar.Number.weekAfter;
 
 /***/ },
 /* 185 */
@@ -5729,11 +5844,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.weekBefore;
+	module.exports = Sugar.Number.weekAgo;
 
 /***/ },
 /* 186 */
@@ -5741,11 +5856,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.weekFromNow;
+	module.exports = Sugar.Number.weekBefore;
 
 /***/ },
 /* 187 */
@@ -5753,11 +5868,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.weeks;
+	module.exports = Sugar.Number.weekFromNow;
 
 /***/ },
 /* 188 */
@@ -5765,11 +5880,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.weeksAfter;
+	module.exports = Sugar.Number.weeks;
 
 /***/ },
 /* 189 */
@@ -5777,11 +5892,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.weeksAgo;
+	module.exports = Sugar.Number.weeksAfter;
 
 /***/ },
 /* 190 */
@@ -5789,11 +5904,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.weeksBefore;
+	module.exports = Sugar.Number.weeksAgo;
 
 /***/ },
 /* 191 */
@@ -5801,11 +5916,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.weeksFromNow;
+	module.exports = Sugar.Number.weeksBefore;
 
 /***/ },
 /* 192 */
@@ -5813,11 +5928,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.year;
+	module.exports = Sugar.Number.weeksFromNow;
 
 /***/ },
 /* 193 */
@@ -5825,11 +5940,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.yearAfter;
+	module.exports = Sugar.Number.year;
 
 /***/ },
 /* 194 */
@@ -5837,11 +5952,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.yearAgo;
+	module.exports = Sugar.Number.yearAfter;
 
 /***/ },
 /* 195 */
@@ -5849,11 +5964,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.yearBefore;
+	module.exports = Sugar.Number.yearAgo;
 
 /***/ },
 /* 196 */
@@ -5861,11 +5976,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.yearFromNow;
+	module.exports = Sugar.Number.yearBefore;
 
 /***/ },
 /* 197 */
@@ -5873,11 +5988,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.years;
+	module.exports = Sugar.Number.yearFromNow;
 
 /***/ },
 /* 198 */
@@ -5885,11 +6000,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.yearsAfter;
+	module.exports = Sugar.Number.years;
 
 /***/ },
 /* 199 */
@@ -5897,11 +6012,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.yearsAgo;
+	module.exports = Sugar.Number.yearsAfter;
 
 /***/ },
 /* 200 */
@@ -5909,11 +6024,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.yearsBefore;
+	module.exports = Sugar.Number.yearsAgo;
 
 /***/ },
 /* 201 */
@@ -5921,11 +6036,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(116);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Number.yearsFromNow;
+	module.exports = Sugar.Number.yearsBefore;
 
 /***/ },
 /* 202 */
@@ -5933,11 +6048,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(117);
 	
-	module.exports = Sugar.Date.addDays;
+	module.exports = Sugar.Number.yearsFromNow;
 
 /***/ },
 /* 203 */
@@ -5945,9 +6060,11 @@
 
 	'use strict';
 	
-	var buildDateUnitMethods = __webpack_require__(204);
+	var Sugar = __webpack_require__(5);
 	
-	buildDateUnitMethods();
+	__webpack_require__(204);
+	
+	module.exports = Sugar.Date.addDays;
 
 /***/ },
 /* 204 */
@@ -5955,18 +6072,28 @@
 
 	'use strict';
 	
-	var DateUnits = __webpack_require__(44),
-	    DateUnitIndexes = __webpack_require__(52),
-	    forEach = __webpack_require__(23),
-	    compareDate = __webpack_require__(205),
-	    advanceDate = __webpack_require__(98),
-	    moveToEndOfUnit = __webpack_require__(99),
-	    simpleCapitalize = __webpack_require__(207),
-	    namespaceAliases = __webpack_require__(82),
-	    defineInstanceSimilar = __webpack_require__(118),
-	    moveToBeginningOfUnit = __webpack_require__(103),
-	    createDateWithContext = __webpack_require__(208),
-	    getTimeDistanceForUnit = __webpack_require__(209);
+	var buildDateUnitMethods = __webpack_require__(205);
+	
+	buildDateUnitMethods();
+
+/***/ },
+/* 205 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var DateUnits = __webpack_require__(45),
+	    DateUnitIndexes = __webpack_require__(53),
+	    forEach = __webpack_require__(24),
+	    compareDate = __webpack_require__(206),
+	    advanceDate = __webpack_require__(99),
+	    moveToEndOfUnit = __webpack_require__(100),
+	    simpleCapitalize = __webpack_require__(208),
+	    namespaceAliases = __webpack_require__(83),
+	    defineInstanceSimilar = __webpack_require__(119),
+	    moveToBeginningOfUnit = __webpack_require__(104),
+	    createDateWithContext = __webpack_require__(209),
+	    getTimeDistanceForUnit = __webpack_require__(210);
 	
 	var sugarDate = namespaceAliases.sugarDate,
 	    HOURS_INDEX = DateUnitIndexes.HOURS_INDEX,
@@ -6014,23 +6141,23 @@
 	module.exports = buildDateUnitMethods;
 
 /***/ },
-/* 205 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var MINUTES = __webpack_require__(66),
-	    DateUnits = __webpack_require__(44),
-	    DateUnitIndexes = __webpack_require__(52),
-	    _utc = __webpack_require__(48),
-	    tzOffset = __webpack_require__(67),
-	    cloneDate = __webpack_require__(91),
-	    isDefined = __webpack_require__(27),
-	    advanceDate = __webpack_require__(98),
-	    dateIsValid = __webpack_require__(206),
-	    moveToEndOfUnit = __webpack_require__(99),
-	    getExtendedDate = __webpack_require__(65),
-	    moveToBeginningOfUnit = __webpack_require__(103);
+	var MINUTES = __webpack_require__(67),
+	    DateUnits = __webpack_require__(45),
+	    DateUnitIndexes = __webpack_require__(53),
+	    _utc = __webpack_require__(49),
+	    tzOffset = __webpack_require__(68),
+	    cloneDate = __webpack_require__(92),
+	    isDefined = __webpack_require__(28),
+	    advanceDate = __webpack_require__(99),
+	    dateIsValid = __webpack_require__(207),
+	    moveToEndOfUnit = __webpack_require__(100),
+	    getExtendedDate = __webpack_require__(66),
+	    moveToBeginningOfUnit = __webpack_require__(104);
 	
 	var MONTH_INDEX = DateUnitIndexes.MONTH_INDEX;
 	
@@ -6096,7 +6223,7 @@
 	module.exports = compareDate;
 
 /***/ },
-/* 206 */
+/* 207 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6108,7 +6235,7 @@
 	module.exports = dateIsValid;
 
 /***/ },
-/* 207 */
+/* 208 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6120,12 +6247,12 @@
 	module.exports = simpleCapitalize;
 
 /***/ },
-/* 208 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getExtendedDate = __webpack_require__(65);
+	var getExtendedDate = __webpack_require__(66);
 	
 	function createDateWithContext(contextDate, d, options, forceClone) {
 	  return getExtendedDate(contextDate, d, options, forceClone).date;
@@ -6134,14 +6261,14 @@
 	module.exports = createDateWithContext;
 
 /***/ },
-/* 209 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var trunc = __webpack_require__(59),
-	    cloneDate = __webpack_require__(91),
-	    advanceDate = __webpack_require__(98);
+	var trunc = __webpack_require__(60),
+	    cloneDate = __webpack_require__(92),
+	    advanceDate = __webpack_require__(99);
 	
 	function getTimeDistanceForUnit(d1, d2, unit) {
 	  var fwd = d2 > d1, num, tmp;
@@ -6175,28 +6302,16 @@
 	module.exports = getTimeDistanceForUnit;
 
 /***/ },
-/* 210 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(203);
-	
-	module.exports = Sugar.Date.addHours;
-
-/***/ },
 /* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.addMilliseconds;
+	module.exports = Sugar.Date.addHours;
 
 /***/ },
 /* 212 */
@@ -6204,11 +6319,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.addMinutes;
+	module.exports = Sugar.Date.addMilliseconds;
 
 /***/ },
 /* 213 */
@@ -6216,11 +6331,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.addMonths;
+	module.exports = Sugar.Date.addMinutes;
 
 /***/ },
 /* 214 */
@@ -6228,11 +6343,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.addSeconds;
+	module.exports = Sugar.Date.addMonths;
 
 /***/ },
 /* 215 */
@@ -6240,11 +6355,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.addWeeks;
+	module.exports = Sugar.Date.addSeconds;
 
 /***/ },
 /* 216 */
@@ -6252,11 +6367,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.addYears;
+	module.exports = Sugar.Date.addWeeks;
 
 /***/ },
 /* 217 */
@@ -6264,8 +6379,20 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    advanceDateWithArgs = __webpack_require__(218);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(204);
+	
+	module.exports = Sugar.Date.addYears;
+
+/***/ },
+/* 218 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5),
+	    advanceDateWithArgs = __webpack_require__(219);
 	
 	Sugar.Date.defineInstanceWithArguments({
 	
@@ -6278,13 +6405,13 @@
 	module.exports = Sugar.Date.advance;
 
 /***/ },
-/* 218 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var updateDate = __webpack_require__(77),
-	    collectDateArguments = __webpack_require__(219);
+	var updateDate = __webpack_require__(78),
+	    collectDateArguments = __webpack_require__(220);
 	
 	function advanceDateWithArgs(d, args, dir) {
 	  args = collectDateArguments(args, true);
@@ -6294,16 +6421,16 @@
 	module.exports = advanceDateWithArgs;
 
 /***/ },
-/* 219 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var classChecks = __webpack_require__(30),
-	    simpleClone = __webpack_require__(12),
-	    isObjectType = __webpack_require__(35),
-	    getDateParamsFromString = __webpack_require__(220),
-	    collectDateParamsFromArguments = __webpack_require__(221);
+	var classChecks = __webpack_require__(31),
+	    simpleClone = __webpack_require__(13),
+	    isObjectType = __webpack_require__(36),
+	    getDateParamsFromString = __webpack_require__(221),
+	    collectDateParamsFromArguments = __webpack_require__(222);
 	
 	var isNumber = classChecks.isNumber,
 	    isString = classChecks.isString;
@@ -6326,12 +6453,12 @@
 	module.exports = collectDateArguments;
 
 /***/ },
-/* 220 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var isUndefined = __webpack_require__(38);
+	var isUndefined = __webpack_require__(39);
 	
 	function getDateParamsFromString(str) {
 	  var match, num, params = {};
@@ -6351,14 +6478,14 @@
 	module.exports = getDateParamsFromString;
 
 /***/ },
-/* 221 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DateUnitIndexes = __webpack_require__(52),
-	    isDefined = __webpack_require__(27),
-	    walkUnitDown = __webpack_require__(71);
+	var DateUnitIndexes = __webpack_require__(53),
+	    isDefined = __webpack_require__(28),
+	    walkUnitDown = __webpack_require__(72);
 	
 	var YEAR_INDEX = DateUnitIndexes.YEAR_INDEX;
 	
@@ -6376,27 +6503,27 @@
 	module.exports = collectDateParamsFromArguments;
 
 /***/ },
-/* 222 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(203);
-	
-	module.exports = Sugar.Date.beginningOfDay;
-
-/***/ },
 /* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    resetTime = __webpack_require__(68),
-	    getWeekday = __webpack_require__(76),
-	    setWeekday = __webpack_require__(73);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(204);
+	
+	module.exports = Sugar.Date.beginningOfDay;
+
+/***/ },
+/* 224 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5),
+	    resetTime = __webpack_require__(69),
+	    getWeekday = __webpack_require__(77),
+	    setWeekday = __webpack_require__(74);
 	
 	Sugar.Date.defineInstance({
 	
@@ -6416,28 +6543,16 @@
 	module.exports = Sugar.Date.beginningOfISOWeek;
 
 /***/ },
-/* 224 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(203);
-	
-	module.exports = Sugar.Date.beginningOfMonth;
-
-/***/ },
 /* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.beginningOfWeek;
+	module.exports = Sugar.Date.beginningOfMonth;
 
 /***/ },
 /* 226 */
@@ -6445,11 +6560,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.beginningOfYear;
+	module.exports = Sugar.Date.beginningOfWeek;
 
 /***/ },
 /* 227 */
@@ -6457,8 +6572,20 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    cloneDate = __webpack_require__(91);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(204);
+	
+	module.exports = Sugar.Date.beginningOfYear;
+
+/***/ },
+/* 228 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5),
+	    cloneDate = __webpack_require__(92);
 	
 	Sugar.Date.defineInstance({
 	
@@ -6471,28 +6598,16 @@
 	module.exports = Sugar.Date.clone;
 
 /***/ },
-/* 228 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(203);
-	
-	module.exports = Sugar.Date.daysAgo;
-
-/***/ },
 /* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.daysFromNow;
+	module.exports = Sugar.Date.daysAgo;
 
 /***/ },
 /* 230 */
@@ -6500,8 +6615,20 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    getDaysInMonth = __webpack_require__(45);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(204);
+	
+	module.exports = Sugar.Date.daysFromNow;
+
+/***/ },
+/* 231 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5),
+	    getDaysInMonth = __webpack_require__(46);
 	
 	Sugar.Date.defineInstance({
 	
@@ -6514,28 +6641,16 @@
 	module.exports = Sugar.Date.daysInMonth;
 
 /***/ },
-/* 231 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(203);
-	
-	module.exports = Sugar.Date.daysSince;
-
-/***/ },
 /* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.daysUntil;
+	module.exports = Sugar.Date.daysSince;
 
 /***/ },
 /* 233 */
@@ -6543,11 +6658,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.endOfDay;
+	module.exports = Sugar.Date.daysUntil;
 
 /***/ },
 /* 234 */
@@ -6555,11 +6670,23 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    DateUnitIndexes = __webpack_require__(52),
-	    getWeekday = __webpack_require__(76),
-	    setWeekday = __webpack_require__(73),
-	    moveToEndOfUnit = __webpack_require__(99);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(204);
+	
+	module.exports = Sugar.Date.endOfDay;
+
+/***/ },
+/* 235 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5),
+	    DateUnitIndexes = __webpack_require__(53),
+	    getWeekday = __webpack_require__(77),
+	    setWeekday = __webpack_require__(74),
+	    moveToEndOfUnit = __webpack_require__(100);
 	
 	var DAY_INDEX = DateUnitIndexes.DAY_INDEX;
 	
@@ -6577,28 +6704,16 @@
 	module.exports = Sugar.Date.endOfISOWeek;
 
 /***/ },
-/* 235 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(203);
-	
-	module.exports = Sugar.Date.endOfMonth;
-
-/***/ },
 /* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.endOfWeek;
+	module.exports = Sugar.Date.endOfMonth;
 
 /***/ },
 /* 237 */
@@ -6606,11 +6721,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.endOfYear;
+	module.exports = Sugar.Date.endOfWeek;
 
 /***/ },
 /* 238 */
@@ -6618,8 +6733,20 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    dateFormat = __webpack_require__(239);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(204);
+	
+	module.exports = Sugar.Date.endOfYear;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5),
+	    dateFormat = __webpack_require__(240);
 	
 	Sugar.Date.defineInstance({
 	
@@ -6632,14 +6759,14 @@
 	module.exports = Sugar.Date.format;
 
 /***/ },
-/* 239 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var CoreOutputFormats = __webpack_require__(240),
-	    formattingTokens = __webpack_require__(241),
-	    assertDateIsValid = __webpack_require__(256);
+	var CoreOutputFormats = __webpack_require__(241),
+	    formattingTokens = __webpack_require__(242),
+	    assertDateIsValid = __webpack_require__(257);
 	
 	var dateFormatMatcher = formattingTokens.dateFormatMatcher;
 	
@@ -6652,7 +6779,7 @@
 	module.exports = dateFormat;
 
 /***/ },
-/* 240 */
+/* 241 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6666,21 +6793,21 @@
 	module.exports = CoreOutputFormats;
 
 /***/ },
-/* 241 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var LocaleHelpers = __webpack_require__(5),
-	    FormatTokensBase = __webpack_require__(242),
-	    CoreOutputFormats = __webpack_require__(240),
-	    forEach = __webpack_require__(23),
-	    padNumber = __webpack_require__(245),
-	    spaceSplit = __webpack_require__(33),
-	    namespaceAliases = __webpack_require__(82),
-	    coreUtilityAliases = __webpack_require__(11),
-	    createFormatMatcher = __webpack_require__(252),
-	    defineInstanceSimilar = __webpack_require__(118);
+	var LocaleHelpers = __webpack_require__(6),
+	    FormatTokensBase = __webpack_require__(243),
+	    CoreOutputFormats = __webpack_require__(241),
+	    forEach = __webpack_require__(24),
+	    padNumber = __webpack_require__(246),
+	    spaceSplit = __webpack_require__(34),
+	    namespaceAliases = __webpack_require__(83),
+	    coreUtilityAliases = __webpack_require__(12),
+	    createFormatMatcher = __webpack_require__(253),
+	    defineInstanceSimilar = __webpack_require__(119);
 	
 	var localeManager = LocaleHelpers.localeManager,
 	    hasOwn = coreUtilityAliases.hasOwn,
@@ -6832,30 +6959,30 @@
 	};
 
 /***/ },
-/* 242 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var TIMEZONE_ABBREVIATION_REG = __webpack_require__(243),
-	    LocaleHelpers = __webpack_require__(5),
-	    DateUnitIndexes = __webpack_require__(52),
-	    trunc = __webpack_require__(59),
-	    getDate = __webpack_require__(75),
-	    getYear = __webpack_require__(46),
-	    getHours = __webpack_require__(244),
-	    getMonth = __webpack_require__(51),
-	    cloneDate = __webpack_require__(91),
-	    padNumber = __webpack_require__(245),
-	    getWeekday = __webpack_require__(76),
-	    callDateGet = __webpack_require__(47),
-	    mathAliases = __webpack_require__(39),
-	    getWeekYear = __webpack_require__(247),
-	    getUTCOffset = __webpack_require__(249),
-	    getDaysSince = __webpack_require__(250),
-	    getWeekNumber = __webpack_require__(248),
-	    getMeridiemToken = __webpack_require__(251),
-	    setUnitAndLowerToEdge = __webpack_require__(69);
+	var TIMEZONE_ABBREVIATION_REG = __webpack_require__(244),
+	    LocaleHelpers = __webpack_require__(6),
+	    DateUnitIndexes = __webpack_require__(53),
+	    trunc = __webpack_require__(60),
+	    getDate = __webpack_require__(76),
+	    getYear = __webpack_require__(47),
+	    getHours = __webpack_require__(245),
+	    getMonth = __webpack_require__(52),
+	    cloneDate = __webpack_require__(92),
+	    padNumber = __webpack_require__(246),
+	    getWeekday = __webpack_require__(77),
+	    callDateGet = __webpack_require__(48),
+	    mathAliases = __webpack_require__(40),
+	    getWeekYear = __webpack_require__(248),
+	    getUTCOffset = __webpack_require__(250),
+	    getDaysSince = __webpack_require__(251),
+	    getWeekNumber = __webpack_require__(249),
+	    getMeridiemToken = __webpack_require__(252),
+	    setUnitAndLowerToEdge = __webpack_require__(70);
 	
 	var localeManager = LocaleHelpers.localeManager,
 	    MONTH_INDEX = DateUnitIndexes.MONTH_INDEX,
@@ -7164,7 +7291,7 @@
 	module.exports = FormatTokensBase;
 
 /***/ },
-/* 243 */
+/* 244 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7172,12 +7299,12 @@
 	module.exports = /(\w{3})[()\s\d]*$/;
 
 /***/ },
-/* 244 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var callDateGet = __webpack_require__(47);
+	var callDateGet = __webpack_require__(48);
 	
 	function getHours(d) {
 	  return callDateGet(d, 'Hours');
@@ -7186,13 +7313,13 @@
 	module.exports = getHours;
 
 /***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var mathAliases = __webpack_require__(39),
-	    repeatString = __webpack_require__(246);
+	var mathAliases = __webpack_require__(40),
+	    repeatString = __webpack_require__(247);
 	
 	var abs = mathAliases.abs;
 	
@@ -7208,7 +7335,7 @@
 	module.exports = padNumber;
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7230,15 +7357,15 @@
 	module.exports = repeatString;
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var LocaleHelpers = __webpack_require__(5),
-	    getYear = __webpack_require__(46),
-	    getMonth = __webpack_require__(51),
-	    getWeekNumber = __webpack_require__(248);
+	var LocaleHelpers = __webpack_require__(6),
+	    getYear = __webpack_require__(47),
+	    getMonth = __webpack_require__(52),
+	    getWeekNumber = __webpack_require__(249);
 	
 	var localeManager = LocaleHelpers.localeManager;
 	
@@ -7265,19 +7392,19 @@
 	module.exports = getWeekYear;
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var ISODefaults = __webpack_require__(17),
-	    setDate = __webpack_require__(74),
-	    getDate = __webpack_require__(75),
-	    cloneDate = __webpack_require__(91),
-	    isUndefined = __webpack_require__(38),
-	    moveToEndOfWeek = __webpack_require__(100),
-	    moveToBeginningOfWeek = __webpack_require__(93),
-	    moveToFirstDayOfWeekYear = __webpack_require__(92);
+	var ISODefaults = __webpack_require__(18),
+	    setDate = __webpack_require__(75),
+	    getDate = __webpack_require__(76),
+	    cloneDate = __webpack_require__(92),
+	    isUndefined = __webpack_require__(39),
+	    moveToEndOfWeek = __webpack_require__(101),
+	    moveToBeginningOfWeek = __webpack_require__(94),
+	    moveToFirstDayOfWeekYear = __webpack_require__(93);
 	
 	var ISO_FIRST_DAY_OF_WEEK = ISODefaults.ISO_FIRST_DAY_OF_WEEK,
 	    ISO_FIRST_DAY_OF_WEEK_YEAR = ISODefaults.ISO_FIRST_DAY_OF_WEEK_YEAR;
@@ -7312,16 +7439,16 @@
 	module.exports = getWeekNumber;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _utc = __webpack_require__(48),
-	    trunc = __webpack_require__(59),
-	    tzOffset = __webpack_require__(67),
-	    padNumber = __webpack_require__(245),
-	    mathAliases = __webpack_require__(39);
+	var _utc = __webpack_require__(49),
+	    trunc = __webpack_require__(60),
+	    tzOffset = __webpack_require__(68),
+	    padNumber = __webpack_require__(246),
+	    mathAliases = __webpack_require__(40);
 	
 	var abs = mathAliases.abs;
 	
@@ -7337,14 +7464,14 @@
 	module.exports = getUTCOffset;
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DateUnits = __webpack_require__(44),
-	    DateUnitIndexes = __webpack_require__(52),
-	    getTimeDistanceForUnit = __webpack_require__(209);
+	var DateUnits = __webpack_require__(45),
+	    DateUnitIndexes = __webpack_require__(53),
+	    getTimeDistanceForUnit = __webpack_require__(210);
 	
 	var DAY_INDEX = DateUnitIndexes.DAY_INDEX;
 	
@@ -7355,14 +7482,14 @@
 	module.exports = getDaysSince;
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var LocaleHelpers = __webpack_require__(5),
-	    trunc = __webpack_require__(59),
-	    getHours = __webpack_require__(244);
+	var LocaleHelpers = __webpack_require__(6),
+	    trunc = __webpack_require__(60),
+	    getHours = __webpack_require__(245);
 	
 	var localeManager = LocaleHelpers.localeManager;
 	
@@ -7374,14 +7501,14 @@
 	module.exports = getMeridiemToken;
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var STRING_FORMAT_REG = __webpack_require__(253),
-	    CommonChars = __webpack_require__(29),
-	    memoizeFunction = __webpack_require__(254);
+	var STRING_FORMAT_REG = __webpack_require__(254),
+	    CommonChars = __webpack_require__(30),
+	    memoizeFunction = __webpack_require__(255);
 	
 	var OPEN_BRACE = CommonChars.OPEN_BRACE,
 	    CLOSE_BRACE = CommonChars.CLOSE_BRACE;
@@ -7469,7 +7596,7 @@
 	module.exports = createFormatMatcher;
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7477,13 +7604,13 @@
 	module.exports = /([{}])\1|\{([^}]*)\}|(%)%|(%(\w*))/g;
 
 /***/ },
-/* 254 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var INTERNAL_MEMOIZE_LIMIT = __webpack_require__(255),
-	    coreUtilityAliases = __webpack_require__(11);
+	var INTERNAL_MEMOIZE_LIMIT = __webpack_require__(256),
+	    coreUtilityAliases = __webpack_require__(12);
 	
 	var hasOwn = coreUtilityAliases.hasOwn;
 	
@@ -7506,7 +7633,7 @@
 	module.exports = memoizeFunction;
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7514,12 +7641,12 @@
 	module.exports = 1000;
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var dateIsValid = __webpack_require__(206);
+	var dateIsValid = __webpack_require__(207);
 	
 	function assertDateIsValid(d) {
 	  if (!dateIsValid(d)) {
@@ -7530,13 +7657,13 @@
 	module.exports = assertDateIsValid;
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    createDateWithContext = __webpack_require__(208);
+	var Sugar = __webpack_require__(5),
+	    createDateWithContext = __webpack_require__(209);
 	
 	Sugar.Date.defineInstance({
 	
@@ -7549,13 +7676,13 @@
 	module.exports = Sugar.Date.get;
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    getWeekNumber = __webpack_require__(248);
+	var Sugar = __webpack_require__(5),
+	    getWeekNumber = __webpack_require__(249);
 	
 	Sugar.Date.defineInstance({
 	
@@ -7568,13 +7695,13 @@
 	module.exports = Sugar.Date.getISOWeek;
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    getUTCOffset = __webpack_require__(249);
+	var Sugar = __webpack_require__(5),
+	    getUTCOffset = __webpack_require__(250);
 	
 	Sugar.Date.defineInstance({
 	
@@ -7587,12 +7714,12 @@
 	module.exports = Sugar.Date.getUTCOffset;
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
 	Sugar.Date.defineInstance({
 	
@@ -7605,13 +7732,13 @@
 	module.exports = Sugar.Date.getUTCWeekday;
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    getWeekday = __webpack_require__(76);
+	var Sugar = __webpack_require__(5),
+	    getWeekday = __webpack_require__(77);
 	
 	Sugar.Date.defineInstance({
 	
@@ -7624,28 +7751,16 @@
 	module.exports = Sugar.Date.getWeekday;
 
 /***/ },
-/* 262 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(203);
-	
-	module.exports = Sugar.Date.hoursAgo;
-
-/***/ },
 /* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.hoursFromNow;
+	module.exports = Sugar.Date.hoursAgo;
 
 /***/ },
 /* 264 */
@@ -7653,11 +7768,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.hoursSince;
+	module.exports = Sugar.Date.hoursFromNow;
 
 /***/ },
 /* 265 */
@@ -7665,11 +7780,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.hoursUntil;
+	module.exports = Sugar.Date.hoursSince;
 
 /***/ },
 /* 266 */
@@ -7677,8 +7792,20 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    fullCompareDate = __webpack_require__(267);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(204);
+	
+	module.exports = Sugar.Date.hoursUntil;
+
+/***/ },
+/* 267 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5),
+	    fullCompareDate = __webpack_require__(268);
 	
 	Sugar.Date.defineInstance({
 	
@@ -7691,21 +7818,21 @@
 	module.exports = Sugar.Date.is;
 
 /***/ },
-/* 267 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var LocaleHelpers = __webpack_require__(5),
-	    trim = __webpack_require__(268),
-	    getMonth = __webpack_require__(51),
-	    isDefined = __webpack_require__(27),
-	    getNewDate = __webpack_require__(78),
-	    compareDay = __webpack_require__(269),
-	    getWeekday = __webpack_require__(76),
-	    dateIsValid = __webpack_require__(206),
-	    classChecks = __webpack_require__(30),
-	    compareDate = __webpack_require__(205);
+	var LocaleHelpers = __webpack_require__(6),
+	    trim = __webpack_require__(269),
+	    getMonth = __webpack_require__(52),
+	    isDefined = __webpack_require__(28),
+	    getNewDate = __webpack_require__(79),
+	    compareDay = __webpack_require__(270),
+	    getWeekday = __webpack_require__(77),
+	    dateIsValid = __webpack_require__(207),
+	    classChecks = __webpack_require__(31),
+	    compareDate = __webpack_require__(206);
 	
 	var isString = classChecks.isString,
 	    English = LocaleHelpers.English;
@@ -7736,7 +7863,7 @@
 	module.exports = fullCompareDate;
 
 /***/ },
-/* 268 */
+/* 269 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7748,16 +7875,16 @@
 	module.exports = trim;
 
 /***/ },
-/* 269 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var setDate = __webpack_require__(74),
-	    getDate = __webpack_require__(75),
-	    getYear = __webpack_require__(46),
-	    getMonth = __webpack_require__(51),
-	    getNewDate = __webpack_require__(78);
+	var setDate = __webpack_require__(75),
+	    getDate = __webpack_require__(76),
+	    getYear = __webpack_require__(47),
+	    getMonth = __webpack_require__(52),
+	    getNewDate = __webpack_require__(79);
 	
 	function compareDay(d, shift) {
 	  var comp = getNewDate();
@@ -7772,13 +7899,13 @@
 	module.exports = compareDay;
 
 /***/ },
-/* 270 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    createDate = __webpack_require__(64);
+	var Sugar = __webpack_require__(5),
+	    createDate = __webpack_require__(65);
 	
 	Sugar.Date.defineInstance({
 	
@@ -7791,13 +7918,13 @@
 	module.exports = Sugar.Date.isAfter;
 
 /***/ },
-/* 271 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    createDate = __webpack_require__(64);
+	var Sugar = __webpack_require__(5),
+	    createDate = __webpack_require__(65);
 	
 	Sugar.Date.defineInstance({
 	
@@ -7810,14 +7937,14 @@
 	module.exports = Sugar.Date.isBefore;
 
 /***/ },
-/* 272 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    createDate = __webpack_require__(64),
-	    mathAliases = __webpack_require__(39);
+	var Sugar = __webpack_require__(5),
+	    createDate = __webpack_require__(65),
+	    mathAliases = __webpack_require__(40);
 	
 	var min = mathAliases.min,
 	    max = mathAliases.max;
@@ -7839,26 +7966,16 @@
 	module.exports = Sugar.Date.isBetween;
 
 /***/ },
-/* 273 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(274);
-	
-	module.exports = Sugar.Date.isFriday;
-
-/***/ },
 /* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var buildRelativeAliases = __webpack_require__(275);
+	var Sugar = __webpack_require__(5);
 	
-	buildRelativeAliases();
+	__webpack_require__(275);
+	
+	module.exports = Sugar.Date.isFriday;
 
 /***/ },
 /* 275 */
@@ -7866,11 +7983,21 @@
 
 	'use strict';
 	
-	var LocaleHelpers = __webpack_require__(5),
-	    spaceSplit = __webpack_require__(33),
-	    fullCompareDate = __webpack_require__(267),
-	    namespaceAliases = __webpack_require__(82),
-	    defineInstanceSimilar = __webpack_require__(118);
+	var buildRelativeAliases = __webpack_require__(276);
+	
+	buildRelativeAliases();
+
+/***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var LocaleHelpers = __webpack_require__(6),
+	    spaceSplit = __webpack_require__(34),
+	    fullCompareDate = __webpack_require__(268),
+	    namespaceAliases = __webpack_require__(83),
+	    defineInstanceSimilar = __webpack_require__(119);
 	
 	var English = LocaleHelpers.English,
 	    sugarDate = namespaceAliases.sugarDate;
@@ -7890,28 +8017,16 @@
 	module.exports = buildRelativeAliases;
 
 /***/ },
-/* 276 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(274);
-	
-	module.exports = Sugar.Date.isFuture;
-
-/***/ },
 /* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(275);
 	
-	module.exports = Sugar.Date.isLastMonth;
+	module.exports = Sugar.Date.isFuture;
 
 /***/ },
 /* 278 */
@@ -7919,11 +8034,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.isLastWeek;
+	module.exports = Sugar.Date.isLastMonth;
 
 /***/ },
 /* 279 */
@@ -7931,11 +8046,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.isLastYear;
+	module.exports = Sugar.Date.isLastWeek;
 
 /***/ },
 /* 280 */
@@ -7943,8 +8058,20 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    getYear = __webpack_require__(46);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(204);
+	
+	module.exports = Sugar.Date.isLastYear;
+
+/***/ },
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5),
+	    getYear = __webpack_require__(47);
 	
 	Sugar.Date.defineInstance({
 	
@@ -7958,28 +8085,16 @@
 	module.exports = Sugar.Date.isLeapYear;
 
 /***/ },
-/* 281 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(274);
-	
-	module.exports = Sugar.Date.isMonday;
-
-/***/ },
 /* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(275);
 	
-	module.exports = Sugar.Date.isNextMonth;
+	module.exports = Sugar.Date.isMonday;
 
 /***/ },
 /* 283 */
@@ -7987,11 +8102,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.isNextWeek;
+	module.exports = Sugar.Date.isNextMonth;
 
 /***/ },
 /* 284 */
@@ -7999,11 +8114,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.isNextYear;
+	module.exports = Sugar.Date.isNextWeek;
 
 /***/ },
 /* 285 */
@@ -8011,11 +8126,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(274);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.isPast;
+	module.exports = Sugar.Date.isNextYear;
 
 /***/ },
 /* 286 */
@@ -8023,11 +8138,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(274);
+	__webpack_require__(275);
 	
-	module.exports = Sugar.Date.isSaturday;
+	module.exports = Sugar.Date.isPast;
 
 /***/ },
 /* 287 */
@@ -8035,11 +8150,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(274);
+	__webpack_require__(275);
 	
-	module.exports = Sugar.Date.isSunday;
+	module.exports = Sugar.Date.isSaturday;
 
 /***/ },
 /* 288 */
@@ -8047,11 +8162,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(275);
 	
-	module.exports = Sugar.Date.isThisMonth;
+	module.exports = Sugar.Date.isSunday;
 
 /***/ },
 /* 289 */
@@ -8059,11 +8174,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.isThisWeek;
+	module.exports = Sugar.Date.isThisMonth;
 
 /***/ },
 /* 290 */
@@ -8071,11 +8186,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.isThisYear;
+	module.exports = Sugar.Date.isThisWeek;
 
 /***/ },
 /* 291 */
@@ -8083,11 +8198,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(274);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.isThursday;
+	module.exports = Sugar.Date.isThisYear;
 
 /***/ },
 /* 292 */
@@ -8095,11 +8210,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(274);
+	__webpack_require__(275);
 	
-	module.exports = Sugar.Date.isToday;
+	module.exports = Sugar.Date.isThursday;
 
 /***/ },
 /* 293 */
@@ -8107,11 +8222,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(274);
+	__webpack_require__(275);
 	
-	module.exports = Sugar.Date.isTomorrow;
+	module.exports = Sugar.Date.isToday;
 
 /***/ },
 /* 294 */
@@ -8119,11 +8234,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(274);
+	__webpack_require__(275);
 	
-	module.exports = Sugar.Date.isTuesday;
+	module.exports = Sugar.Date.isTomorrow;
 
 /***/ },
 /* 295 */
@@ -8131,8 +8246,20 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    isUTC = __webpack_require__(296);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(275);
+	
+	module.exports = Sugar.Date.isTuesday;
+
+/***/ },
+/* 296 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5),
+	    isUTC = __webpack_require__(297);
 	
 	Sugar.Date.defineInstance({
 	
@@ -8145,13 +8272,13 @@
 	module.exports = Sugar.Date.isUTC;
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _utc = __webpack_require__(48),
-	    tzOffset = __webpack_require__(67);
+	var _utc = __webpack_require__(49),
+	    tzOffset = __webpack_require__(68);
 	
 	function isUTC(d) {
 	  return !!_utc(d) || tzOffset(d) === 0;
@@ -8160,13 +8287,13 @@
 	module.exports = isUTC;
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    dateIsValid = __webpack_require__(206);
+	var Sugar = __webpack_require__(5),
+	    dateIsValid = __webpack_require__(207);
 	
 	Sugar.Date.defineInstance({
 	
@@ -8179,28 +8306,16 @@
 	module.exports = Sugar.Date.isValid;
 
 /***/ },
-/* 298 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(274);
-	
-	module.exports = Sugar.Date.isWednesday;
-
-/***/ },
 /* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(274);
+	__webpack_require__(275);
 	
-	module.exports = Sugar.Date.isWeekday;
+	module.exports = Sugar.Date.isWednesday;
 
 /***/ },
 /* 300 */
@@ -8208,11 +8323,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(274);
+	__webpack_require__(275);
 	
-	module.exports = Sugar.Date.isWeekend;
+	module.exports = Sugar.Date.isWeekday;
 
 /***/ },
 /* 301 */
@@ -8220,11 +8335,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(274);
+	__webpack_require__(275);
 	
-	module.exports = Sugar.Date.isYesterday;
+	module.exports = Sugar.Date.isWeekend;
 
 /***/ },
 /* 302 */
@@ -8232,7 +8347,19 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(275);
+	
+	module.exports = Sugar.Date.isYesterday;
+
+/***/ },
+/* 303 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5);
 	
 	Sugar.Date.defineInstance({
 	
@@ -8245,28 +8372,16 @@
 	module.exports = Sugar.Date.iso;
 
 /***/ },
-/* 303 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(203);
-	
-	module.exports = Sugar.Date.millisecondsAgo;
-
-/***/ },
 /* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.millisecondsFromNow;
+	module.exports = Sugar.Date.millisecondsAgo;
 
 /***/ },
 /* 305 */
@@ -8274,11 +8389,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.millisecondsSince;
+	module.exports = Sugar.Date.millisecondsFromNow;
 
 /***/ },
 /* 306 */
@@ -8286,11 +8401,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.millisecondsUntil;
+	module.exports = Sugar.Date.millisecondsSince;
 
 /***/ },
 /* 307 */
@@ -8298,11 +8413,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.minutesAgo;
+	module.exports = Sugar.Date.millisecondsUntil;
 
 /***/ },
 /* 308 */
@@ -8310,11 +8425,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.minutesFromNow;
+	module.exports = Sugar.Date.minutesAgo;
 
 /***/ },
 /* 309 */
@@ -8322,11 +8437,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.minutesSince;
+	module.exports = Sugar.Date.minutesFromNow;
 
 /***/ },
 /* 310 */
@@ -8334,11 +8449,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.minutesUntil;
+	module.exports = Sugar.Date.minutesSince;
 
 /***/ },
 /* 311 */
@@ -8346,11 +8461,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.monthsAgo;
+	module.exports = Sugar.Date.minutesUntil;
 
 /***/ },
 /* 312 */
@@ -8358,11 +8473,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.monthsFromNow;
+	module.exports = Sugar.Date.monthsAgo;
 
 /***/ },
 /* 313 */
@@ -8370,11 +8485,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.monthsSince;
+	module.exports = Sugar.Date.monthsFromNow;
 
 /***/ },
 /* 314 */
@@ -8382,11 +8497,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.monthsUntil;
+	module.exports = Sugar.Date.monthsSince;
 
 /***/ },
 /* 315 */
@@ -8394,8 +8509,20 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    dateRelative = __webpack_require__(316);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(204);
+	
+	module.exports = Sugar.Date.monthsUntil;
+
+/***/ },
+/* 316 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5),
+	    dateRelative = __webpack_require__(317);
 	
 	Sugar.Date.defineInstance({
 	
@@ -8408,16 +8535,16 @@
 	module.exports = Sugar.Date.relative;
 
 /***/ },
-/* 316 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var LocaleHelpers = __webpack_require__(5),
-	    dateFormat = __webpack_require__(239),
-	    classChecks = __webpack_require__(30),
-	    assertDateIsValid = __webpack_require__(256),
-	    getAdjustedUnitForDate = __webpack_require__(317);
+	var LocaleHelpers = __webpack_require__(6),
+	    dateFormat = __webpack_require__(240),
+	    classChecks = __webpack_require__(31),
+	    assertDateIsValid = __webpack_require__(257),
+	    getAdjustedUnitForDate = __webpack_require__(318);
 	
 	var isFunction = classChecks.isFunction,
 	    localeManager = LocaleHelpers.localeManager;
@@ -8457,15 +8584,15 @@
 	module.exports = dateRelative;
 
 /***/ },
-/* 317 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var getNewDate = __webpack_require__(78),
-	    mathAliases = __webpack_require__(39),
-	    getAdjustedUnit = __webpack_require__(61),
-	    getTimeDistanceForUnit = __webpack_require__(209);
+	var getNewDate = __webpack_require__(79),
+	    mathAliases = __webpack_require__(40),
+	    getAdjustedUnit = __webpack_require__(62),
+	    getTimeDistanceForUnit = __webpack_require__(210);
 	
 	var abs = mathAliases.abs;
 	
@@ -8493,14 +8620,14 @@
 	module.exports = getAdjustedUnitForDate;
 
 /***/ },
-/* 318 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    createDate = __webpack_require__(64),
-	    dateRelative = __webpack_require__(316);
+	var Sugar = __webpack_require__(5),
+	    createDate = __webpack_require__(65),
+	    dateRelative = __webpack_require__(317);
 	
 	Sugar.Date.defineInstance({
 	
@@ -8513,15 +8640,15 @@
 	module.exports = Sugar.Date.relativeTo;
 
 /***/ },
-/* 319 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    DateUnitIndexes = __webpack_require__(52),
-	    moveToBeginningOfUnit = __webpack_require__(103),
-	    getUnitIndexForParamName = __webpack_require__(320);
+	var Sugar = __webpack_require__(5),
+	    DateUnitIndexes = __webpack_require__(53),
+	    moveToBeginningOfUnit = __webpack_require__(104),
+	    getUnitIndexForParamName = __webpack_require__(321);
 	
 	var DAY_INDEX = DateUnitIndexes.DAY_INDEX;
 	
@@ -8538,12 +8665,12 @@
 	module.exports = Sugar.Date.reset;
 
 /***/ },
-/* 320 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var iterateOverDateParams = __webpack_require__(94);
+	var iterateOverDateParams = __webpack_require__(95);
 	
 	function getUnitIndexForParamName(name) {
 	  var params = {}, unitIndex;
@@ -8558,13 +8685,13 @@
 	module.exports = getUnitIndexForParamName;
 
 /***/ },
-/* 321 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    advanceDateWithArgs = __webpack_require__(218);
+	var Sugar = __webpack_require__(5),
+	    advanceDateWithArgs = __webpack_require__(219);
 	
 	Sugar.Date.defineInstanceWithArguments({
 	
@@ -8577,28 +8704,16 @@
 	module.exports = Sugar.Date.rewind;
 
 /***/ },
-/* 322 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(203);
-	
-	module.exports = Sugar.Date.secondsAgo;
-
-/***/ },
 /* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.secondsFromNow;
+	module.exports = Sugar.Date.secondsAgo;
 
 /***/ },
 /* 324 */
@@ -8606,11 +8721,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.secondsSince;
+	module.exports = Sugar.Date.secondsFromNow;
 
 /***/ },
 /* 325 */
@@ -8618,11 +8733,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.secondsUntil;
+	module.exports = Sugar.Date.secondsSince;
 
 /***/ },
 /* 326 */
@@ -8630,9 +8745,21 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    updateDate = __webpack_require__(77),
-	    collectDateArguments = __webpack_require__(219);
+	var Sugar = __webpack_require__(5);
+	
+	__webpack_require__(204);
+	
+	module.exports = Sugar.Date.secondsUntil;
+
+/***/ },
+/* 327 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Sugar = __webpack_require__(5),
+	    updateDate = __webpack_require__(78),
+	    collectDateArguments = __webpack_require__(220);
 	
 	Sugar.Date.defineInstanceWithArguments({
 	
@@ -8646,13 +8773,13 @@
 	module.exports = Sugar.Date.set;
 
 /***/ },
-/* 327 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    setISOWeekNumber = __webpack_require__(88);
+	var Sugar = __webpack_require__(5),
+	    setISOWeekNumber = __webpack_require__(89);
 	
 	Sugar.Date.defineInstance({
 	
@@ -8665,13 +8792,13 @@
 	module.exports = Sugar.Date.setISOWeek;
 
 /***/ },
-/* 328 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    _utc = __webpack_require__(48);
+	var Sugar = __webpack_require__(5),
+	    _utc = __webpack_require__(49);
 	
 	Sugar.Date.defineInstance({
 	
@@ -8684,13 +8811,13 @@
 	module.exports = Sugar.Date.setUTC;
 
 /***/ },
-/* 329 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    setWeekday = __webpack_require__(73);
+	var Sugar = __webpack_require__(5),
+	    setWeekday = __webpack_require__(74);
 	
 	Sugar.Date.defineInstance({
 	
@@ -8703,28 +8830,16 @@
 	module.exports = Sugar.Date.setWeekday;
 
 /***/ },
-/* 330 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(4);
-	
-	__webpack_require__(203);
-	
-	module.exports = Sugar.Date.weeksAgo;
-
-/***/ },
 /* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.weeksFromNow;
+	module.exports = Sugar.Date.weeksAgo;
 
 /***/ },
 /* 332 */
@@ -8732,11 +8847,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.weeksSince;
+	module.exports = Sugar.Date.weeksFromNow;
 
 /***/ },
 /* 333 */
@@ -8744,11 +8859,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.weeksUntil;
+	module.exports = Sugar.Date.weeksSince;
 
 /***/ },
 /* 334 */
@@ -8756,11 +8871,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.yearsAgo;
+	module.exports = Sugar.Date.weeksUntil;
 
 /***/ },
 /* 335 */
@@ -8768,11 +8883,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.yearsFromNow;
+	module.exports = Sugar.Date.yearsAgo;
 
 /***/ },
 /* 336 */
@@ -8780,11 +8895,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.yearsSince;
+	module.exports = Sugar.Date.yearsFromNow;
 
 /***/ },
 /* 337 */
@@ -8792,11 +8907,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4);
+	var Sugar = __webpack_require__(5);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
-	module.exports = Sugar.Date.yearsUntil;
+	module.exports = Sugar.Date.yearsSince;
 
 /***/ },
 /* 338 */
@@ -8804,10 +8919,11 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    _dateOptions = __webpack_require__(79);
+	var Sugar = __webpack_require__(5);
 	
-	module.exports = Sugar.Date.getOption;
+	__webpack_require__(204);
+	
+	module.exports = Sugar.Date.yearsUntil;
 
 /***/ },
 /* 339 */
@@ -8815,10 +8931,10 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    _dateOptions = __webpack_require__(79);
+	var Sugar = __webpack_require__(5),
+	    _dateOptions = __webpack_require__(80);
 	
-	module.exports = Sugar.Date.setOption;
+	module.exports = Sugar.Date.getOption;
 
 /***/ },
 /* 340 */
@@ -8826,15 +8942,25 @@
 
 	'use strict';
 	
+	var Sugar = __webpack_require__(5),
+	    _dateOptions = __webpack_require__(80);
+	
+	module.exports = Sugar.Date.setOption;
+
+/***/ },
+/* 341 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	// Static Methods
-	__webpack_require__(341);
+	__webpack_require__(342);
 	
 	// Prototype Methods
-	__webpack_require__(355);
-	__webpack_require__(358);
+	__webpack_require__(356);
 	__webpack_require__(359);
 	__webpack_require__(360);
-	__webpack_require__(372);
+	__webpack_require__(361);
 	__webpack_require__(373);
 	__webpack_require__(374);
 	__webpack_require__(375);
@@ -8843,22 +8969,23 @@
 	__webpack_require__(378);
 	__webpack_require__(379);
 	__webpack_require__(380);
-	__webpack_require__(382);
+	__webpack_require__(381);
 	__webpack_require__(383);
 	__webpack_require__(384);
 	__webpack_require__(385);
 	__webpack_require__(386);
+	__webpack_require__(387);
 	
-	module.exports = __webpack_require__(4);
+	module.exports = __webpack_require__(5);
 
 /***/ },
-/* 341 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(4),
-	    DateRangeConstructor = __webpack_require__(342);
+	var Sugar = __webpack_require__(5),
+	    DateRangeConstructor = __webpack_require__(343);
 	
 	Sugar.Date.defineStatic({
 	
@@ -8869,15 +8996,15 @@
 	module.exports = Sugar.Date.range;
 
 /***/ },
-/* 342 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Range = __webpack_require__(343),
-	    classChecks = __webpack_require__(30),
-	    getDateForRange = __webpack_require__(346),
-	    createDateRangeFromString = __webpack_require__(347);
+	var Range = __webpack_require__(344),
+	    classChecks = __webpack_require__(31),
+	    getDateForRange = __webpack_require__(347),
+	    createDateRangeFromString = __webpack_require__(348);
 	
 	var isString = classChecks.isString;
 	
@@ -8891,12 +9018,12 @@
 	module.exports = DateRangeConstructor;
 
 /***/ },
-/* 343 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var cloneRangeMember = __webpack_require__(344);
+	var cloneRangeMember = __webpack_require__(345);
 	
 	function Range(start, end) {
 	  this.start = cloneRangeMember(start);
@@ -8906,13 +9033,13 @@
 	module.exports = Range;
 
 /***/ },
-/* 344 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var classChecks = __webpack_require__(30),
-	    getRangeMemberPrimitiveValue = __webpack_require__(345);
+	var classChecks = __webpack_require__(31),
+	    getRangeMemberPrimitiveValue = __webpack_require__(346);
 	
 	var isDate = classChecks.isDate;
 	
@@ -8927,12 +9054,12 @@
 	module.exports = cloneRangeMember;
 
 /***/ },
-/* 345 */
+/* 346 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var classChecks = __webpack_require__(30);
+	var classChecks = __webpack_require__(31);
 	
 	var isDate = classChecks.isDate;
 	
@@ -8944,13 +9071,13 @@
 	module.exports = getRangeMemberPrimitiveValue;
 
 /***/ },
-/* 346 */
+/* 347 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var classChecks = __webpack_require__(30),
-	    namespaceAliases = __webpack_require__(82);
+	var classChecks = __webpack_require__(31),
+	    namespaceAliases = __webpack_require__(83);
 	
 	var isDate = classChecks.isDate,
 	    sugarDate = namespaceAliases.sugarDate;
@@ -8969,17 +9096,17 @@
 	module.exports = getDateForRange;
 
 /***/ },
-/* 347 */
+/* 348 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Range = __webpack_require__(343),
-	    DurationTextFormats = __webpack_require__(348),
-	    incrementDate = __webpack_require__(351),
-	    getDateForRange = __webpack_require__(346),
-	    namespaceAliases = __webpack_require__(82),
-	    getDateIncrementObject = __webpack_require__(353);
+	var Range = __webpack_require__(344),
+	    DurationTextFormats = __webpack_require__(349),
+	    incrementDate = __webpack_require__(352),
+	    getDateForRange = __webpack_require__(347),
+	    namespaceAliases = __webpack_require__(83),
+	    getDateIncrementObject = __webpack_require__(354);
 	
 	var sugarDate = namespaceAliases.sugarDate,
 	    RANGE_REG_FROM_TO = DurationTextFormats.RANGE_REG_FROM_TO,
@@ -9014,12 +9141,12 @@
 	module.exports = createDateRangeFromString;
 
 /***/ },
-/* 348 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var FULL_CAPTURED_DURATION = __webpack_require__(349);
+	var FULL_CAPTURED_DURATION = __webpack_require__(350);
 	
 	module.exports = {
 	  RANGE_REG_FROM_TO: /(?:from)?\s*(.+)\s+(?:to|until)\s+(.+)$/i,
@@ -9028,17 +9155,17 @@
 	};
 
 /***/ },
-/* 349 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DURATION_UNITS = __webpack_require__(350);
+	var DURATION_UNITS = __webpack_require__(351);
 	
 	module.exports = '((?:\\d+)?\\s*(?:' + DURATION_UNITS + '))s?';
 
 /***/ },
-/* 350 */
+/* 351 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -9046,14 +9173,14 @@
 	module.exports = 'year|month|week|day|hour|minute|second|millisecond';
 
 /***/ },
-/* 351 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var MULTIPLIERS = __webpack_require__(352),
-	    callDateSet = __webpack_require__(70),
-	    callDateGet = __webpack_require__(47);
+	var MULTIPLIERS = __webpack_require__(353),
+	    callDateSet = __webpack_require__(71),
+	    callDateGet = __webpack_require__(48);
 	
 	function incrementDate(src, amount, unit) {
 	  var mult = MULTIPLIERS[unit], d;
@@ -9069,7 +9196,7 @@
 	module.exports = incrementDate;
 
 /***/ },
-/* 352 */
+/* 353 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -9084,14 +9211,14 @@
 	module.exports = MULTIPLIERS;
 
 /***/ },
-/* 353 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var DURATION_REG = __webpack_require__(354),
-	    classChecks = __webpack_require__(30),
-	    simpleCapitalize = __webpack_require__(207);
+	var DURATION_REG = __webpack_require__(355),
+	    classChecks = __webpack_require__(31),
+	    simpleCapitalize = __webpack_require__(208);
 	
 	var isNumber = classChecks.isNumber;
 	
@@ -9119,24 +9246,24 @@
 	module.exports = getDateIncrementObject;
 
 /***/ },
-/* 354 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var DURATION_UNITS = __webpack_require__(350);
-	
-	module.exports = RegExp('(\\d+)?\\s*('+ DURATION_UNITS +')s?', 'i');
-
-/***/ },
 /* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Range = __webpack_require__(343),
-	    rangeClamp = __webpack_require__(356),
-	    defineOnPrototype = __webpack_require__(357);
+	var DURATION_UNITS = __webpack_require__(351);
+	
+	module.exports = RegExp('(\\d+)?\\s*('+ DURATION_UNITS +')s?', 'i');
+
+/***/ },
+/* 356 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Range = __webpack_require__(344),
+	    rangeClamp = __webpack_require__(357),
+	    defineOnPrototype = __webpack_require__(358);
 	
 	defineOnPrototype(Range, {
 	
@@ -9150,12 +9277,12 @@
 	// simply defining "clamp" on Range.prototype.
 
 /***/ },
-/* 356 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var cloneRangeMember = __webpack_require__(344);
+	var cloneRangeMember = __webpack_require__(345);
 	
 	function rangeClamp(range, obj) {
 	  var clamped,
@@ -9176,12 +9303,12 @@
 	module.exports = rangeClamp;
 
 /***/ },
-/* 357 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var coreUtilityAliases = __webpack_require__(11);
+	var coreUtilityAliases = __webpack_require__(12);
 	
 	var forEachProperty = coreUtilityAliases.forEachProperty;
 	
@@ -9195,13 +9322,13 @@
 	module.exports = defineOnPrototype;
 
 /***/ },
-/* 358 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Range = __webpack_require__(343),
-	    defineOnPrototype = __webpack_require__(357);
+	var Range = __webpack_require__(344),
+	    defineOnPrototype = __webpack_require__(358);
 	
 	defineOnPrototype(Range, {
 	
@@ -9215,13 +9342,13 @@
 	// simply defining "clone" on Range.prototype.
 
 /***/ },
-/* 359 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Range = __webpack_require__(343),
-	    defineOnPrototype = __webpack_require__(357);
+	var Range = __webpack_require__(344),
+	    defineOnPrototype = __webpack_require__(358);
 	
 	defineOnPrototype(Range, {
 	
@@ -9241,25 +9368,15 @@
 	// simply defining "contains" on Range.prototype.
 
 /***/ },
-/* 360 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	__webpack_require__(361);
-	
-	// This package does not export anything as it is
-	// simply defining "days" on Range.prototype.
-
-/***/ },
 /* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var buildDateRangeUnits = __webpack_require__(362);
+	__webpack_require__(362);
 	
-	buildDateRangeUnits();
+	// This package does not export anything as it is
+	// simply defining "days" on Range.prototype.
 
 /***/ },
 /* 362 */
@@ -9267,14 +9384,24 @@
 
 	'use strict';
 	
-	var MULTIPLIERS = __webpack_require__(352),
-	    DURATION_UNITS = __webpack_require__(350),
-	    Range = __webpack_require__(343),
-	    trunc = __webpack_require__(59),
-	    forEach = __webpack_require__(23),
-	    rangeEvery = __webpack_require__(363),
-	    simpleCapitalize = __webpack_require__(207),
-	    defineOnPrototype = __webpack_require__(357);
+	var buildDateRangeUnits = __webpack_require__(363);
+	
+	buildDateRangeUnits();
+
+/***/ },
+/* 363 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var MULTIPLIERS = __webpack_require__(353),
+	    DURATION_UNITS = __webpack_require__(351),
+	    Range = __webpack_require__(344),
+	    trunc = __webpack_require__(60),
+	    forEach = __webpack_require__(24),
+	    rangeEvery = __webpack_require__(364),
+	    simpleCapitalize = __webpack_require__(208),
+	    defineOnPrototype = __webpack_require__(358);
 	
 	function buildDateRangeUnits() {
 	  var methods = {};
@@ -9298,18 +9425,18 @@
 	module.exports = buildDateRangeUnits;
 
 /***/ },
-/* 363 */
+/* 364 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var classChecks = __webpack_require__(30),
-	    rangeIsValid = __webpack_require__(364),
-	    incrementDate = __webpack_require__(351),
-	    incrementNumber = __webpack_require__(367),
-	    incrementString = __webpack_require__(368),
-	    getGreaterPrecision = __webpack_require__(369),
-	    getDateIncrementObject = __webpack_require__(353);
+	var classChecks = __webpack_require__(31),
+	    rangeIsValid = __webpack_require__(365),
+	    incrementDate = __webpack_require__(352),
+	    incrementNumber = __webpack_require__(368),
+	    incrementString = __webpack_require__(369),
+	    getGreaterPrecision = __webpack_require__(370),
+	    getDateIncrementObject = __webpack_require__(354);
 	
 	var isNumber = classChecks.isNumber,
 	    isString = classChecks.isString,
@@ -9373,12 +9500,12 @@
 	module.exports = rangeEvery;
 
 /***/ },
-/* 364 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var isValidRangeMember = __webpack_require__(365);
+	var isValidRangeMember = __webpack_require__(366);
 	
 	function rangeIsValid(range) {
 	  return isValidRangeMember(range.start) &&
@@ -9389,13 +9516,13 @@
 	module.exports = rangeIsValid;
 
 /***/ },
-/* 365 */
+/* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var valueIsNotInfinite = __webpack_require__(366),
-	    getRangeMemberPrimitiveValue = __webpack_require__(345);
+	var valueIsNotInfinite = __webpack_require__(367),
+	    getRangeMemberPrimitiveValue = __webpack_require__(346);
 	
 	function isValidRangeMember(m) {
 	  var val = getRangeMemberPrimitiveValue(m);
@@ -9405,7 +9532,7 @@
 	module.exports = isValidRangeMember;
 
 /***/ },
-/* 366 */
+/* 367 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -9417,12 +9544,12 @@
 	module.exports = valueIsNotInfinite;
 
 /***/ },
-/* 367 */
+/* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var withPrecision = __webpack_require__(60);
+	var withPrecision = __webpack_require__(61);
 	
 	function incrementNumber(current, amount, precision) {
 	  return withPrecision(current + amount, precision);
@@ -9431,12 +9558,12 @@
 	module.exports = incrementNumber;
 
 /***/ },
-/* 368 */
+/* 369 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var chr = __webpack_require__(56);
+	var chr = __webpack_require__(57);
 	
 	function incrementString(current, amount) {
 	  return chr(current.charCodeAt(0) + amount);
@@ -9445,13 +9572,13 @@
 	module.exports = incrementString;
 
 /***/ },
-/* 369 */
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var mathAliases = __webpack_require__(39),
-	    getPrecision = __webpack_require__(370);
+	var mathAliases = __webpack_require__(40),
+	    getPrecision = __webpack_require__(371);
 	
 	var max = mathAliases.max;
 	
@@ -9462,12 +9589,12 @@
 	module.exports = getGreaterPrecision;
 
 /***/ },
-/* 370 */
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var periodSplit = __webpack_require__(371);
+	var periodSplit = __webpack_require__(372);
 	
 	function getPrecision(n) {
 	  var split = periodSplit(n.toString());
@@ -9477,12 +9604,12 @@
 	module.exports = getPrecision;
 
 /***/ },
-/* 371 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var CommonChars = __webpack_require__(29);
+	var CommonChars = __webpack_require__(30);
 	
 	var HALF_WIDTH_PERIOD = CommonChars.HALF_WIDTH_PERIOD;
 	
@@ -9493,14 +9620,14 @@
 	module.exports = periodSplit;
 
 /***/ },
-/* 372 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Range = __webpack_require__(343),
-	    rangeEvery = __webpack_require__(363),
-	    defineOnPrototype = __webpack_require__(357);
+	var Range = __webpack_require__(344),
+	    rangeEvery = __webpack_require__(364),
+	    defineOnPrototype = __webpack_require__(358);
 	
 	defineOnPrototype(Range, {
 	
@@ -9514,24 +9641,24 @@
 	// simply defining "every" on Range.prototype.
 
 /***/ },
-/* 373 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	__webpack_require__(361);
-	
-	// This package does not export anything as it is
-	// simply defining "hours" on Range.prototype.
-
-/***/ },
 /* 374 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Range = __webpack_require__(343),
-	    defineOnPrototype = __webpack_require__(357);
+	__webpack_require__(362);
+	
+	// This package does not export anything as it is
+	// simply defining "hours" on Range.prototype.
+
+/***/ },
+/* 375 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Range = __webpack_require__(344),
+	    defineOnPrototype = __webpack_require__(358);
 	
 	defineOnPrototype(Range, {
 	
@@ -9551,14 +9678,14 @@
 	// simply defining "intersect" on Range.prototype.
 
 /***/ },
-/* 375 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Range = __webpack_require__(343),
-	    rangeIsValid = __webpack_require__(364),
-	    defineOnPrototype = __webpack_require__(357);
+	var Range = __webpack_require__(344),
+	    rangeIsValid = __webpack_require__(365),
+	    defineOnPrototype = __webpack_require__(358);
 	
 	defineOnPrototype(Range, {
 	
@@ -9572,26 +9699,15 @@
 	// simply defining "isValid" on Range.prototype.
 
 /***/ },
-/* 376 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	__webpack_require__(361);
-	
-	// This package does not export anything as it is
-	// simply defining "milliseconds" on Range.prototype.
-
-/***/ },
 /* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	__webpack_require__(361);
+	__webpack_require__(362);
 	
 	// This package does not export anything as it is
-	// simply defining "minutes" on Range.prototype.
+	// simply defining "milliseconds" on Range.prototype.
 
 /***/ },
 /* 378 */
@@ -9599,10 +9715,10 @@
 
 	'use strict';
 	
-	__webpack_require__(361);
+	__webpack_require__(362);
 	
 	// This package does not export anything as it is
-	// simply defining "months" on Range.prototype.
+	// simply defining "minutes" on Range.prototype.
 
 /***/ },
 /* 379 */
@@ -9610,10 +9726,10 @@
 
 	'use strict';
 	
-	__webpack_require__(361);
+	__webpack_require__(362);
 	
 	// This package does not export anything as it is
-	// simply defining "seconds" on Range.prototype.
+	// simply defining "months" on Range.prototype.
 
 /***/ },
 /* 380 */
@@ -9621,11 +9737,22 @@
 
 	'use strict';
 	
-	var Range = __webpack_require__(343),
-	    mathAliases = __webpack_require__(39),
-	    rangeIsValid = __webpack_require__(364),
-	    defineOnPrototype = __webpack_require__(357),
-	    getRangeMemberNumericValue = __webpack_require__(381);
+	__webpack_require__(362);
+	
+	// This package does not export anything as it is
+	// simply defining "seconds" on Range.prototype.
+
+/***/ },
+/* 381 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Range = __webpack_require__(344),
+	    mathAliases = __webpack_require__(40),
+	    rangeIsValid = __webpack_require__(365),
+	    defineOnPrototype = __webpack_require__(358),
+	    getRangeMemberNumericValue = __webpack_require__(382);
 	
 	var abs = mathAliases.abs;
 	
@@ -9642,12 +9769,12 @@
 	// simply defining "span" on Range.prototype.
 
 /***/ },
-/* 381 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var classChecks = __webpack_require__(30);
+	var classChecks = __webpack_require__(31);
 	
 	var isString = classChecks.isString;
 	
@@ -9658,14 +9785,14 @@
 	module.exports = getRangeMemberNumericValue;
 
 /***/ },
-/* 382 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Range = __webpack_require__(343),
-	    rangeEvery = __webpack_require__(363),
-	    defineOnPrototype = __webpack_require__(357);
+	var Range = __webpack_require__(344),
+	    rangeEvery = __webpack_require__(364),
+	    defineOnPrototype = __webpack_require__(358);
 	
 	defineOnPrototype(Range, {
 	
@@ -9679,14 +9806,14 @@
 	// simply defining "toArray" on Range.prototype.
 
 /***/ },
-/* 383 */
+/* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Range = __webpack_require__(343),
-	    rangeIsValid = __webpack_require__(364),
-	    defineOnPrototype = __webpack_require__(357);
+	var Range = __webpack_require__(344),
+	    rangeIsValid = __webpack_require__(365),
+	    defineOnPrototype = __webpack_require__(358);
 	
 	defineOnPrototype(Range, {
 	
@@ -9700,13 +9827,13 @@
 	// simply defining "toString" on Range.prototype.
 
 /***/ },
-/* 384 */
+/* 385 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Range = __webpack_require__(343),
-	    defineOnPrototype = __webpack_require__(357);
+	var Range = __webpack_require__(344),
+	    defineOnPrototype = __webpack_require__(358);
 	
 	defineOnPrototype(Range, {
 	
@@ -9723,153 +9850,26 @@
 	// simply defining "union" on Range.prototype.
 
 /***/ },
-/* 385 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	__webpack_require__(361);
-	
-	// This package does not export anything as it is
-	// simply defining "weeks" on Range.prototype.
-
-/***/ },
 /* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	__webpack_require__(361);
+	__webpack_require__(362);
 	
 	// This package does not export anything as it is
-	// simply defining "years" on Range.prototype.
+	// simply defining "weeks" on Range.prototype.
 
 /***/ },
 /* 387 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Sugar = __webpack_require__(1);
+	'use strict';
 	
-	let dateTimeUtils = {
+	__webpack_require__(362);
 	
-	  getMonth: datetime => {
-	    let dt = new Date(datetime);
-	    return dt.getMonth() + 1;
-	  },
-	
-	  getDay: datetime => {
-	    let dt = new Date(datetime);
-	    return dt.getDate();
-	  },
-	
-	  getYear: datetime => {
-	    let dt = new Date(datetime);
-	    return dt.getFullYear();
-	  },
-	
-	  getHours: datetime => {
-	    let dt = new Date(datetime);
-	    return dt.getHours();
-	  },
-	
-	  getMinutes: datetime => {
-	    let dt = new Date(datetime);
-	    return dt.getMinutes();
-	  },
-	
-	  getTime: datetime => {
-	    let hours = parseInt(dateTimeUtils.getHours(datetime));
-	    let mins = parseInt(dateTimeUtils.getMinutes(datetime));
-	    let ampm = 'am';
-	
-	    if (hours > 12) {
-	      hours -= 12;
-	      ampm = 'pm';
-	    }
-	
-	    if (hours === 12) {
-	      ampm = 'pm';
-	    }
-	
-	    if (hours === 0) {
-	      hours = 12;
-	    }
-	
-	    if (hours > 24) {
-	      hours = 0;
-	      ampm = 'am';
-	    }
-	
-	    return hours + ':' + dateTimeUtils.addZero(mins) + ' ' + ampm.toUpperCase();
-	  },
-	
-	  getDate: datetime => {
-	    let mon = parseInt(dateTimeUtils.getMonth(datetime));
-	    let day = parseInt(dateTimeUtils.getDay(datetime));
-	    let year = parseInt(dateTimeUtils.getYear(datetime));
-	    return dateTimeUtils.addZero(mon) + '/' + dateTimeUtils.addZero(day) + '/' + year;
-	  },
-	
-	  isValidTime: value => {
-	    let timeValue = value.toUpperCase().replace(' ', ':');
-	    let ampm = 'AM';
-	    let isValidTime = true;
-	
-	    if (/nan/i.test(value)) {
-	      return false;
-	    }
-	
-	    if (typeof timeValue !== 'undefined') {
-	      let parts = timeValue.split(':');
-	      if (parts.length === 0) {
-	        let timeValue24 = parseInt(timeValue);
-	        if (timeValue > 0 && timeValue <= 2359) {
-	          isValidTime = true;
-	        }
-	      }
-	
-	      let hours = parseInt(parts[0]);
-	      let mins = parseInt(parts[1]);
-	      ampm = parts.length > 1 ? parts[2] : ampm;
-	
-	      if (hours > 12) {
-	        hours -= hours;
-	        ampm = 'PM';
-	      }
-	      if (hours > 12 || mins > 59) {
-	        isValidTime = false;
-	      }
-	    }
-	
-	    return isValidTime;
-	  },
-	
-	  isValidDate: datetime => {
-	    // this needs further validation but this will suffice for now
-	    if (!datetime) {
-	      return false;
-	    }
-	    var dt = new Date(datetime);
-	    return !isNaN(dt);
-	  },
-	
-	  addZero: val => {
-	    if (val < 10) {
-	      val = '0' + val;
-	    }
-	    return val;
-	  },
-	
-	  convertHumanDate: val => {
-	    let dtResult = Sugar.Date.create(val);
-	    if (!isNaN(dtResult)) {
-	      return dtResult;
-	    }
-	    return null;
-	  }
-	};
-	
-	module.exports = dateTimeUtils;
+	// This package does not export anything as it is
+	// simply defining "years" on Range.prototype.
 
 /***/ },
 /* 388 */
@@ -10241,8 +10241,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./timepicker.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./timepicker.css");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./datepicker.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./datepicker.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -10260,7 +10260,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".ui-timepicker-wrapper {\n\toverflow-y: auto;\n\theight: 150px;\n\twidth: 6.5em;\n\tbackground: #fff;\n\tborder: 1px solid #ddd;\n\t-webkit-box-shadow:0 5px 10px rgba(0,0,0,0.2);\n\t-moz-box-shadow:0 5px 10px rgba(0,0,0,0.2);\n\tbox-shadow:0 5px 10px rgba(0,0,0,0.2);\n\toutline: none;\n\tz-index: 10001;\n\tmargin: 0;\n}\n\n.ui-timepicker-wrapper.ui-timepicker-with-duration {\n\twidth: 13em;\n}\n\n.ui-timepicker-wrapper.ui-timepicker-with-duration.ui-timepicker-step-30,\n.ui-timepicker-wrapper.ui-timepicker-with-duration.ui-timepicker-step-60 {\n\twidth: 11em;\n}\n\n.ui-timepicker-list {\n\tmargin: 0;\n\tpadding: 0;\n\tlist-style: none;\n}\n\n.ui-timepicker-duration {\n\tmargin-left: 5px; color: #888;\n}\n\n.ui-timepicker-list:hover .ui-timepicker-duration {\n\tcolor: #888;\n}\n\n.ui-timepicker-list li {\n\tpadding: 3px 0 3px 5px;\n\tcursor: pointer;\n\twhite-space: nowrap;\n\tcolor: #000;\n\tlist-style: none;\n\tmargin: 0;\n}\n\n.ui-timepicker-list:hover .ui-timepicker-selected {\n\tbackground: #fff; color: #000;\n}\n\nli.ui-timepicker-selected,\n.ui-timepicker-list li:hover,\n.ui-timepicker-list .ui-timepicker-selected:hover {\n\tbackground: #1980EC; color: #fff;\n}\n\nli.ui-timepicker-selected .ui-timepicker-duration,\n.ui-timepicker-list li:hover .ui-timepicker-duration {\n\tcolor: #ccc;\n}\n\n.ui-timepicker-list li.ui-timepicker-disabled,\n.ui-timepicker-list li.ui-timepicker-disabled:hover,\n.ui-timepicker-list li.ui-timepicker-selected.ui-timepicker-disabled {\n\tcolor: #888;\n\tcursor: default;\n}\n\n.ui-timepicker-list li.ui-timepicker-disabled:hover,\n.ui-timepicker-list li.ui-timepicker-selected.ui-timepicker-disabled {\n\tbackground: #f2f2f2;\n}\n", ""]);
+	exports.push([module.id, "/*!\n * Datepicker for Bootstrap v1.7.0-dev (https://github.com/uxsolutions/bootstrap-datepicker)\n *\n * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)\n */\n\n.datepicker {\n  padding: 4px;\n  -webkit-border-radius: 4px;\n  -moz-border-radius: 4px;\n  border-radius: 4px;\n  direction: ltr;\n}\n.datepicker-inline {\n  width: 220px;\n}\n.datepicker.datepicker-rtl {\n  direction: rtl;\n}\n.datepicker.datepicker-rtl.dropdown-menu {\n  left: auto;\n}\n.datepicker.datepicker-rtl table tr td span {\n  float: right;\n}\n.datepicker-dropdown {\n  top: 0;\n  left: 0;\n}\n.datepicker-dropdown:before {\n  content: '';\n  display: inline-block;\n  border-left: 7px solid transparent;\n  border-right: 7px solid transparent;\n  border-bottom: 7px solid #999999;\n  border-top: 0;\n  border-bottom-color: rgba(0, 0, 0, 0.2);\n  position: absolute;\n}\n.datepicker-dropdown:after {\n  content: '';\n  display: inline-block;\n  border-left: 6px solid transparent;\n  border-right: 6px solid transparent;\n  border-bottom: 6px solid #ffffff;\n  border-top: 0;\n  position: absolute;\n}\n.datepicker-dropdown.datepicker-orient-left:before {\n  left: 6px;\n}\n.datepicker-dropdown.datepicker-orient-left:after {\n  left: 7px;\n}\n.datepicker-dropdown.datepicker-orient-right:before {\n  right: 6px;\n}\n.datepicker-dropdown.datepicker-orient-right:after {\n  right: 7px;\n}\n.datepicker-dropdown.datepicker-orient-bottom:before {\n  top: -7px;\n}\n.datepicker-dropdown.datepicker-orient-bottom:after {\n  top: -6px;\n}\n.datepicker-dropdown.datepicker-orient-top:before {\n  bottom: -7px;\n  border-bottom: 0;\n  border-top: 7px solid #999999;\n}\n.datepicker-dropdown.datepicker-orient-top:after {\n  bottom: -6px;\n  border-bottom: 0;\n  border-top: 6px solid #ffffff;\n}\n.datepicker table {\n  margin: 0;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.datepicker td,\n.datepicker th {\n  text-align: center;\n  width: 20px;\n  height: 20px;\n  -webkit-border-radius: 4px;\n  -moz-border-radius: 4px;\n  border-radius: 4px;\n  border: none;\n}\n.table-striped .datepicker table tr td,\n.table-striped .datepicker table tr th {\n  background-color: transparent;\n}\n.datepicker table tr td.day:hover,\n.datepicker table tr td.day.focused {\n  background: #eeeeee;\n  cursor: pointer;\n}\n.datepicker table tr td.old,\n.datepicker table tr td.new {\n  color: #999999;\n}\n.datepicker table tr td.disabled,\n.datepicker table tr td.disabled:hover {\n  background: none;\n  color: #999999;\n  cursor: default;\n}\n.datepicker table tr td.highlighted {\n  background: #d9edf7;\n  border-radius: 0;\n}\n.datepicker table tr td.today,\n.datepicker table tr td.today:hover,\n.datepicker table tr td.today.disabled,\n.datepicker table tr td.today.disabled:hover {\n  background-color: #fde19a;\n  background-image: -moz-linear-gradient(to bottom, #fdd49a, #fdf59a);\n  background-image: -ms-linear-gradient(to bottom, #fdd49a, #fdf59a);\n  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fdd49a), to(#fdf59a));\n  background-image: -webkit-linear-gradient(to bottom, #fdd49a, #fdf59a);\n  background-image: -o-linear-gradient(to bottom, #fdd49a, #fdf59a);\n  background-image: linear-gradient(to bottom, #fdd49a, #fdf59a);\n  background-repeat: repeat-x;\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdd49a', endColorstr='#fdf59a', GradientType=0);\n  border-color: #fdf59a #fdf59a #fbed50;\n  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);\n  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);\n  color: #000;\n}\n.datepicker table tr td.today:hover,\n.datepicker table tr td.today:hover:hover,\n.datepicker table tr td.today.disabled:hover,\n.datepicker table tr td.today.disabled:hover:hover,\n.datepicker table tr td.today:active,\n.datepicker table tr td.today:hover:active,\n.datepicker table tr td.today.disabled:active,\n.datepicker table tr td.today.disabled:hover:active,\n.datepicker table tr td.today.active,\n.datepicker table tr td.today:hover.active,\n.datepicker table tr td.today.disabled.active,\n.datepicker table tr td.today.disabled:hover.active,\n.datepicker table tr td.today.disabled,\n.datepicker table tr td.today:hover.disabled,\n.datepicker table tr td.today.disabled.disabled,\n.datepicker table tr td.today.disabled:hover.disabled,\n.datepicker table tr td.today[disabled],\n.datepicker table tr td.today:hover[disabled],\n.datepicker table tr td.today.disabled[disabled],\n.datepicker table tr td.today.disabled:hover[disabled] {\n  background-color: #fdf59a;\n}\n.datepicker table tr td.today:active,\n.datepicker table tr td.today:hover:active,\n.datepicker table tr td.today.disabled:active,\n.datepicker table tr td.today.disabled:hover:active,\n.datepicker table tr td.today.active,\n.datepicker table tr td.today:hover.active,\n.datepicker table tr td.today.disabled.active,\n.datepicker table tr td.today.disabled:hover.active {\n  background-color: #fbf069 \\9;\n}\n.datepicker table tr td.today:hover:hover {\n  color: #000;\n}\n.datepicker table tr td.today.active:hover {\n  color: #fff;\n}\n.datepicker table tr td.range,\n.datepicker table tr td.range:hover,\n.datepicker table tr td.range.disabled,\n.datepicker table tr td.range.disabled:hover {\n  background: #eeeeee;\n  -webkit-border-radius: 0;\n  -moz-border-radius: 0;\n  border-radius: 0;\n}\n.datepicker table tr td.range.today,\n.datepicker table tr td.range.today:hover,\n.datepicker table tr td.range.today.disabled,\n.datepicker table tr td.range.today.disabled:hover {\n  background-color: #f3d17a;\n  background-image: -moz-linear-gradient(to bottom, #f3c17a, #f3e97a);\n  background-image: -ms-linear-gradient(to bottom, #f3c17a, #f3e97a);\n  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f3c17a), to(#f3e97a));\n  background-image: -webkit-linear-gradient(to bottom, #f3c17a, #f3e97a);\n  background-image: -o-linear-gradient(to bottom, #f3c17a, #f3e97a);\n  background-image: linear-gradient(to bottom, #f3c17a, #f3e97a);\n  background-repeat: repeat-x;\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f3c17a', endColorstr='#f3e97a', GradientType=0);\n  border-color: #f3e97a #f3e97a #edde34;\n  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);\n  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);\n  -webkit-border-radius: 0;\n  -moz-border-radius: 0;\n  border-radius: 0;\n}\n.datepicker table tr td.range.today:hover,\n.datepicker table tr td.range.today:hover:hover,\n.datepicker table tr td.range.today.disabled:hover,\n.datepicker table tr td.range.today.disabled:hover:hover,\n.datepicker table tr td.range.today:active,\n.datepicker table tr td.range.today:hover:active,\n.datepicker table tr td.range.today.disabled:active,\n.datepicker table tr td.range.today.disabled:hover:active,\n.datepicker table tr td.range.today.active,\n.datepicker table tr td.range.today:hover.active,\n.datepicker table tr td.range.today.disabled.active,\n.datepicker table tr td.range.today.disabled:hover.active,\n.datepicker table tr td.range.today.disabled,\n.datepicker table tr td.range.today:hover.disabled,\n.datepicker table tr td.range.today.disabled.disabled,\n.datepicker table tr td.range.today.disabled:hover.disabled,\n.datepicker table tr td.range.today[disabled],\n.datepicker table tr td.range.today:hover[disabled],\n.datepicker table tr td.range.today.disabled[disabled],\n.datepicker table tr td.range.today.disabled:hover[disabled] {\n  background-color: #f3e97a;\n}\n.datepicker table tr td.range.today:active,\n.datepicker table tr td.range.today:hover:active,\n.datepicker table tr td.range.today.disabled:active,\n.datepicker table tr td.range.today.disabled:hover:active,\n.datepicker table tr td.range.today.active,\n.datepicker table tr td.range.today:hover.active,\n.datepicker table tr td.range.today.disabled.active,\n.datepicker table tr td.range.today.disabled:hover.active {\n  background-color: #efe24b \\9;\n}\n.datepicker table tr td.selected,\n.datepicker table tr td.selected:hover,\n.datepicker table tr td.selected.disabled,\n.datepicker table tr td.selected.disabled:hover {\n  background-color: #9e9e9e;\n  background-image: -moz-linear-gradient(to bottom, #b3b3b3, #808080);\n  background-image: -ms-linear-gradient(to bottom, #b3b3b3, #808080);\n  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#b3b3b3), to(#808080));\n  background-image: -webkit-linear-gradient(to bottom, #b3b3b3, #808080);\n  background-image: -o-linear-gradient(to bottom, #b3b3b3, #808080);\n  background-image: linear-gradient(to bottom, #b3b3b3, #808080);\n  background-repeat: repeat-x;\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b3b3b3', endColorstr='#808080', GradientType=0);\n  border-color: #808080 #808080 #595959;\n  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);\n  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);\n  color: #fff;\n  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);\n}\n.datepicker table tr td.selected:hover,\n.datepicker table tr td.selected:hover:hover,\n.datepicker table tr td.selected.disabled:hover,\n.datepicker table tr td.selected.disabled:hover:hover,\n.datepicker table tr td.selected:active,\n.datepicker table tr td.selected:hover:active,\n.datepicker table tr td.selected.disabled:active,\n.datepicker table tr td.selected.disabled:hover:active,\n.datepicker table tr td.selected.active,\n.datepicker table tr td.selected:hover.active,\n.datepicker table tr td.selected.disabled.active,\n.datepicker table tr td.selected.disabled:hover.active,\n.datepicker table tr td.selected.disabled,\n.datepicker table tr td.selected:hover.disabled,\n.datepicker table tr td.selected.disabled.disabled,\n.datepicker table tr td.selected.disabled:hover.disabled,\n.datepicker table tr td.selected[disabled],\n.datepicker table tr td.selected:hover[disabled],\n.datepicker table tr td.selected.disabled[disabled],\n.datepicker table tr td.selected.disabled:hover[disabled] {\n  background-color: #808080;\n}\n.datepicker table tr td.selected:active,\n.datepicker table tr td.selected:hover:active,\n.datepicker table tr td.selected.disabled:active,\n.datepicker table tr td.selected.disabled:hover:active,\n.datepicker table tr td.selected.active,\n.datepicker table tr td.selected:hover.active,\n.datepicker table tr td.selected.disabled.active,\n.datepicker table tr td.selected.disabled:hover.active {\n  background-color: #666666 \\9;\n}\n.datepicker table tr td.active,\n.datepicker table tr td.active:hover,\n.datepicker table tr td.active.disabled,\n.datepicker table tr td.active.disabled:hover {\n  background-color: #006dcc;\n  background-image: -moz-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: -ms-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));\n  background-image: -webkit-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: -o-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: linear-gradient(to bottom, #0088cc, #0044cc);\n  background-repeat: repeat-x;\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);\n  border-color: #0044cc #0044cc #002a80;\n  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);\n  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);\n  color: #fff;\n  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);\n}\n.datepicker table tr td.active:hover,\n.datepicker table tr td.active:hover:hover,\n.datepicker table tr td.active.disabled:hover,\n.datepicker table tr td.active.disabled:hover:hover,\n.datepicker table tr td.active:active,\n.datepicker table tr td.active:hover:active,\n.datepicker table tr td.active.disabled:active,\n.datepicker table tr td.active.disabled:hover:active,\n.datepicker table tr td.active.active,\n.datepicker table tr td.active:hover.active,\n.datepicker table tr td.active.disabled.active,\n.datepicker table tr td.active.disabled:hover.active,\n.datepicker table tr td.active.disabled,\n.datepicker table tr td.active:hover.disabled,\n.datepicker table tr td.active.disabled.disabled,\n.datepicker table tr td.active.disabled:hover.disabled,\n.datepicker table tr td.active[disabled],\n.datepicker table tr td.active:hover[disabled],\n.datepicker table tr td.active.disabled[disabled],\n.datepicker table tr td.active.disabled:hover[disabled] {\n  background-color: #0044cc;\n}\n.datepicker table tr td.active:active,\n.datepicker table tr td.active:hover:active,\n.datepicker table tr td.active.disabled:active,\n.datepicker table tr td.active.disabled:hover:active,\n.datepicker table tr td.active.active,\n.datepicker table tr td.active:hover.active,\n.datepicker table tr td.active.disabled.active,\n.datepicker table tr td.active.disabled:hover.active {\n  background-color: #003399 \\9;\n}\n.datepicker table tr td span {\n  display: block;\n  width: 23%;\n  height: 54px;\n  line-height: 54px;\n  float: left;\n  margin: 1%;\n  cursor: pointer;\n  -webkit-border-radius: 4px;\n  -moz-border-radius: 4px;\n  border-radius: 4px;\n}\n.datepicker table tr td span:hover,\n.datepicker table tr td span.focused {\n  background: #eeeeee;\n}\n.datepicker table tr td span.disabled,\n.datepicker table tr td span.disabled:hover {\n  background: none;\n  color: #999999;\n  cursor: default;\n}\n.datepicker table tr td span.active,\n.datepicker table tr td span.active:hover,\n.datepicker table tr td span.active.disabled,\n.datepicker table tr td span.active.disabled:hover {\n  background-color: #006dcc;\n  background-image: -moz-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: -ms-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));\n  background-image: -webkit-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: -o-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: linear-gradient(to bottom, #0088cc, #0044cc);\n  background-repeat: repeat-x;\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);\n  border-color: #0044cc #0044cc #002a80;\n  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);\n  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);\n  color: #fff;\n  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);\n}\n.datepicker table tr td span.active:hover,\n.datepicker table tr td span.active:hover:hover,\n.datepicker table tr td span.active.disabled:hover,\n.datepicker table tr td span.active.disabled:hover:hover,\n.datepicker table tr td span.active:active,\n.datepicker table tr td span.active:hover:active,\n.datepicker table tr td span.active.disabled:active,\n.datepicker table tr td span.active.disabled:hover:active,\n.datepicker table tr td span.active.active,\n.datepicker table tr td span.active:hover.active,\n.datepicker table tr td span.active.disabled.active,\n.datepicker table tr td span.active.disabled:hover.active,\n.datepicker table tr td span.active.disabled,\n.datepicker table tr td span.active:hover.disabled,\n.datepicker table tr td span.active.disabled.disabled,\n.datepicker table tr td span.active.disabled:hover.disabled,\n.datepicker table tr td span.active[disabled],\n.datepicker table tr td span.active:hover[disabled],\n.datepicker table tr td span.active.disabled[disabled],\n.datepicker table tr td span.active.disabled:hover[disabled] {\n  background-color: #0044cc;\n}\n.datepicker table tr td span.active:active,\n.datepicker table tr td span.active:hover:active,\n.datepicker table tr td span.active.disabled:active,\n.datepicker table tr td span.active.disabled:hover:active,\n.datepicker table tr td span.active.active,\n.datepicker table tr td span.active:hover.active,\n.datepicker table tr td span.active.disabled.active,\n.datepicker table tr td span.active.disabled:hover.active {\n  background-color: #003399 \\9;\n}\n.datepicker table tr td span.old,\n.datepicker table tr td span.new {\n  color: #999999;\n}\n.datepicker .datepicker-switch {\n  width: 145px;\n}\n.datepicker .datepicker-switch,\n.datepicker .prev,\n.datepicker .next,\n.datepicker tfoot tr th {\n  cursor: pointer;\n}\n.datepicker .datepicker-switch:hover,\n.datepicker .prev:hover,\n.datepicker .next:hover,\n.datepicker tfoot tr th:hover {\n  background: #eeeeee;\n}\n.datepicker .prev.disabled,\n.datepicker .next.disabled {\n  visibility: hidden;\n}\n.datepicker .cw {\n  font-size: 10px;\n  width: 12px;\n  padding: 0 2px 0 5px;\n  vertical-align: middle;\n}\n.input-append.date .add-on,\n.input-prepend.date .add-on {\n  cursor: pointer;\n}\n.input-append.date .add-on i,\n.input-prepend.date .add-on i {\n  margin-top: 3px;\n}\n.input-daterange input {\n  text-align: center;\n}\n.input-daterange input:first-child {\n  -webkit-border-radius: 3px 0 0 3px;\n  -moz-border-radius: 3px 0 0 3px;\n  border-radius: 3px 0 0 3px;\n}\n.input-daterange input:last-child {\n  -webkit-border-radius: 0 3px 3px 0;\n  -moz-border-radius: 0 3px 3px 0;\n  border-radius: 0 3px 3px 0;\n}\n.input-daterange .add-on {\n  display: inline-block;\n  width: auto;\n  min-width: 16px;\n  height: 18px;\n  padding: 4px 5px;\n  font-weight: normal;\n  line-height: 18px;\n  text-align: center;\n  text-shadow: 0 1px 0 #ffffff;\n  vertical-align: middle;\n  background-color: #eeeeee;\n  border: 1px solid #ccc;\n  margin-left: -5px;\n  margin-right: -5px;\n}\n/*# sourceMappingURL=bootstrap-datepicker.css.map */", ""]);
 	
 	// exports
 
@@ -10281,8 +10281,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./datepicker.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./datepicker.css");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./timepicker.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./timepicker.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -10300,7 +10300,7 @@
 	
 	
 	// module
-	exports.push([module.id, "/*!\n * Datepicker for Bootstrap v1.7.0-dev (https://github.com/uxsolutions/bootstrap-datepicker)\n *\n * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)\n */\n\n.datepicker {\n  padding: 4px;\n  -webkit-border-radius: 4px;\n  -moz-border-radius: 4px;\n  border-radius: 4px;\n  direction: ltr;\n}\n.datepicker-inline {\n  width: 220px;\n}\n.datepicker.datepicker-rtl {\n  direction: rtl;\n}\n.datepicker.datepicker-rtl.dropdown-menu {\n  left: auto;\n}\n.datepicker.datepicker-rtl table tr td span {\n  float: right;\n}\n.datepicker-dropdown {\n  top: 0;\n  left: 0;\n}\n.datepicker-dropdown:before {\n  content: '';\n  display: inline-block;\n  border-left: 7px solid transparent;\n  border-right: 7px solid transparent;\n  border-bottom: 7px solid #999999;\n  border-top: 0;\n  border-bottom-color: rgba(0, 0, 0, 0.2);\n  position: absolute;\n}\n.datepicker-dropdown:after {\n  content: '';\n  display: inline-block;\n  border-left: 6px solid transparent;\n  border-right: 6px solid transparent;\n  border-bottom: 6px solid #ffffff;\n  border-top: 0;\n  position: absolute;\n}\n.datepicker-dropdown.datepicker-orient-left:before {\n  left: 6px;\n}\n.datepicker-dropdown.datepicker-orient-left:after {\n  left: 7px;\n}\n.datepicker-dropdown.datepicker-orient-right:before {\n  right: 6px;\n}\n.datepicker-dropdown.datepicker-orient-right:after {\n  right: 7px;\n}\n.datepicker-dropdown.datepicker-orient-bottom:before {\n  top: -7px;\n}\n.datepicker-dropdown.datepicker-orient-bottom:after {\n  top: -6px;\n}\n.datepicker-dropdown.datepicker-orient-top:before {\n  bottom: -7px;\n  border-bottom: 0;\n  border-top: 7px solid #999999;\n}\n.datepicker-dropdown.datepicker-orient-top:after {\n  bottom: -6px;\n  border-bottom: 0;\n  border-top: 6px solid #ffffff;\n}\n.datepicker table {\n  margin: 0;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.datepicker td,\n.datepicker th {\n  text-align: center;\n  width: 20px;\n  height: 20px;\n  -webkit-border-radius: 4px;\n  -moz-border-radius: 4px;\n  border-radius: 4px;\n  border: none;\n}\n.table-striped .datepicker table tr td,\n.table-striped .datepicker table tr th {\n  background-color: transparent;\n}\n.datepicker table tr td.day:hover,\n.datepicker table tr td.day.focused {\n  background: #eeeeee;\n  cursor: pointer;\n}\n.datepicker table tr td.old,\n.datepicker table tr td.new {\n  color: #999999;\n}\n.datepicker table tr td.disabled,\n.datepicker table tr td.disabled:hover {\n  background: none;\n  color: #999999;\n  cursor: default;\n}\n.datepicker table tr td.highlighted {\n  background: #d9edf7;\n  border-radius: 0;\n}\n.datepicker table tr td.today,\n.datepicker table tr td.today:hover,\n.datepicker table tr td.today.disabled,\n.datepicker table tr td.today.disabled:hover {\n  background-color: #fde19a;\n  background-image: -moz-linear-gradient(to bottom, #fdd49a, #fdf59a);\n  background-image: -ms-linear-gradient(to bottom, #fdd49a, #fdf59a);\n  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fdd49a), to(#fdf59a));\n  background-image: -webkit-linear-gradient(to bottom, #fdd49a, #fdf59a);\n  background-image: -o-linear-gradient(to bottom, #fdd49a, #fdf59a);\n  background-image: linear-gradient(to bottom, #fdd49a, #fdf59a);\n  background-repeat: repeat-x;\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdd49a', endColorstr='#fdf59a', GradientType=0);\n  border-color: #fdf59a #fdf59a #fbed50;\n  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);\n  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);\n  color: #000;\n}\n.datepicker table tr td.today:hover,\n.datepicker table tr td.today:hover:hover,\n.datepicker table tr td.today.disabled:hover,\n.datepicker table tr td.today.disabled:hover:hover,\n.datepicker table tr td.today:active,\n.datepicker table tr td.today:hover:active,\n.datepicker table tr td.today.disabled:active,\n.datepicker table tr td.today.disabled:hover:active,\n.datepicker table tr td.today.active,\n.datepicker table tr td.today:hover.active,\n.datepicker table tr td.today.disabled.active,\n.datepicker table tr td.today.disabled:hover.active,\n.datepicker table tr td.today.disabled,\n.datepicker table tr td.today:hover.disabled,\n.datepicker table tr td.today.disabled.disabled,\n.datepicker table tr td.today.disabled:hover.disabled,\n.datepicker table tr td.today[disabled],\n.datepicker table tr td.today:hover[disabled],\n.datepicker table tr td.today.disabled[disabled],\n.datepicker table tr td.today.disabled:hover[disabled] {\n  background-color: #fdf59a;\n}\n.datepicker table tr td.today:active,\n.datepicker table tr td.today:hover:active,\n.datepicker table tr td.today.disabled:active,\n.datepicker table tr td.today.disabled:hover:active,\n.datepicker table tr td.today.active,\n.datepicker table tr td.today:hover.active,\n.datepicker table tr td.today.disabled.active,\n.datepicker table tr td.today.disabled:hover.active {\n  background-color: #fbf069 \\9;\n}\n.datepicker table tr td.today:hover:hover {\n  color: #000;\n}\n.datepicker table tr td.today.active:hover {\n  color: #fff;\n}\n.datepicker table tr td.range,\n.datepicker table tr td.range:hover,\n.datepicker table tr td.range.disabled,\n.datepicker table tr td.range.disabled:hover {\n  background: #eeeeee;\n  -webkit-border-radius: 0;\n  -moz-border-radius: 0;\n  border-radius: 0;\n}\n.datepicker table tr td.range.today,\n.datepicker table tr td.range.today:hover,\n.datepicker table tr td.range.today.disabled,\n.datepicker table tr td.range.today.disabled:hover {\n  background-color: #f3d17a;\n  background-image: -moz-linear-gradient(to bottom, #f3c17a, #f3e97a);\n  background-image: -ms-linear-gradient(to bottom, #f3c17a, #f3e97a);\n  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f3c17a), to(#f3e97a));\n  background-image: -webkit-linear-gradient(to bottom, #f3c17a, #f3e97a);\n  background-image: -o-linear-gradient(to bottom, #f3c17a, #f3e97a);\n  background-image: linear-gradient(to bottom, #f3c17a, #f3e97a);\n  background-repeat: repeat-x;\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f3c17a', endColorstr='#f3e97a', GradientType=0);\n  border-color: #f3e97a #f3e97a #edde34;\n  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);\n  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);\n  -webkit-border-radius: 0;\n  -moz-border-radius: 0;\n  border-radius: 0;\n}\n.datepicker table tr td.range.today:hover,\n.datepicker table tr td.range.today:hover:hover,\n.datepicker table tr td.range.today.disabled:hover,\n.datepicker table tr td.range.today.disabled:hover:hover,\n.datepicker table tr td.range.today:active,\n.datepicker table tr td.range.today:hover:active,\n.datepicker table tr td.range.today.disabled:active,\n.datepicker table tr td.range.today.disabled:hover:active,\n.datepicker table tr td.range.today.active,\n.datepicker table tr td.range.today:hover.active,\n.datepicker table tr td.range.today.disabled.active,\n.datepicker table tr td.range.today.disabled:hover.active,\n.datepicker table tr td.range.today.disabled,\n.datepicker table tr td.range.today:hover.disabled,\n.datepicker table tr td.range.today.disabled.disabled,\n.datepicker table tr td.range.today.disabled:hover.disabled,\n.datepicker table tr td.range.today[disabled],\n.datepicker table tr td.range.today:hover[disabled],\n.datepicker table tr td.range.today.disabled[disabled],\n.datepicker table tr td.range.today.disabled:hover[disabled] {\n  background-color: #f3e97a;\n}\n.datepicker table tr td.range.today:active,\n.datepicker table tr td.range.today:hover:active,\n.datepicker table tr td.range.today.disabled:active,\n.datepicker table tr td.range.today.disabled:hover:active,\n.datepicker table tr td.range.today.active,\n.datepicker table tr td.range.today:hover.active,\n.datepicker table tr td.range.today.disabled.active,\n.datepicker table tr td.range.today.disabled:hover.active {\n  background-color: #efe24b \\9;\n}\n.datepicker table tr td.selected,\n.datepicker table tr td.selected:hover,\n.datepicker table tr td.selected.disabled,\n.datepicker table tr td.selected.disabled:hover {\n  background-color: #9e9e9e;\n  background-image: -moz-linear-gradient(to bottom, #b3b3b3, #808080);\n  background-image: -ms-linear-gradient(to bottom, #b3b3b3, #808080);\n  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#b3b3b3), to(#808080));\n  background-image: -webkit-linear-gradient(to bottom, #b3b3b3, #808080);\n  background-image: -o-linear-gradient(to bottom, #b3b3b3, #808080);\n  background-image: linear-gradient(to bottom, #b3b3b3, #808080);\n  background-repeat: repeat-x;\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b3b3b3', endColorstr='#808080', GradientType=0);\n  border-color: #808080 #808080 #595959;\n  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);\n  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);\n  color: #fff;\n  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);\n}\n.datepicker table tr td.selected:hover,\n.datepicker table tr td.selected:hover:hover,\n.datepicker table tr td.selected.disabled:hover,\n.datepicker table tr td.selected.disabled:hover:hover,\n.datepicker table tr td.selected:active,\n.datepicker table tr td.selected:hover:active,\n.datepicker table tr td.selected.disabled:active,\n.datepicker table tr td.selected.disabled:hover:active,\n.datepicker table tr td.selected.active,\n.datepicker table tr td.selected:hover.active,\n.datepicker table tr td.selected.disabled.active,\n.datepicker table tr td.selected.disabled:hover.active,\n.datepicker table tr td.selected.disabled,\n.datepicker table tr td.selected:hover.disabled,\n.datepicker table tr td.selected.disabled.disabled,\n.datepicker table tr td.selected.disabled:hover.disabled,\n.datepicker table tr td.selected[disabled],\n.datepicker table tr td.selected:hover[disabled],\n.datepicker table tr td.selected.disabled[disabled],\n.datepicker table tr td.selected.disabled:hover[disabled] {\n  background-color: #808080;\n}\n.datepicker table tr td.selected:active,\n.datepicker table tr td.selected:hover:active,\n.datepicker table tr td.selected.disabled:active,\n.datepicker table tr td.selected.disabled:hover:active,\n.datepicker table tr td.selected.active,\n.datepicker table tr td.selected:hover.active,\n.datepicker table tr td.selected.disabled.active,\n.datepicker table tr td.selected.disabled:hover.active {\n  background-color: #666666 \\9;\n}\n.datepicker table tr td.active,\n.datepicker table tr td.active:hover,\n.datepicker table tr td.active.disabled,\n.datepicker table tr td.active.disabled:hover {\n  background-color: #006dcc;\n  background-image: -moz-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: -ms-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));\n  background-image: -webkit-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: -o-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: linear-gradient(to bottom, #0088cc, #0044cc);\n  background-repeat: repeat-x;\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);\n  border-color: #0044cc #0044cc #002a80;\n  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);\n  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);\n  color: #fff;\n  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);\n}\n.datepicker table tr td.active:hover,\n.datepicker table tr td.active:hover:hover,\n.datepicker table tr td.active.disabled:hover,\n.datepicker table tr td.active.disabled:hover:hover,\n.datepicker table tr td.active:active,\n.datepicker table tr td.active:hover:active,\n.datepicker table tr td.active.disabled:active,\n.datepicker table tr td.active.disabled:hover:active,\n.datepicker table tr td.active.active,\n.datepicker table tr td.active:hover.active,\n.datepicker table tr td.active.disabled.active,\n.datepicker table tr td.active.disabled:hover.active,\n.datepicker table tr td.active.disabled,\n.datepicker table tr td.active:hover.disabled,\n.datepicker table tr td.active.disabled.disabled,\n.datepicker table tr td.active.disabled:hover.disabled,\n.datepicker table tr td.active[disabled],\n.datepicker table tr td.active:hover[disabled],\n.datepicker table tr td.active.disabled[disabled],\n.datepicker table tr td.active.disabled:hover[disabled] {\n  background-color: #0044cc;\n}\n.datepicker table tr td.active:active,\n.datepicker table tr td.active:hover:active,\n.datepicker table tr td.active.disabled:active,\n.datepicker table tr td.active.disabled:hover:active,\n.datepicker table tr td.active.active,\n.datepicker table tr td.active:hover.active,\n.datepicker table tr td.active.disabled.active,\n.datepicker table tr td.active.disabled:hover.active {\n  background-color: #003399 \\9;\n}\n.datepicker table tr td span {\n  display: block;\n  width: 23%;\n  height: 54px;\n  line-height: 54px;\n  float: left;\n  margin: 1%;\n  cursor: pointer;\n  -webkit-border-radius: 4px;\n  -moz-border-radius: 4px;\n  border-radius: 4px;\n}\n.datepicker table tr td span:hover,\n.datepicker table tr td span.focused {\n  background: #eeeeee;\n}\n.datepicker table tr td span.disabled,\n.datepicker table tr td span.disabled:hover {\n  background: none;\n  color: #999999;\n  cursor: default;\n}\n.datepicker table tr td span.active,\n.datepicker table tr td span.active:hover,\n.datepicker table tr td span.active.disabled,\n.datepicker table tr td span.active.disabled:hover {\n  background-color: #006dcc;\n  background-image: -moz-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: -ms-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));\n  background-image: -webkit-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: -o-linear-gradient(to bottom, #0088cc, #0044cc);\n  background-image: linear-gradient(to bottom, #0088cc, #0044cc);\n  background-repeat: repeat-x;\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);\n  border-color: #0044cc #0044cc #002a80;\n  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);\n  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);\n  color: #fff;\n  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);\n}\n.datepicker table tr td span.active:hover,\n.datepicker table tr td span.active:hover:hover,\n.datepicker table tr td span.active.disabled:hover,\n.datepicker table tr td span.active.disabled:hover:hover,\n.datepicker table tr td span.active:active,\n.datepicker table tr td span.active:hover:active,\n.datepicker table tr td span.active.disabled:active,\n.datepicker table tr td span.active.disabled:hover:active,\n.datepicker table tr td span.active.active,\n.datepicker table tr td span.active:hover.active,\n.datepicker table tr td span.active.disabled.active,\n.datepicker table tr td span.active.disabled:hover.active,\n.datepicker table tr td span.active.disabled,\n.datepicker table tr td span.active:hover.disabled,\n.datepicker table tr td span.active.disabled.disabled,\n.datepicker table tr td span.active.disabled:hover.disabled,\n.datepicker table tr td span.active[disabled],\n.datepicker table tr td span.active:hover[disabled],\n.datepicker table tr td span.active.disabled[disabled],\n.datepicker table tr td span.active.disabled:hover[disabled] {\n  background-color: #0044cc;\n}\n.datepicker table tr td span.active:active,\n.datepicker table tr td span.active:hover:active,\n.datepicker table tr td span.active.disabled:active,\n.datepicker table tr td span.active.disabled:hover:active,\n.datepicker table tr td span.active.active,\n.datepicker table tr td span.active:hover.active,\n.datepicker table tr td span.active.disabled.active,\n.datepicker table tr td span.active.disabled:hover.active {\n  background-color: #003399 \\9;\n}\n.datepicker table tr td span.old,\n.datepicker table tr td span.new {\n  color: #999999;\n}\n.datepicker .datepicker-switch {\n  width: 145px;\n}\n.datepicker .datepicker-switch,\n.datepicker .prev,\n.datepicker .next,\n.datepicker tfoot tr th {\n  cursor: pointer;\n}\n.datepicker .datepicker-switch:hover,\n.datepicker .prev:hover,\n.datepicker .next:hover,\n.datepicker tfoot tr th:hover {\n  background: #eeeeee;\n}\n.datepicker .prev.disabled,\n.datepicker .next.disabled {\n  visibility: hidden;\n}\n.datepicker .cw {\n  font-size: 10px;\n  width: 12px;\n  padding: 0 2px 0 5px;\n  vertical-align: middle;\n}\n.input-append.date .add-on,\n.input-prepend.date .add-on {\n  cursor: pointer;\n}\n.input-append.date .add-on i,\n.input-prepend.date .add-on i {\n  margin-top: 3px;\n}\n.input-daterange input {\n  text-align: center;\n}\n.input-daterange input:first-child {\n  -webkit-border-radius: 3px 0 0 3px;\n  -moz-border-radius: 3px 0 0 3px;\n  border-radius: 3px 0 0 3px;\n}\n.input-daterange input:last-child {\n  -webkit-border-radius: 0 3px 3px 0;\n  -moz-border-radius: 0 3px 3px 0;\n  border-radius: 0 3px 3px 0;\n}\n.input-daterange .add-on {\n  display: inline-block;\n  width: auto;\n  min-width: 16px;\n  height: 18px;\n  padding: 4px 5px;\n  font-weight: normal;\n  line-height: 18px;\n  text-align: center;\n  text-shadow: 0 1px 0 #ffffff;\n  vertical-align: middle;\n  background-color: #eeeeee;\n  border: 1px solid #ccc;\n  margin-left: -5px;\n  margin-right: -5px;\n}\n/*# sourceMappingURL=bootstrap-datepicker.css.map */", ""]);
+	exports.push([module.id, ".ui-timepicker-wrapper {\n\toverflow-y: auto;\n\theight: 150px;\n\twidth: 6.5em;\n\tbackground: #fff;\n\tborder: 1px solid #ddd;\n\t-webkit-box-shadow:0 5px 10px rgba(0,0,0,0.2);\n\t-moz-box-shadow:0 5px 10px rgba(0,0,0,0.2);\n\tbox-shadow:0 5px 10px rgba(0,0,0,0.2);\n\toutline: none;\n\tz-index: 10001;\n\tmargin: 0;\n}\n\n.ui-timepicker-wrapper.ui-timepicker-with-duration {\n\twidth: 13em;\n}\n\n.ui-timepicker-wrapper.ui-timepicker-with-duration.ui-timepicker-step-30,\n.ui-timepicker-wrapper.ui-timepicker-with-duration.ui-timepicker-step-60 {\n\twidth: 11em;\n}\n\n.ui-timepicker-list {\n\tmargin: 0;\n\tpadding: 0;\n\tlist-style: none;\n}\n\n.ui-timepicker-duration {\n\tmargin-left: 5px; color: #888;\n}\n\n.ui-timepicker-list:hover .ui-timepicker-duration {\n\tcolor: #888;\n}\n\n.ui-timepicker-list li {\n\tpadding: 3px 0 3px 5px;\n\tcursor: pointer;\n\twhite-space: nowrap;\n\tcolor: #000;\n\tlist-style: none;\n\tmargin: 0;\n}\n\n.ui-timepicker-list:hover .ui-timepicker-selected {\n\tbackground: #fff; color: #000;\n}\n\nli.ui-timepicker-selected,\n.ui-timepicker-list li:hover,\n.ui-timepicker-list .ui-timepicker-selected:hover {\n\tbackground: #1980EC; color: #fff;\n}\n\nli.ui-timepicker-selected .ui-timepicker-duration,\n.ui-timepicker-list li:hover .ui-timepicker-duration {\n\tcolor: #ccc;\n}\n\n.ui-timepicker-list li.ui-timepicker-disabled,\n.ui-timepicker-list li.ui-timepicker-disabled:hover,\n.ui-timepicker-list li.ui-timepicker-selected.ui-timepicker-disabled {\n\tcolor: #888;\n\tcursor: default;\n}\n\n.ui-timepicker-list li.ui-timepicker-disabled:hover,\n.ui-timepicker-list li.ui-timepicker-selected.ui-timepicker-disabled {\n\tbackground: #f2f2f2;\n}\n", ""]);
 	
 	// exports
 

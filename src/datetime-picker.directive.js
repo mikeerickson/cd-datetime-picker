@@ -1,12 +1,12 @@
 'use strict';
 
-const Sugar         = require('sugar-date');
 const dateTimeUtils = require('./utils/datetime.utils.js');
+const Sugar         = require('sugar-date');
 const template      = require('./datetime-picker.template.html');
 
 require('./datetime-picker.css');
-require('./lib/timepicker.css');
 require('./lib/datepicker.css');
+require('./lib/timepicker.css');
 
 angular.module('ci-datetime-picker', [])
   .directive('ciDateTimePicker', DateTimePickerDirective);
@@ -94,7 +94,7 @@ function DateTimePickerLinker(scope, element, attrs, ngModel) {
     autoclose: true,
     todayHighlight: true,
     weekStart: 0,
-    forceParse: false
+    forceParse: false       // this is required to support human entry 
   };
 
   let tpDefaultOpts = {
