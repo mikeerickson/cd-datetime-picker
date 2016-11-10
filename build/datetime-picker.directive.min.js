@@ -46,9 +46,9 @@
 
 	'use strict';
 	
-	var Sugar = __webpack_require__(1);
-	var dateTimeUtils = __webpack_require__(387);
-	var template = __webpack_require__(388);
+	const Sugar = __webpack_require__(1);
+	const dateTimeUtils = __webpack_require__(387);
+	const template = __webpack_require__(388);
 	
 	__webpack_require__(389);
 	__webpack_require__(393);
@@ -9815,7 +9815,7 @@
 	    let ampm = 'AM';
 	    let isValidTime = true;
 	
-	    if (isNaN(value)) {
+	    if (/nan/i.test(value)) {
 	      return false;
 	    }
 	

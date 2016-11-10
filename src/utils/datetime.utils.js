@@ -65,7 +65,7 @@ let dateTimeUtils = {
     let ampm = 'AM';
     let isValidTime = true;
 
-    if (isNaN(value)) {
+    if (/nan/i.test(value)) {
       return false;
     }
 
