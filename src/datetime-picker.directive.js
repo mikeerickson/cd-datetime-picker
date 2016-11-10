@@ -1,8 +1,8 @@
 'use strict';
 
-var Sugar         = require('sugar-date');
-var dateTimeUtils = require('./utils/datetime.utils.js');
-var template      = require('./datetime-picker.template.html');
+const Sugar         = require('sugar-date');
+const dateTimeUtils = require('./utils/datetime.utils.js');
+const template      = require('./datetime-picker.template.html');
 
 require('./datetime-picker.css');
 require('./lib/timepicker.css');
