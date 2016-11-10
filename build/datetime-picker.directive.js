@@ -80,18 +80,18 @@
 	    }
 	    let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
 	    $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
-	    // $scope.$emit('dp.updateDateTime', {dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue});
+	    $scope.$emit('dp.updateDateTime', { dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue });
 	  };
 	
 	  $dateTimeCtrl.onDateKeyUp = evt => {
-	    console.log(evt);
+	    console.log('onDateKeyUp', evt);
 	  };
 	
 	  $dateTimeCtrl.onTimeBlur = evt => {
 	    $dateTimeCtrl.timeValue = evt.target.value;
 	    let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
 	    $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
-	    // $scope.$emit('dp.updateDateTime', {dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue});
+	    $scope.$emit('dp.updateDateTime', { dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue });
 	  };
 	
 	  $scope.$on('dp.dateChange', (evt, value) => {
@@ -156,7 +156,7 @@
 	  tp.timepicker(tpOpts);
 	  dp.datepicker(dpOpts);
 	  dp.on('changeDate', () => {
-	    console.log('changeDate');
+	    //TODO: leftover, not sure if this can be removed though
 	  });
 	
 	  // setup click handler if time-icon is clicked
@@ -311,6 +311,10 @@
 	      val = '0' + val;
 	    }
 	    return val;
+	  },
+	
+	  getRandomDate: (from, to) => {
+	    return new Date(from.getTime() + Math.random() * (to.getTime() - from.getTime()));
 	  },
 	
 	  convertHumanDate: val => {

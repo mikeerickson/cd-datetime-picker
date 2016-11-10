@@ -110,6 +110,10 @@ let dateTimeUtils = {
     return val;
   },
 
+  getRandomDate: (from, to) => {
+    return new Date(from.getTime() + Math.random() * (to.getTime() - from.getTime()));
+  },
+
   convertHumanDate: (val) => {
     let dtResult = Sugar.Date.create(val);
     if (!isNaN(dtResult)) {

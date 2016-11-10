@@ -43,7 +43,7 @@ function AppController($scope, $element, $attrs) {
   }
 
   vm.formatDateTimeDisplay = function (dateValue, timeValue) {
-    let dt = moment(dateValue + ' ' + timeValue);
+    let dt = moment(new Date(dateValue + ' ' + timeValue));
     let isValid = (dt.isValid() && (parseInt(dt.format('YYYY')) >= pivotYear));
     if (isValid) {
       vm.timeValue = dt.format('h:mm A');
@@ -56,10 +56,8 @@ function AppController($scope, $element, $attrs) {
     }
   };
 
-  function getRandomDate(from, to) {
-      from = from.getTime();
-      to = to.getTime();
-      return new Date(from + Math.random() * (to - from));
+  function getRandomDate(from = new Date(), to = new Date()) {
+    return new Date(from.getTime() + Math.random() * (to.getTime() - from.getTime()));
   }
 
 }
