@@ -1,5 +1,6 @@
 'use strict';
 
+var Sugar         = require('sugar-date');
 var dateTimeUtils = require('./utils/datetime.utils.js');
 var template      = require('./datetime-picker.template.html');
 
@@ -26,15 +27,23 @@ function DateTimePickerController($scope, $element, $attrs) {
   $dateTimeCtrl.timeValue = dateTimeUtils.getTime($scope.datetimeValue);
 
   $dateTimeCtrl.onDateBlur = (evt) => {
-    $dateTimeCtrl.dateValue = evt.target.value;
+    let result = dateTimeUtils.convertHumanDate(evt.target.value);
+    if (dateTimeUtils.isValidDate(result)) {
+      $dateTimeCtrl.dateValue = dateTimeUtils.getDate(result);
+    }
+    else {
+      $dateTimeCtrl.dateValue = evt.target.value;
+    }
     let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
     $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
     $scope.$emit('dp.updateDateTime', {dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue});
   };
 
   $dateTimeCtrl.onDateKeyUp = (evt) => {
-    // perform natural language lookup here?
-    // how to update this value
+    // let dtResult = Sugar.Date.create(evt.target.value);
+    // if (dateTimeUtils.isValidDate(dtResult)) {
+    //   $(evt.target).val(dateTimeUtils.getDate(dtResult));
+    // }
   };
 
   $dateTimeCtrl.onTimeBlur = (evt) => {
@@ -57,7 +66,7 @@ function DateTimePickerController($scope, $element, $attrs) {
 
   });
 
-  $scope.$on('destroy', function () {
+  $scope.$on('destroy', () => {
     $(element).find('span.time-picker-icon').unbind('click');
     $(element).find('span.date-picker-icon').unbind('click');
   });
@@ -87,7 +96,8 @@ function DateTimePickerLinker(scope, element, attrs, ngModel) {
     todayBtn: 'linked',
     autoclose: true,
     todayHighlight: true,
-    weekStart: 0
+    weekStart: 0,
+    forceParse: false
   };
 
   let tpDefaultOpts = {
@@ -100,44 +110,52 @@ function DateTimePickerLinker(scope, element, attrs, ngModel) {
   let dpOpts = angular.extend(dpDefaultOpts, scope.dpOptions);
   let tpOpts = angular.extend(tpDefaultOpts, scope.tpOptions);
 
-  // setup date and time pickers
+  // setup date and time pickers with config options from attributes
   let tp = $(element).find('input.time-picker');
   let dp = $(element).find('input.date-picker');
   tp.timepicker(tpOpts);
   dp.datepicker(dpOpts);
+  dp.on('changeDate', () => {
+    console.log('changeDate');
+  });
 
   // setup click handler if time-icon is clicked
   $(element).find('span.time-picker-icon')
-    .on('click', function () {
+    .on('click', () => {
       tp.timepicker('show');
     });
 
   // setup click handler if date-icon is clicked
   $(element).find('span.date-picker-icon')
-    .on('click', function () {
+    .on('click', () => {
       dp.datepicker('show');
     });
 
   let defaultDate = dateTimeUtils.getDate(scope.datetimeValue);
-  let defaultTime = dateTimeUtils.getTime(scope.datetimeValue);  // this does not seem to be used anywhere
+  let defaultTime = dateTimeUtils.getTime(scope.datetimeValue);
 
   // set control default date (supplyed by ng-model)
   dp.datepicker('setDate', defaultDate);
+  tp.timepicker('setTime', defaultTime);
 
   // attach event listener triggered when date change occurs
   dp.datepicker().on('changeDate', (evt) => {
     scope.$broadcast('dp.dateChange', {dateValue: evt.target.value});
   });
 
-  ngModel.$render = function () {
-
+  ngModel.$render = () => {
     var dateValue = dateTimeUtils.getDate(ngModel.$viewValue);
     var timeValue = dateTimeUtils.getTime(ngModel.$viewValue);
 
-    scope.$dateTimeCtrl.timeValue = timeValue;
-    scope.$dateTimeCtrl.dateValue = dateValue;
+    if (dateTimeUtils.isValidTime(timeValue)) {
+      scope.$dateTimeCtrl.timeValue = timeValue;
+      tp.timepicker('setTime', timeValue);
+    }
 
-    dp.datepicker('setDate', dateValue);
+    if (dateTimeUtils.isValidDate(dateValue)) {
+      scope.$dateTimeCtrl.dateValue = dateValue;
+      dp.datepicker('setDate', dateValue);
+    }
 
   };
 

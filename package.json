@@ -1,6 +1,6 @@
 {
   "name": "cd-datetime-picker",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "angular-datetime-picker",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,8 @@
     "bootstrap": "^3.3.7",
     "bootstrap-datepicker": "^1.6.4",
     "jquery": "2.2.4",
-    "moment": "^2.15.2"
+    "moment": "^2.15.2",
+    "sugar-date": "^2.0.2"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",

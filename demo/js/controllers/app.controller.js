@@ -10,7 +10,6 @@ function AppController($scope, $element, $attrs) {
   // override default datePicker options
   vm.dpOpts = {
     autoclose: true, // true
-    weekStart: 2  // 0
   };
 
   // override default timePicker options

@@ -1,3 +1,5 @@
+const Sugar = require('sugar-date');
+
 let dateTimeUtils = {
 
   getMonth: (datetime) => {
@@ -63,6 +65,10 @@ let dateTimeUtils = {
     let ampm = 'AM';
     let isValidTime = true;
 
+    if (isNaN(value)) {
+      return false;
+    }
+
     if (typeof timeValue !== 'undefined') {
       let parts = timeValue.split(':');
       if (parts.length === 0) {
@@ -88,13 +94,28 @@ let dateTimeUtils = {
     return isValidTime;
   },
 
-  isValidDate: (datetime) => {},
+  isValidDate: (datetime) => {
+    // this needs further validation but this will suffice for now
+    if (!datetime) {
+      return false;
+    }
+    var dt = new Date(datetime);
+    return !isNaN(dt);
+  },
 
   addZero: (val) => {
     if (val < 10) {
       val = '0' + val;
     }
     return val;
+  },
+
+  convertHumanDate: (val) => {
+    let dtResult = Sugar.Date.create(val);
+    if (!isNaN(dtResult)) {
+      return dtResult;
+    }
+    return null;
   }
 };
 
