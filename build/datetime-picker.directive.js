@@ -80,7 +80,7 @@
 	    }
 	    let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
 	    $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
-	    $scope.$emit('dp.updateDateTime', { dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue });
+	    // $scope.$emit('dp.updateDateTime', {dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue});
 	  };
 	
 	  $dateTimeCtrl.onDateKeyUp = evt => {
@@ -91,7 +91,7 @@
 	    $dateTimeCtrl.timeValue = evt.target.value;
 	    let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
 	    $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
-	    $scope.$emit('dp.updateDateTime', { dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue });
+	    // $scope.$emit('dp.updateDateTime', {dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue});
 	  };
 	
 	  $scope.$on('dp.dateChange', (evt, value) => {
