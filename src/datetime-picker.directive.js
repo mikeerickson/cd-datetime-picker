@@ -94,7 +94,8 @@ function DateTimePickerLinker(scope, element, attrs, ngModel) {
     autoclose: true,
     todayHighlight: true,
     weekStart: 0,
-    forceParse: false       // this is required to support human entry
+    forceParse: false,       // this is required to support human entry
+    startDate: new Date()
   };
 
   let tpDefaultOpts = {
