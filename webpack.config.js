@@ -1,6 +1,6 @@
 var webpack              = require('webpack');
 var path                 = require('path');
-const WebpackShellPlugin = require('webpack-shell-plugin');
+const WebpackShellPlugin = require('@slightlytyler/webpack-shell-plugin');
 const TodoWebpackPlugin  = require('todo-webpack-plugin');
 
 module.exports = {

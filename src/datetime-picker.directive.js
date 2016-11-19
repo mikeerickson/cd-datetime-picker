@@ -74,10 +74,10 @@ function DateTimePickerDirective() {
     restrict: 'E',
     require: '^ngModel',
     scope: {
-      dpOptions: '<',
-      tpOptions: '<',
-      dpShow: '<',
-      tpShow: '<',
+      dpOptions: '=',
+      tpOptions: '=',
+      dpShow: '=',
+      tpShow: '=',
       datetimeValue: '=ngModel'
     },
     link: DateTimePickerLinker,
