@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pre-build": "npm run test && npm run eslint",
-    "test": "npm run test:unit",
+    "test": "mocha specs",
     "test:unit": "./node_modules/.bin/karma start",
     "eslint": "eslint \"./**/*.js\"",
     "lint": "npm run eslint",
