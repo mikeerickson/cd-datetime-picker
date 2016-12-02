@@ -4,7 +4,7 @@ var msg    = require('gulp-messenger');
 var concat = require('gulp-concat');
 var chalk  = require('chalk');
 
-msg.init({timestamp: true})
+msg.init({timestamp: true});
 
 var files = [
   './build/datetime-picker.directive.js',
