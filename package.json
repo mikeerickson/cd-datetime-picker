@@ -7,6 +7,7 @@
     "pre-build": "npm run test && npm run eslint",
     "test": "mocha specs",
     "test:unit": "./node_modules/.bin/karma start",
+    "test:karma": "npm run test:unit",
     "eslint": "eslint \"./**/*.js\"",
     "lint": "npm run eslint",
     "start": "node server.js",
