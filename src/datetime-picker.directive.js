@@ -3,6 +3,7 @@
 const dateTimeUtils = require('./utils/datetime.utils.js');
 const Sugar         = require('sugar-date');
 const template      = require('./datetime-picker.template.html');
+const moment        = require('moment');  // This could possibly be removed
 
 require('./datetime-picker.css');
 require('./lib/datepicker.css');

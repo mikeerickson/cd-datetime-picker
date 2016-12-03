@@ -1,5 +1,5 @@
-var webpack              = require('webpack');
-var path                 = require('path');
+const webpack            = require('webpack');
+const path               = require('path');
 const WebpackShellPlugin = require('@slightlytyler/webpack-shell-plugin');
 const TodoWebpackPlugin  = require('todo-webpack-plugin');
 
@@ -28,8 +28,8 @@ module.exports = {
     new WebpackShellPlugin({onBuildEnd: ['gulp build']}),
 
     new TodoWebpackPlugin({
-      console:  true,
-      suppressFileOutput: true,
+      console:  false,
+      suppressFileOutput: false,
       tags: ['todo','error','fixme','bug','info','note']
     }),
 
