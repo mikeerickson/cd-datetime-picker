@@ -1,9 +1,11 @@
 {
   "name": "cd-datetime-picker",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "angular-datetime-picker",
   "main": "index.js",
   "scripts": {
+    "build": "webpack",
+    "build:prod": "webpack -p",
     "pre-build": "npm run test && npm run eslint",
     "test": "mocha specs",
     "test:unit": "./node_modules/.bin/karma start",
