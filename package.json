@@ -1,6 +1,6 @@
 {
   "name": "cd-datetime-picker",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "angular-datetime-picker",
   "main": "index.js",
   "scripts": {
