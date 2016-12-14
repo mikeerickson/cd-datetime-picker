@@ -4,7 +4,9 @@
   "description": "angular-datetime-picker",
   "main": "index.js",
   "scripts": {
+    "all": "npm run eslint && npm run test",
     "build": "webpack",
+    "build:dev": "webpack -w",
     "build:prod": "webpack -p",
     "pre-build": "npm run test && npm run eslint",
     "test": "mocha specs",
