@@ -114,9 +114,8 @@ function DateTimePickerLinker(scope, element, attrs, ngModel) {
   let dp = $(element).find('input.date-picker');
   tp.timepicker(tpOpts);
   dp.datepicker(dpOpts);
-  dp.on('changeDate', () => {
-    //TODO: leftover, not sure if this can be removed though
-  });
+  // dp.on('changeDate', () => {
+  // });
 
   // setup click handler if time-icon is clicked
   $(element).find('span.time-picker-icon')

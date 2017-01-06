@@ -4,7 +4,6 @@ const WebpackShellPlugin = require('@slightlytyler/webpack-shell-plugin');
 const TodoWebpackPlugin  = require('todo-webpack-plugin');
 
 module.exports = {
-  devtool: 'sourcemap',
   context: __dirname + '/src',
   entry: {
     app: './datetime-picker.directive.js'
@@ -28,7 +27,7 @@ module.exports = {
     new WebpackShellPlugin({onBuildEnd: ['gulp build']}),
 
     new TodoWebpackPlugin({
-      console:  false,
+      console:  true,
       suppressFileOutput: false,
       tags: ['todo','error','fixme','bug','info','note']
     }),
