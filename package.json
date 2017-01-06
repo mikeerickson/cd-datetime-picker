@@ -1,6 +1,6 @@
 {
   "name": "cd-datetime-picker",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "angular-datetime-picker",
   "main": "index.js",
   "scripts": {
@@ -49,6 +49,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-messenger": "^0.25.3",
     "gulp-notify": "^2.2.0",
+    "gulp-todo": "^5.1.0",
     "html-loader": "^0.4.4",
     "jasmine": "^2.5.2",
     "jasmine-expect": "^3.0.1",
