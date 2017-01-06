@@ -6,6 +6,7 @@
   "scripts": {
     "build:prod": "webpack -p",
     "build": "webpack",
+    "clean": "rimraf ./dist && rimraf ./demo/lib",
     "eslint": "eslint \"./**/*.js\"",
     "karma": "./node_modules/.bin/karma start",
     "lint": "npm run eslint",
