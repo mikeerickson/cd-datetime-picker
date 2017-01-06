@@ -39,8 +39,12 @@ function AppController($scope, $element, $attrs) {
   };
 
   vm.randomDateTime = function() {
+      debugger;
+
       vm.dateTime = getRandomDate(new Date('01-01-70'), new Date());
       vm.dateTimeValue = moment(vm.dateTime).format(_DATETIMEVALUEFORMAT);
+      //
+
   }
 
   vm.formatDateTimeDisplay = function (dateValue, timeValue) {

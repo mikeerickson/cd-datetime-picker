@@ -2,18 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Cirrus DateTime Picker</title>
+    <title>CodeDungeon DateTime Picker</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="css/app.css">
 
   </head>
   <body ng-app="app">
     <div class="container" ng-controller="AppController as vm">
-      <h1>Cirrus DateTime Picker</h1>
+      <h1>CodeDungeon DateTime Picker</h1>
       <div class="datetime-picker">
         <form>
           <div class="date-time-picker">
-            <ci-datetime-picker tp-options="vm.tpOpts" dp-options="vm.dpOpts" ng-model="vm.dateTime" ></ci-datetime-picker>
+            <cd-datetime-picker tp-options="vm.tpOpts" dp-options="vm.dpOpts" ng-model="vm.dateTime" ></cd-datetime-picker>
             <br />
             {{ vm.displayDateTime }}
             {{ vm.dateTime }}
@@ -65,7 +65,7 @@
     <script src="vendor/moment.min.js"></script>
 
     <!-- ci directives (contains all dependencies including css) -->
-    <script src="../build/datetime-picker.directive.min.js"></script>
+    <script src="lib/datetime-picker.directive.min.js"></script>
 
     <!-- demo files -->
     <script src="js/controllers/app.controller.js"></script>
