@@ -13,10 +13,10 @@
       <div class="datetime-picker">
         <form>
           <div class="date-time-picker">
-            <cd-datetime-picker tp-options="vm.tpOpts" dp-options="vm.dpOpts" ng-model="vm.dateTime" ></cd-datetime-picker>
+            <ci-datetime-picker tp-options="vm.tpOpts" dp-options="vm.dpOpts" ng-model="vm.dateTime" ></ci-datetime-picker>
             <br />
             {{ vm.displayDateTime }}
-            {{ vm.dateTime }}
+            DateTime Value: {{ vm.dateTime }}
             <div class="clearfix">
               <code>Formatted DateTimeValue: {{vm.dateTimeValue}}</code><br/>
               <code>JS Datetime: {{vm.dateTime}}</code><br/>

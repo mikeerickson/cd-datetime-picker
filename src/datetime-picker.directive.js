@@ -9,8 +9,9 @@ require('./datetime-picker.css');
 require('./lib/datepicker.css');
 require('./lib/timepicker.css');
 
-angular.module('cd-datetime-picker', [])
-  .directive('cdDatetimePicker', DateTimePickerDirective);
+
+angular.module('ci-datetime-picker', [])
+  .directive('ciDatetimePicker', DateTimePickerDirective);
 
 DateTimePickerController.$inject = ['$scope', '$element', '$attrs'];
 function DateTimePickerController($scope, $element, $attrs) {
@@ -55,7 +56,6 @@ function DateTimePickerController($scope, $element, $attrs) {
     $dateTimeCtrl.dateValue = value.dateValue;
     let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
     $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
-
     // broadcast datetime change to controller
     $scope.$emit('dp.updateDateTime', {
       dateValue: $dateTimeCtrl.dateValue,
@@ -139,7 +139,11 @@ function DateTimePickerLinker(scope, element, attrs, ngModel) {
 
   // attach event listener triggered when date change occurs
   dp.datepicker().on('changeDate', (evt) => {
-    scope.$broadcast('dp.dateChange', {dateValue: evt.target.value});
+    let dateValue = evt.target.value;
+    if (dateValue.length === 0) {
+      dateValue = dateTimeUtils.getDate(scope.datetimeValue);
+    }
+    scope.$broadcast('dp.dateChange', {dateValue: dateValue});
   });
 
   ngModel.$render = () => {

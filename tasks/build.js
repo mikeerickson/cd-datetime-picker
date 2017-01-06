@@ -16,6 +16,7 @@ gulp.task('build', function () {
   gulp.src(files)
     .pipe(concat('datetime-picker.directive.min.js'))
     .pipe(gulp.dest('./build'))
+    .pipe(gulp.dest('./demo/lib'))
     .on('end', function () {
       msg.log(chalk.green.bold('==> Build Completed Successfully'));
     })
