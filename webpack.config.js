@@ -10,7 +10,7 @@ module.exports = {
     app: './datetime-picker.directive.js'
   },
   output: {
-    path: path.join(__dirname, '/build'),
+    path: path.join(__dirname, '/dist'),
     filename: 'datetime-picker.directive.js'
   },
   module: {

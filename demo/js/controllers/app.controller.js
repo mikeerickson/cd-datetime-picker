@@ -21,7 +21,7 @@ function AppController($scope, $element, $attrs) {
   vm.timeValue     = moment(vm.dateTime).format('h:mm A');
   vm.dateValue     = moment(vm.dateTime).format('MM/DD/YYYY');
   vm.dateTimeValue = moment(vm.dateTime).format(_DATETIMEVALUEFORMAT);
-  vm.displayDateTime = 'dsp';
+  vm.displayDateTime = '';
 
   // events
   $scope.$on('dp.updateDateTime', function (event, data) {

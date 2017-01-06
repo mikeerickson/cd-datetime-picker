@@ -7,7 +7,7 @@ var chalk  = require('chalk');
 msg.init({timestamp: true});
 
 var files = [
-  './build/datetime-picker.directive.js',
+  './dist/datetime-picker.directive.js',
   './src/lib/datepicker.js',
   './src/lib/timepicker.js'
 ];
@@ -15,7 +15,7 @@ var files = [
 gulp.task('build', function () {
   gulp.src(files)
     .pipe(concat('datetime-picker.directive.min.js'))
-    .pipe(gulp.dest('./build'))
+    .pipe(gulp.dest('./dist'))
     .pipe(gulp.dest('./demo/lib'))
     .on('end', function () {
       msg.log(chalk.green.bold('==> Build Completed Successfully'));
