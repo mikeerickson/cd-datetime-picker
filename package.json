@@ -1,6 +1,6 @@
 {
   "name": "cd-datetime-picker",
-  "version": "0.9.2",
+  "version": "0.10.0",
   "description": "angular-datetime-picker",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "lint": "npm run eslint",
     "pre-build": "npm run test && npm run eslint",
     "serve": "lite-server",
-    "start": "node server.js",
+    "start": "lite-server",
     "test:karma": "npm run test:unit",
     "test:unit": "./node_modules/.bin/karma start",
     "test": "mocha specs",
@@ -24,7 +24,8 @@
     "date-picker",
     "time-picker",
     "datetime-picker",
-    "moment"
+    "moment",
+    "picker"
   ],
   "author": "Mike Erickson <codedungeon@gmail.com> (https://github.com/mikeerickson)",
   "license": "MIT",

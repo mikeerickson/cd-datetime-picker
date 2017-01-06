@@ -11,5 +11,5 @@
  * any advantage to use this directive -- http://recras.github.io/angular-jquery-timepicker/
  */
 
-angular.module('app',['ci-datetime-picker'])
+angular.module('app',['cd-datetime-picker'])
   .controller('AppController', AppController);

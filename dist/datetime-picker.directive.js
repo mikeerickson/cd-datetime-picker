@@ -55,7 +55,7 @@
 	__webpack_require__(504);
 	__webpack_require__(506);
 	
-	angular.module('ci-datetime-picker', []).directive('ciDatetimePicker', DateTimePickerDirective);
+	angular.module('cd-datetime-picker', []).directive('cdDatetimePicker', DateTimePickerDirective);
 	
 	DateTimePickerController.$inject = ['$scope', '$element', '$attrs'];
 	function DateTimePickerController($scope, $element, $attrs) {

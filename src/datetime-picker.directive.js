@@ -10,8 +10,8 @@ require('./lib/datepicker.css');
 require('./lib/timepicker.css');
 
 
-angular.module('ci-datetime-picker', [])
-  .directive('ciDatetimePicker', DateTimePickerDirective);
+angular.module('cd-datetime-picker', [])
+  .directive('cdDatetimePicker', DateTimePickerDirective);
 
 DateTimePickerController.$inject = ['$scope', '$element', '$attrs'];
 function DateTimePickerController($scope, $element, $attrs) {
