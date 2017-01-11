@@ -1,9 +1,39 @@
+/*global __dirname*/
+
 const webpack            = require('webpack');
+const merge              = require('webpack-merge');
 const path               = require('path');
 const WebpackShellPlugin = require('@slightlytyler/webpack-shell-plugin');
-const TodoWebpackPlugin  = require('todo-webpack-plugin');
 
-module.exports = {
+const isProd   = (process.env.NODE_ENV === 'production');
+const isDev    = !isProd;
+let targetDev  = {};
+let targetProd = {};
+
+if (isDev) {
+  const TodoWebpackPlugin  = require('todo-webpack-plugin');
+
+  targetDev = {
+    devtool: 'sourcemap',
+    plugins: [
+      new TodoWebpackPlugin({
+        console:  true,
+        suppressFileOutput: false,
+        tags: ['todo','error','fixme','bug','info','note']
+      }),
+    ]
+  };
+}
+
+if (isProd) {
+  targetProd = {
+    plugins: [
+      new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}})
+    ]
+  };
+}
+
+let targetBase = {
   context: __dirname + '/src',
   entry: {
     app: './datetime-picker.directive.js'
@@ -19,18 +49,13 @@ module.exports = {
       {test: /\.css$/, loader: 'style!css'}
     ]
   },
+  devServer: {
+    stats: 'errors-only', // hide all those annoying warnings
+  },
   plugins: [
-
-    // enabling this hoses the datetime controller bind ($dateTimeCtrl)
-    // new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}})
-
     new WebpackShellPlugin({onBuildEnd: ['gulp build']}),
-
-    new TodoWebpackPlugin({
-      console:  true,
-      suppressFileOutput: false,
-      tags: ['todo','error','fixme','bug','info','note']
-    }),
-
+    new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}})
   ]
 };
+
+module.exports = merge(targetBase, targetDev, targetProd);

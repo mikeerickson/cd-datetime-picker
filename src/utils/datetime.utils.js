@@ -72,7 +72,6 @@ let dateTimeUtils = {
     if (typeof timeValue !== 'undefined') {
       let parts = timeValue.split(':');
       if (parts.length === 0) {
-        let timeValue24 = parseInt(timeValue);
         if ((timeValue > 0) && (timeValue <= 2359)) {
           isValidTime = true;
         }
@@ -118,6 +117,14 @@ let dateTimeUtils = {
     let dtResult = Sugar.Date.create(val);
     if (!isNaN(dtResult)) {
       return dtResult;
+    }
+    return null;
+  },
+
+  formatDateTime: (val) => {
+    let dtResult = Sugar.Date(val);
+    if (dtResult.hasOwnProperty('raw')) {
+      return dtResult.full().raw;
     }
     return null;
   }

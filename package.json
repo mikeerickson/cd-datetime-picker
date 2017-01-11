@@ -1,10 +1,10 @@
 {
   "name": "cd-datetime-picker",
-  "version": "0.12.0",
+  "version": "0.14.1",
   "description": "angular-datetime-picker",
   "main": "index.js",
   "scripts": {
-    "build:prod": "webpack -p",
+    "build:prod": "NODE_ENV=production webpack -p",
     "build": "webpack",
     "clean": "rimraf ./dist && rimraf ./demo/lib",
     "eslint": "eslint \"./**/*.js\"",
@@ -21,12 +21,12 @@
   "keywords": [
     "angular",
     "bootstrap",
-    "datetime",
     "date-picker",
-    "time-picker",
     "datetime-picker",
+    "datetime",
     "moment",
-    "picker"
+    "picker",
+    "time-picker"
   ],
   "author": "Mike Erickson <codedungeon@gmail.com> (https://github.com/mikeerickson)",
   "license": "MIT",
@@ -36,7 +36,7 @@
     "bootstrap-datepicker": "^1.6.4",
     "jquery": "2.2.4",
     "jquery-timepicker": "^1.3.3",
-    "moment": "^2.15.2",
+    "moment": "2.17.1",
     "sugar-date": "2.0.4"
   },
   "devDependencies": {
@@ -52,6 +52,7 @@
     "gulp-messenger": "^0.25.3",
     "gulp-notify": "^2.2.0",
     "gulp-todo": "5.2.0",
+    "gulp-uglifyjs": "0.6.2",
     "html-loader": "^0.4.4",
     "jasmine": "^2.5.2",
     "jasmine-expect": "^3.0.1",
@@ -72,6 +73,7 @@
     "require-dir": "^0.3.1",
     "style-loader": "^0.13.1",
     "todo-webpack-plugin": "^1.5.1",
-    "webpack": "1.14.0"
+    "webpack": "1.14.0",
+    "webpack-merge": "2.3.1"
   }
 }

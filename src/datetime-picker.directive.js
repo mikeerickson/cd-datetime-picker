@@ -1,23 +1,20 @@
 'use strict';
 
 const dateTimeUtils = require('./utils/datetime.utils.js');
-const Sugar         = require('sugar-date');
 const template      = require('./datetime-picker.template.html');
-const moment        = require('moment');  // This could possibly be removed
+require('sugar-date');
 
 require('./datetime-picker.css');
 require('./lib/datepicker.css');
 require('./lib/timepicker.css');
 
-
 angular.module('cd-datetime-picker', [])
   .directive('cdDatetimePicker', DateTimePickerDirective);
 
-DateTimePickerController.$inject = ['$scope', '$element', '$attrs'];
+/* @ngInject */
 function DateTimePickerController($scope, $element, $attrs) {
 
-  let $dateTimeCtrl = this;
-  let _DATETIMEVALUEFORMAT = 'LLLL';
+  const $dateTimeCtrl = this;
 
   $dateTimeCtrl.dpShow = $scope.dpShow === undefined || $scope.dpShow;
   $dateTimeCtrl.tpShow = $scope.tpShow === undefined || $scope.tpShow;
@@ -36,8 +33,7 @@ function DateTimePickerController($scope, $element, $attrs) {
     else {
       $dateTimeCtrl.dateValue = evt.target.value;
     }
-    let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
-    $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
+    $scope.datetimeValue = dateTimeUtils.formatDateTime($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
     $scope.$emit('dp.updateDateTime', {dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue});
   };
 
@@ -47,15 +43,14 @@ function DateTimePickerController($scope, $element, $attrs) {
 
   $dateTimeCtrl.onTimeBlur = (evt) => {
     $dateTimeCtrl.timeValue = evt.target.value;
-    let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
-    $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
+    $scope.datetimeValue = dateTimeUtils.formatDateTime($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
     $scope.$emit('dp.updateDateTime', {dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue});
   };
 
   $scope.$on('dp.dateChange', (evt, value) => {
     $dateTimeCtrl.dateValue = value.dateValue;
-    let dt = new Date($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
-    $scope.datetimeValue = moment(dt).format(_DATETIMEVALUEFORMAT);
+    $scope.datetimeValue = dateTimeUtils.formatDateTime($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
+
     // broadcast datetime change to controller
     $scope.$emit('dp.updateDateTime', {
       dateValue: $dateTimeCtrl.dateValue,

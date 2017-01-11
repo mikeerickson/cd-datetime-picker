@@ -3,6 +3,7 @@ var utils  = require('./utils.js');
 var msg    = require('gulp-messenger');
 var concat = require('gulp-concat');
 var chalk  = require('chalk');
+var uglify = require('gulp-uglifyjs');
 
 msg.init({timestamp: true});
 
@@ -15,6 +16,7 @@ var files = [
 gulp.task('build', function () {
   gulp.src(files)
     .pipe(concat('datetime-picker.directive.min.js'))
+    .pipe(uglify())
     .pipe(gulp.dest('./dist'))
     .pipe(gulp.dest('./demo/lib'))
     .on('end', function () {
