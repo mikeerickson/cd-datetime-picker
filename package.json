@@ -11,16 +11,16 @@
     "build:dev": "npm run clean && webpack",
     "clean": "rimraf npm-debug.log && rimraf ./build && rimraf ./dist && rimraf ./demo/lib",
     "eslint": "eslint \"./**/*.js\"",
-    "karma": "./node_modules/.bin/karma start --single-run",
+    "karma": "karma start --single-run",
     "lint": "npm run eslint",
     "pre-publish": "npm run clean && npm run build:prod",
     "pre-build": "npm run test && npm run eslint",
     "serve": "lite-server",
     "start": "lite-server",
     "test:karma": "npm run test:unit",
-    "test:unit": "./node_modules/.bin/karma start",
+    "test:unit": "karma start",
     "test": "mocha specs",
-    "todo": "./node_modules/.bin/leasot \"./src/**/*.js\" --ignore \"./src/lib/**/*.js\" --tags error,info,fixme,review,bug,note,feature || true"
+    "todo": "leasot \"./src/**/*.js\" --ignore \"./src/lib/**/*.js\" --tags error,info,fixme,review,bug,note,feature || true"
   },
   "keywords": [
     "angular",
@@ -80,5 +80,16 @@
     "todo-webpack-plugin": "^1.5.1",
     "webpack": "1.14.0",
     "webpack-merge": "2.3.1"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeerickson/cd-datetime-picker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mikeerickson/cd-datetime-picker/issues"
+  },
+  "homepage": "https://github.com/mikeerickson/cd-datetime-picker#readme"
 }
