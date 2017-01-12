@@ -14,6 +14,10 @@ var files = [
   './src/lib/timepicker.js'
 ];
 
+gulp.task('build:vendor', () => {
+  msg.log(chalk.yellow.bold(`==> WIP ${pkgInfo.name} Vendor Bundle Build In Progress`));
+});
+
 gulp.task('build:dev', function () {
   gulp.src(files)
     .pipe(concat('datetime-picker.directive.js'))

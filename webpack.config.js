@@ -7,6 +7,8 @@ const WebpackShellPlugin = require('@slightlytyler/webpack-shell-plugin');
 
 const isProd   = (process.env.NODE_ENV === 'production');
 const isDev    = !isProd;
+const demoPath = path.join(__dirname, '/demo');
+
 let targetDev  = {};
 let targetProd = {};
 
@@ -16,6 +18,7 @@ if (isDev) {
   targetDev = {
     devtool: 'sourcemap',
     plugins: [
+      new WebpackShellPlugin({onBuildEnd: ['gulp build:dev']}),
       new TodoWebpackPlugin({
         console:  true,
         suppressFileOutput: false,
@@ -28,7 +31,8 @@ if (isDev) {
 if (isProd) {
   targetProd = {
     plugins: [
-      new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}})
+      new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
+      new WebpackShellPlugin({onBuildEnd: ['gulp build:prod']})
     ]
   };
 }
@@ -52,9 +56,7 @@ let targetBase = {
   devServer: {
     stats: 'errors-only', // hide all those annoying warnings
   },
-  plugins: [
-    new WebpackShellPlugin({onBuildEnd: ['gulp build']})
-  ]
+  plugins: []
 };
 
 const webpackConfig = merge(targetBase, targetDev, targetProd);

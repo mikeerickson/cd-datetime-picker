@@ -6,7 +6,9 @@
   "scripts": {
     "all": "npm run eslint && npm test && npm run karma",
     "build:prod": "NODE_ENV=production webpack -p",
+    "build:vendor": "webpack --progress --config webpack.vendor.config.js",
     "build": "npm run clean && webpack",
+    "build:dev": "npm run clean && webpack",
     "clean": "rimraf ./build && rimraf ./dist && rimraf ./demo/lib",
     "eslint": "eslint \"./**/*.js\"",
     "karma": "./node_modules/.bin/karma start --single-run",
@@ -46,6 +48,7 @@
     "babel-core": "6.21.0",
     "babel-loader": "6.2.10",
     "babel-preset-es2015": "^6.18.0",
+    "copy-webpack-plugin": "4.0.1",
     "css-loader": "0.26.1",
     "eslint": "3.13.0",
     "gulp": "3.9.1",
