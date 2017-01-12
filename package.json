@@ -13,7 +13,7 @@
     "eslint": "eslint \"./**/*.js\"",
     "karma": "karma start --single-run",
     "lint": "npm run eslint",
-    "publish": "npm run clean && npm run build:prod",
+    "publish": "npm run build:dev && npm run build:prod",
     "pre-build": "npm run test && npm run eslint",
     "serve": "lite-server",
     "start": "lite-server",
