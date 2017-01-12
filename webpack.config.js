@@ -11,7 +11,7 @@ let targetDev  = {};
 let targetProd = {};
 
 if (isDev) {
-  const TodoWebpackPlugin  = require('todo-webpack-plugin');
+  const TodoWebpackPlugin = require('todo-webpack-plugin');
 
   targetDev = {
     devtool: 'sourcemap',
@@ -39,7 +39,7 @@ let targetBase = {
     app: './datetime-picker.directive.js'
   },
   output: {
-    path: path.join(__dirname, '/dist'),
+    path: path.join(__dirname, '/build'),
     filename: 'datetime-picker.directive.js'
   },
   module: {
@@ -53,9 +53,9 @@ let targetBase = {
     stats: 'errors-only', // hide all those annoying warnings
   },
   plugins: [
-    new WebpackShellPlugin({onBuildEnd: ['gulp build']}),
-    new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}})
+    new WebpackShellPlugin({onBuildEnd: ['gulp build']})
   ]
 };
 
-module.exports = merge(targetBase, targetDev, targetProd);
+const webpackConfig = merge(targetBase, targetDev, targetProd);
+module.exports = webpackConfig;
