@@ -1,14 +1,14 @@
 {
   "name": "cd-datetime-picker",
-  "version": "0.15.2",
+  "version": "0.15.3",
   "description": "angular-datetime-picker",
   "main": "index.js",
   "scripts": {
     "all": "npm run eslint && npm test && npm run karma",
     "build:prod": "NODE_ENV=production webpack -p",
     "build:vendor": "webpack --progress --config webpack.vendor.config.js",
-    "build": "npm run clean && webpack",
-    "build:dev": "npm run clean && webpack",
+    "build": "npm run build:dev && npm run build:prod",
+    "build:dev": "webpack",
     "clean": "rimraf npm-debug.log && rimraf ./build && rimraf ./dist && rimraf ./demo/lib",
     "eslint": "eslint \"./**/*.js\"",
     "karma": "karma start --single-run",
