@@ -47,13 +47,27 @@
 	'use strict';
 	
 	DateTimePickerController.$inject = ["$scope", "$element", "$attrs"];
-	var dateTimeUtils = __webpack_require__(1);
-	var template = __webpack_require__(388);
-	__webpack_require__(2);
+	var _datetimePickerTemplate = __webpack_require__(388);
+	
+	var _datetimePickerTemplate2 = _interopRequireDefault(_datetimePickerTemplate);
+	
+	var _DateTimeUtils = __webpack_require__(398);
+	
+	var _DateTimeUtils2 = _interopRequireDefault(_DateTimeUtils);
+	
+	var _sugarDate = __webpack_require__(2);
+	
+	var _sugarDate2 = _interopRequireDefault(_sugarDate);
 	
 	__webpack_require__(389);
+	
 	__webpack_require__(393);
+	
 	__webpack_require__(395);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var dateTimeUtils = new _DateTimeUtils2.default();
 	
 	angular.module('cd-datetime-picker', []).directive('cdDatetimePicker', DateTimePickerDirective);
 	
@@ -83,7 +97,8 @@
 	  };
 	
 	  $dateTimeCtrl.onDateKeyUp = function (evt) {
-	    console.log('onDateKeyUp', evt);
+	    // *** NOT WORKING AS OF YET ***
+	    //$dateTimeCtrl.onDateBlur(evt);
 	  };
 	
 	  $dateTimeCtrl.onTimeBlur = function (evt) {
@@ -114,16 +129,16 @@
 	    restrict: 'E',
 	    require: '^ngModel',
 	    scope: {
-	      dpOptions: '=',
-	      tpOptions: '=',
-	      dpShow: '=',
-	      tpShow: '=',
+	      dpOptions: '<',
+	      tpOptions: '<',
+	      dpShow: '<',
+	      tpShow: '<',
 	      datetimeValue: '=ngModel'
 	    },
 	    link: DateTimePickerLinker,
 	    controller: DateTimePickerController,
 	    controllerAs: '$dateTimeCtrl',
-	    template: template
+	    template: _datetimePickerTemplate2.default
 	  };
 	}
 	
@@ -199,146 +214,7 @@
 	}
 
 /***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Sugar = __webpack_require__(2);
-	
-	var dateTimeUtils = {
-	
-	  getMonth: function getMonth(datetime) {
-	    var dt = new Date(datetime);
-	    return dt.getMonth() + 1;
-	  },
-	
-	  getDay: function getDay(datetime) {
-	    var dt = new Date(datetime);
-	    return dt.getDate();
-	  },
-	
-	  getYear: function getYear(datetime) {
-	    var dt = new Date(datetime);
-	    return dt.getFullYear();
-	  },
-	
-	  getHours: function getHours(datetime) {
-	    var dt = new Date(datetime);
-	    return dt.getHours();
-	  },
-	
-	  getMinutes: function getMinutes(datetime) {
-	    var dt = new Date(datetime);
-	    return dt.getMinutes();
-	  },
-	
-	  getTime: function getTime(datetime) {
-	    var hours = parseInt(dateTimeUtils.getHours(datetime));
-	    var mins = parseInt(dateTimeUtils.getMinutes(datetime));
-	    var ampm = 'am';
-	
-	    if (hours > 12) {
-	      hours -= 12;
-	      ampm = 'pm';
-	    }
-	
-	    if (hours === 12) {
-	      ampm = 'pm';
-	    }
-	
-	    if (hours === 0) {
-	      hours = 12;
-	    }
-	
-	    if (hours > 24) {
-	      hours = 0;
-	      ampm = 'am';
-	    }
-	
-	    return hours + ':' + dateTimeUtils.addZero(mins) + ' ' + ampm.toUpperCase();
-	  },
-	
-	  getDate: function getDate(datetime) {
-	    var mon = parseInt(dateTimeUtils.getMonth(datetime));
-	    var day = parseInt(dateTimeUtils.getDay(datetime));
-	    var year = parseInt(dateTimeUtils.getYear(datetime));
-	    return dateTimeUtils.addZero(mon) + '/' + dateTimeUtils.addZero(day) + '/' + year;
-	  },
-	
-	  isValidTime: function isValidTime(value) {
-	    var timeValue = value.toUpperCase().replace(' ', ':');
-	    var ampm = 'AM';
-	    var isValidTime = true;
-	
-	    if (/nan/i.test(value)) {
-	      return false;
-	    }
-	
-	    if (typeof timeValue !== 'undefined') {
-	      var parts = timeValue.split(':');
-	      if (parts.length === 0) {
-	        if (timeValue > 0 && timeValue <= 2359) {
-	          isValidTime = true;
-	        }
-	      }
-	
-	      var hours = parseInt(parts[0]);
-	      var mins = parseInt(parts[1]);
-	      ampm = parts.length > 1 ? parts[2] : ampm;
-	
-	      if (hours > 12) {
-	        hours -= hours;
-	        ampm = 'PM';
-	      }
-	      if (hours > 12 || mins > 59) {
-	        isValidTime = false;
-	      }
-	    }
-	
-	    return isValidTime;
-	  },
-	
-	  isValidDate: function isValidDate(datetime) {
-	    // this needs further validation but this will suffice for now
-	    if (!datetime) {
-	      return false;
-	    }
-	    var dt = new Date(datetime);
-	    return !isNaN(dt);
-	  },
-	
-	  addZero: function addZero(val) {
-	    if (val < 10) {
-	      val = '0' + val;
-	    }
-	    return val;
-	  },
-	
-	  getRandomDate: function getRandomDate(from, to) {
-	    return new Date(from.getTime() + Math.random() * (to.getTime() - from.getTime()));
-	  },
-	
-	  convertHumanDate: function convertHumanDate(val) {
-	    var dtResult = Sugar.Date.create(val);
-	    if (!isNaN(dtResult)) {
-	      return dtResult;
-	    }
-	    return null;
-	  },
-	
-	  formatDateTime: function formatDateTime(val) {
-	    var dtResult = Sugar.Date(val);
-	    if (dtResult.hasOwnProperty('raw')) {
-	      return dtResult.full().raw;
-	    }
-	    return null;
-	  }
-	};
-	
-	module.exports = dateTimeUtils;
-
-/***/ },
+/* 1 */,
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -9889,7 +9765,7 @@
 /* 388 */
 /***/ function(module, exports) {
 
-	module.exports = "<!DOCTYPE html>\n<div class=\"cd-datetime-picker\">\n  <div ng-show=\"{{$dateTimeCtrl.dpShow}}\" class=\"input-group cd-datetime-picker-date\" style=\"width: 140px; float: left;\">\n    <input type=\"text\"\n      class=\"form-control date-picker\"\n      ng-model=\"$dateTimeCtrl.dateValue\"\n      ng-blur=\"$dateTimeCtrl.onDateBlur($event)\"\n    >\n    <span class=\"input-group-addon date-picker-icon\"><i class=\"glyphicon glyphicon-calendar\"></i></span>\n  </div>\n\n  <div ng-show=\"{{$dateTimeCtrl.tpShow}}\" class=\"input-group cd-datetime-picker-time\" style=\"width: 140px; padding-left: 5px; padding-right: 10px;\">\n    <input type=\"text\"\n      class=\"form-control time-picker\"\n      ng-model=\"$dateTimeCtrl.timeValue\"\n      ng-blur=\"$dateTimeCtrl.onTimeBlur($event)\"\n    >\n    <span class=\"input-group-addon time-picker-icon\"><i class=\"glyphicon glyphicon-time\"></i></span>\n  </div>\n</div>\n"
+	module.exports = "<!DOCTYPE html>\n<div class=\"cd-datetime-picker\">\n  <div ng-show=\"{{$dateTimeCtrl.dpShow}}\" class=\"input-group cd-datetime-picker-date\" style=\"width: 140px; float: left;\">\n    <input type=\"text\"\n      class=\"form-control date-picker\"\n      ng-model=\"$dateTimeCtrl.dateValue\"\n      ng-blur=\"$dateTimeCtrl.onDateBlur($event)\"\n      ng-keyup=\"$dateTimeCtrl.onDateKeyUp($event)\"\n    >\n    <span class=\"input-group-addon date-picker-icon\"><i class=\"glyphicon glyphicon-calendar\"></i></span>\n  </div>\n\n  <div ng-show=\"{{$dateTimeCtrl.tpShow}}\" class=\"input-group cd-datetime-picker-time\" style=\"width: 140px; padding-left: 5px; padding-right: 10px;\">\n    <input type=\"text\"\n      class=\"form-control time-picker\"\n      ng-model=\"$dateTimeCtrl.timeValue\"\n      ng-blur=\"$dateTimeCtrl.onTimeBlur($event)\"\n    >\n    <span class=\"input-group-addon time-picker-icon\"><i class=\"glyphicon glyphicon-time\"></i></span>\n  </div>\n</div>\n"
 
 /***/ },
 /* 389 */
@@ -9926,7 +9802,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".cd-datetime-picker {\n  border-radius: 3px;\n}\n", ""]);
+	exports.push([module.id, ".cd-datetime-picker {\n  border-radius: 3px;\n  bordeR: 1px solid purple;\n}\n", ""]);
 	
 	// exports
 
@@ -10318,6 +10194,200 @@
 	
 	// exports
 
+
+/***/ },
+/* 397 */,
+/* 398 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _sugarDate = __webpack_require__(2);
+	
+	var _sugarDate2 = _interopRequireDefault(_sugarDate);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var DateTimeUtils = function () {
+	  function DateTimeUtils() {
+	    _classCallCheck(this, DateTimeUtils);
+	  }
+	
+	  _createClass(DateTimeUtils, [{
+	    key: 'getMonth',
+	    value: function getMonth() {
+	      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+	
+	      var dt = new Date(datetime);
+	      return dt.getMonth() + 1;
+	    }
+	  }, {
+	    key: 'getDay',
+	    value: function getDay() {
+	      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+	
+	      var dt = new Date(datetime);
+	      return dt.getDate();
+	    }
+	  }, {
+	    key: 'getYear',
+	    value: function getYear() {
+	      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+	
+	      var dt = new Date(datetime);
+	      return dt.getFullYear();
+	    }
+	  }, {
+	    key: 'getHours',
+	    value: function getHours() {
+	      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+	
+	      var dt = new Date(datetime);
+	      return dt.getHours();
+	    }
+	  }, {
+	    key: 'getMinutes',
+	    value: function getMinutes() {
+	      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+	
+	      var dt = new Date(datetime);
+	      return dt.getMinutes();
+	    }
+	  }, {
+	    key: 'getTime',
+	    value: function getTime() {
+	      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+	
+	      var hours = parseInt(this.getHours(datetime));
+	      var mins = parseInt(this.getMinutes(datetime));
+	      var ampm = 'am';
+	
+	      if (hours > 12) {
+	        hours -= 12;
+	        ampm = 'pm';
+	      }
+	
+	      if (hours === 12) {
+	        ampm = 'pm';
+	      }
+	
+	      if (hours === 0) {
+	        hours = 12;
+	      }
+	
+	      if (hours > 24) {
+	        hours = 0;
+	        ampm = 'am';
+	      }
+	
+	      return hours + ':' + this.addZero(mins) + ' ' + ampm.toUpperCase();
+	    }
+	  }, {
+	    key: 'getDate',
+	    value: function getDate() {
+	      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+	
+	      var mon = parseInt(this.getMonth(datetime));
+	      var day = parseInt(this.getDay(datetime));
+	      var year = parseInt(this.getYear(datetime));
+	      return this.addZero(mon) + '/' + this.addZero(day) + '/' + year;
+	    }
+	  }, {
+	    key: 'isValidTime',
+	    value: function isValidTime() {
+	      var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+	
+	      if (value === '') {
+	        return false;
+	      }
+	      var timeValue = value.toUpperCase().replace(' ', ':');
+	      var ampm = 'AM';
+	      var isValidTime = true;
+	
+	      if (/nan/i.test(value)) {
+	        return false;
+	      }
+	
+	      if (typeof timeValue !== 'undefined') {
+	        var parts = timeValue.split(':');
+	        if (parts.length === 0) {
+	          if (timeValue > 0 && timeValue <= 2359) {
+	            isValidTime = true;
+	          }
+	        }
+	
+	        var hours = parseInt(parts[0]);
+	        var mins = parseInt(parts[1]);
+	        ampm = parts.length > 1 ? parts[2] : ampm;
+	
+	        if (hours > 12) {
+	          hours -= hours;
+	          ampm = 'PM';
+	        }
+	        if (hours > 12 || mins > 59) {
+	          isValidTime = false;
+	        }
+	      }
+	
+	      return isValidTime;
+	    }
+	  }, {
+	    key: 'isValidDate',
+	    value: function isValidDate(datetime) {
+	      // this needs further validation but this will suffice for now
+	      if (!datetime) {
+	        return false;
+	      }
+	      var dt = new Date(datetime);
+	      return !isNaN(dt);
+	    }
+	  }, {
+	    key: 'addZero',
+	    value: function addZero() {
+	      var val = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+	
+	      if (val < 10) {
+	        val = '0' + val;
+	      }
+	      return val;
+	    }
+	  }, {
+	    key: 'getRandomDate',
+	    value: function getRandomDate(from, to) {
+	      return new Date(from.getTime() + Math.random() * (to.getTime() - from.getTime()));
+	    }
+	  }, {
+	    key: 'convertHumanDate',
+	    value: function convertHumanDate(val) {
+	      var dtResult = _sugarDate2.default.Date.create(val);
+	      if (!isNaN(dtResult)) {
+	        return dtResult;
+	      }
+	      return null;
+	    }
+	  }, {
+	    key: 'formatDateTime',
+	    value: function formatDateTime(val) {
+	      var dtResult = _sugarDate2.default.Date(val);
+	      if (dtResult.hasOwnProperty('raw')) {
+	        return dtResult.full().raw;
+	      }
+	      return null;
+	    }
+	  }]);
+	
+	  return DateTimeUtils;
+	}();
+	
+	exports.default = DateTimeUtils;
 
 /***/ }
 /******/ ]);

@@ -1,12 +1,14 @@
 'use strict';
 
-const dateTimeUtils = require('./utils/datetime.utils.js');
-const template      = require('./datetime-picker.template.html');
-require('sugar-date');
+import template      from './datetime-picker.template.html';
+import DateTimeUtils from './utils/DateTimeUtils';
+import Sugar         from 'sugar-date';
 
-require('./datetime-picker.css');
-require('./lib/datepicker.css');
-require('./lib/timepicker.css');
+import '!style!css!./datetime-picker.css';
+import '!style!css!./lib/datepicker.css';
+import '!style!css!./lib/timepicker.css';
+
+let dateTimeUtils = new DateTimeUtils();
 
 angular.module('cd-datetime-picker', [])
   .directive('cdDatetimePicker', DateTimePickerDirective);
@@ -38,7 +40,8 @@ function DateTimePickerController($scope, $element, $attrs) {
   };
 
   $dateTimeCtrl.onDateKeyUp = (evt) => {
-    console.log('onDateKeyUp', evt);
+    // *** NOT WORKING AS OF YET ***
+    //$dateTimeCtrl.onDateBlur(evt);
   };
 
   $dateTimeCtrl.onTimeBlur = (evt) => {
@@ -70,10 +73,10 @@ function DateTimePickerDirective() {
     restrict: 'E',
     require: '^ngModel',
     scope: {
-      dpOptions: '=',
-      tpOptions: '=',
-      dpShow: '=',
-      tpShow: '=',
+      dpOptions: '<',
+      tpOptions: '<',
+      dpShow: '<',
+      tpShow: '<',
       datetimeValue: '=ngModel'
     },
     link: DateTimePickerLinker,

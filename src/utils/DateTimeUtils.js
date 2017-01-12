@@ -1,35 +1,37 @@
-const Sugar = require('sugar-date');
+import Sugar from 'sugar-date';
 
-const dateTimeUtils = {
+export default class DateTimeUtils {
+  constructor() {
+  }
 
-  getMonth: (datetime = '') => {
+  getMonth(datetime = '') {
     let dt = new Date(datetime);
     return dt.getMonth() + 1;
-  },
+  }
 
-  getDay: (datetime = '') => {
+  getDay(datetime = '') {
     let dt = new Date(datetime);
     return dt.getDate();
-  },
+  }
 
-  getYear: (datetime = '') => {
+  getYear(datetime = '') {
     let dt = new Date(datetime);
     return dt.getFullYear();
-  },
+  }
 
-  getHours: (datetime = '') => {
+  getHours(datetime = '') {
     let dt = new Date(datetime);
     return dt.getHours();
-  },
+  }
 
-  getMinutes: (datetime = '') => {
+  getMinutes(datetime = '') {
     let dt = new Date(datetime);
     return dt.getMinutes();
-  },
+  }
 
-  getTime: (datetime = '') => {
-      let hours = parseInt(dateTimeUtils.getHours(datetime));
-      let mins = parseInt(dateTimeUtils.getMinutes(datetime));
+  getTime(datetime = '') {
+      let hours = parseInt(this.getHours(datetime));
+      let mins = parseInt(this.getMinutes(datetime));
       let ampm = 'am';
 
       if (hours > 12) {
@@ -50,17 +52,17 @@ const dateTimeUtils = {
         ampm = 'am';
       }
 
-      return hours + ':' + dateTimeUtils.addZero(mins) + ' ' + ampm.toUpperCase();
-  },
+      return hours + ':' + this.addZero(mins) + ' ' + ampm.toUpperCase();
+  }
 
-  getDate: (datetime = '') => {
-    let mon = parseInt(dateTimeUtils.getMonth(datetime));
-    let day = parseInt(dateTimeUtils.getDay(datetime));
-    let year = parseInt(dateTimeUtils.getYear(datetime));
-    return dateTimeUtils.addZero(mon) + '/' + dateTimeUtils.addZero(day) + '/' + year;
-  },
+  getDate(datetime = '') {
+    let mon = parseInt(this.getMonth(datetime));
+    let day = parseInt(this.getDay(datetime));
+    let year = parseInt(this.getYear(datetime));
+    return this.addZero(mon) + '/' + this.addZero(day) + '/' + year;
+  }
 
-  isValidTime: (value = '') => {
+  isValidTime(value = '') {
     if (value === '') {
       return false;
     }
@@ -94,43 +96,42 @@ const dateTimeUtils = {
     }
 
     return isValidTime;
-  },
+  }
 
-  isValidDate: (datetime) => {
+  isValidDate(datetime) {
     // this needs further validation but this will suffice for now
     if (!datetime) {
       return false;
     }
     var dt = new Date(datetime);
     return !isNaN(dt);
-  },
+  }
 
-  addZero: (val = 0) => {
+  addZero(val = 0) {
     if (val < 10) {
       val = '0' + val;
     }
     return val;
-  },
+  }
 
-  getRandomDate: (from, to) => {
+  getRandomDate(from, to) {
     return new Date(from.getTime() + Math.random() * (to.getTime() - from.getTime()));
-  },
+  }
 
-  convertHumanDate: (val) => {
+  convertHumanDate(val) {
     let dtResult = Sugar.Date.create(val);
     if (!isNaN(dtResult)) {
       return dtResult;
     }
     return null;
-  },
+  }
 
-  formatDateTime: (val) => {
+  formatDateTime(val) {
     let dtResult = Sugar.Date(val);
     if (dtResult.hasOwnProperty('raw')) {
       return dtResult.full().raw;
     }
     return null;
   }
-};
 
-module.exports = dateTimeUtils;
+}

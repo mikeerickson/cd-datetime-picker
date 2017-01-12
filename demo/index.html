@@ -13,9 +13,18 @@
       <div class="datetime-picker">
         <form>
           <div class="date-time-picker">
-            <cd-datetime-picker tp-options="vm.tpOpts" dp-options="vm.dpOpts" ng-model="vm.dateTime" ></cd-datetime-picker>
+
+            <!-- See demo/js/app.controller.js for configuration options -->
+            <cd-datetime-picker
+              tp-show=true tp-options="vm.tpOpts"
+              dp-show=true dp-options="vm.dpOpts"
+              ng-model="vm.dateTime" >
+            </cd-datetime-picker>
+
             <br />
-            {{ vm.displayDateTime }}
+            <br />
+            <br />
+
             <div class="clearfix">
               <code>Formatted DateTimeValue:<br />{{vm.dateTimeValue}}</code><br/>
               <br />
@@ -24,6 +33,7 @@
               <button class="btn btn-primary" ng-click="vm.updateTime();">Update</button>
               <button class="btn btn-primary" ng-click="vm.randomDateTime();">Random</button>
             </div>
+
           </div>
           <hr />
           <div class="sandbox hide">
