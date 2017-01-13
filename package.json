@@ -19,7 +19,7 @@
     "start": "lite-server",
     "test:karma": "npm run test:unit",
     "test:unit": "karma start",
-    "test": "mocha specs",
+    "test": "nyc mocha specs",
     "todo": "leasot \"./src/**/*.js\" --ignore \"./src/lib/**/*.js\" --tags error,info,fixme,review,bug,note,feature || true"
   },
   "keywords": [
@@ -51,7 +51,7 @@
     "babel-preset-es2015": "^6.18.0",
     "copy-webpack-plugin": "4.0.1",
     "css-loader": "0.26.1",
-    "eslint": "3.13.0",
+    "eslint": "3.13.1",
     "gulp": "3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-messenger": "^0.25.3",
@@ -73,13 +73,16 @@
     "mocha": "3.2.0",
     "ng-annotate": "^1.2.1",
     "ng-annotate-loader": "^0.2.0",
+    "node-sass": "4.3.0",
+    "nyc": "10.0.0",
     "phantomjs-prebuilt": "2.1.14",
     "raw-loader": "^0.5.1",
     "require-dir": "^0.3.1",
+    "sass-loader": "4.1.1",
     "style-loader": "^0.13.1",
     "todo-webpack-plugin": "^1.5.1",
     "webpack": "1.14.0",
-    "webpack-merge": "2.3.1"
+    "webpack-merge": "2.4.0"
   },
   "directories": {
     "test": "test"
