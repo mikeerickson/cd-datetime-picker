@@ -9,6 +9,7 @@
     "build:vendor": "webpack --progress --config webpack.vendor.config.js",
     "build": "npm run build:dev && npm run build:prod",
     "build:dev": "webpack",
+    "coverage": "./node_modules/.bin/nyc npm test",
     "clean": "rimraf npm-debug.log && rimraf ./build && rimraf ./dist && rimraf ./demo/lib",
     "eslint": "eslint \"./**/*.js\"",
     "karma": "karma start --single-run",
@@ -19,7 +20,8 @@
     "start": "lite-server",
     "test:karma": "npm run test:unit",
     "test:unit": "karma start",
-    "test": "nyc mocha specs",
+    "test": "mocha specs",
+    "test:coverage": "./node_modules/.bin/nyc mocha specs",
     "todo": "leasot \"./src/**/*.js\" --ignore \"./src/lib/**/*.js\" --tags error,info,fixme,review,bug,note,feature || true"
   },
   "keywords": [
