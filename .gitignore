@@ -13,3 +13,4 @@ build/
 __old/
 /sandbox
 .nyc_output/
+stats.json
