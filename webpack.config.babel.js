@@ -35,28 +35,11 @@ targetBase = {
 };
 
 if (isDev) {
-  const TodoWebpackPlugin = require('todo-webpack-plugin');
-
-  targetDev = {
-    devtool: 'sourcemap',
-    plugins: [
-      new WebpackShellPlugin({onBuildEnd: ['gulp build:dev']}),
-      new TodoWebpackPlugin({
-        console:  true,
-        suppressFileOutput: false,
-        tags: ['todo','error','fixme','bug','info','note']
-      }),
-    ]
-  };
+  targetDev = require('./webpack/dev.config');
 }
 
 if (isProd) {
-  targetProd = {
-    plugins: [
-      new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
-      new WebpackShellPlugin({onBuildEnd: ['gulp build:prod']})
-    ]
-  };
+  targetProd = require('./webpack/production.config');
 }
 
 const webpackConfig = merge(targetBase, targetDev, targetProd);
