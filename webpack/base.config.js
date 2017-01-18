@@ -1,12 +1,14 @@
-const path = require('path');
+import path from 'path';
+
+const APP_ROOT = path.resolve(__dirname, '..','src');
 
 const targetBase = {
-  context: __dirname + '/src',
+  context: APP_ROOT + '/src',
   entry: {
-    app: './datetime-picker.directive.js'
+    app: path.join(APP_ROOT, 'datetime-picker.directive.js')
   },
   output: {
-    path: path.join(__dirname, '/build'),
+    path: path.join(APP_ROOT, '/build'),
     filename: 'datetime-picker.directive.js'
   },
   module: {
@@ -16,10 +18,7 @@ const targetBase = {
       {test: /\.css$/, loader: 'style!css'}
     ]
   },
-  devServer: {
-    stats: 'errors-only', // hide all those annoying warnings
-  },
   plugins: []
 };
 
-module.exports = targetBase;
+export default targetBase;

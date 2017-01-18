@@ -13,5 +13,4 @@ const webpackConfig = {
   ]
 };
 
-export default webpackConfig;
 module.exports = webpackConfig;
