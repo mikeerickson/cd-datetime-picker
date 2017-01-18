@@ -21,4 +21,4 @@ const targetBase = {
   plugins: []
 };
 
-export default targetBase;
+module.exports = targetBase;
