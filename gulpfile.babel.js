@@ -1,6 +1,6 @@
-var gulp       = require('gulp');
-var msg        = require('gulp-messenger');
-var requireDir = require('require-dir');
+const gulp       = require('gulp');
+const msg        = require('gulp-messenger');
+const requireDir = require('require-dir');
 
 msg.init({logToFile: true, timestamp: true});
 
