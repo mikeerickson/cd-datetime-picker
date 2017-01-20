@@ -10710,7 +10710,7 @@ function DateTimePickerController($scope, $element, $attrs) {
   };
 
   $dateTimeCtrl.onDateKeyUp = function (evt) {
-    // *** NOT WORKING AS OF YET ***
+    // TODO: *** NOT WORKING AS OF YET ***
     //$dateTimeCtrl.onDateBlur(evt);
   };
 
