@@ -4,9 +4,9 @@ import template      from './datetime-picker.template.html';
 import DateTimeUtils from './utils/DateTimeUtils';
 import Sugar         from 'sugar-date';
 
-import '!style!css!./datetime-picker.css';
-import '!style!css!./lib/datepicker.css';
-import '!style!css!./lib/timepicker.css';
+import './datetime-picker.css';
+import './lib/datepicker.css';
+import './lib/timepicker.css';
 
 let dateTimeUtils = new DateTimeUtils();
 
@@ -40,7 +40,7 @@ function DateTimePickerController($scope, $element, $attrs) {
   };
 
   $dateTimeCtrl.onDateKeyUp = (evt) => {
-    // *** NOT WORKING AS OF YET ***
+    // TODO: *** NOT WORKING AS OF YET ***
     //$dateTimeCtrl.onDateBlur(evt);
   };
 

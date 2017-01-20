@@ -6,8 +6,10 @@ var utils = require('./utils.js');
 
 var files = [
   './src/**/*.js',
-  '!./src/lib/*'
-
+  './tasks/**/*.js',
+  './test/**/*.js',
+  './specs/**/*.js',
+  '!./src/lib/*',
 ];
 
 gulp.task('todo', () => {
@@ -15,6 +17,6 @@ gulp.task('todo', () => {
     .pipe(todo())
     .pipe(gulp.dest('./'))
     .on('end', function () {
-      msg.log(chalk.green('==> `./TODO.md` Created'));
+      msg.log(chalk.green.bold(`==> ${chalk.cyan.bold('./TODO.md')} Created Successfully`));
     });
 });
