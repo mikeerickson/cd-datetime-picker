@@ -2,7 +2,7 @@
 // ignore is important, if omitted it will wreak havoc on gulp tsaks
 
 {
-	"presets": ["es2015"],
+	"presets": ["babili", "es2015"],
 	"ignore": ["bower_components", "node_modules"],
 	"plugins": []
 }

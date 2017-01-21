@@ -1,6 +1,6 @@
 {
   "name": "cd-datetime-picker",
-  "version": "0.21.1",
+  "version": "0.21.2-build.14",
   "description": "angular-datetime-picker",
   "main": "index.js",
   "scripts": {
@@ -51,8 +51,11 @@
     "angular-mocks": "1.6.1",
     "babel-core": "6.22.1",
     "babel-loader": "6.2.10",
+    "babel-preset-babili": "0.0.10",
     "babel-preset-es2015": "^6.18.0",
     "babel-register": "6.22.0",
+    "babili-webpack-plugin": "0.0.7",
+    "bump-version": "github:ianstormtaylor/bump",
     "copy-webpack-plugin": "4.0.1",
     "css-loader": "0.26.1",
     "eslint": "3.13.1",

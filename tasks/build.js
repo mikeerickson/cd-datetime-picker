@@ -37,7 +37,7 @@ gulp.task('build:dev', () => {
     .pipe(concat('datetime-picker.directive.js'))
     .pipe(gulp.dest('./dist'))
     .pipe(gulp.dest('./demo/lib'))
-    .pipe(shell(['bump prerelease']))
+    .pipe(shell(['./node_modules/.bin/bump prerelease']))
     .on('end', () => {
       msg.log(chalk.green.bold(`==> ${chalk.cyan.bold(pkgInfo.name)} Development Bundle Built Successfully`));
     });
@@ -49,7 +49,6 @@ gulp.task('build:prod', () => {
     .pipe(uglify())
     .pipe(gulp.dest('./dist'))
     .pipe(gulp.dest('./demo/lib'))
-    // .pipe(shell(['bump prerelease']))  // dont bump production version, handled by `np`
     .on('end', () => {
       msg.log(chalk.green.bold(`==> ${chalk.cyan.bold(pkgInfo.name)} Production Bundle Built Successfully`));
     });
