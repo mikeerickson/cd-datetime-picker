@@ -5,7 +5,6 @@ import chalk from 'chalk';
 import BuildNotifierPlugin from 'webpack-build-notifier';
 import ProgressBarPlugin   from 'progress-bar-webpack-plugin';
 import SemverPlugin        from 'semver-extended-webpack-plugin';
-import BabiliPlugin        from 'babili-webpack-plugin';
 
 const isProd   = (process.env.NODE_ENV === 'production') || (process.env.ENV === 'production');
 const isDev    = !isProd;

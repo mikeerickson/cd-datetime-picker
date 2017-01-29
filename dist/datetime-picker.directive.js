@@ -4111,7 +4111,194 @@ module.exports = MULTIPLIERS;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-var _createClass=function(){function a(b,c){for(var e,d=0;d<c.length;d++)e=c[d],e.enumerable=e.enumerable||!1,e.configurable=!0,'value'in e&&(e.writable=!0),Object.defineProperty(b,e.key,e)}return function(b,c,d){return c&&a(b.prototype,c),d&&a(b,d),b}}(),_sugarDate=__webpack_require__(60),_sugarDate2=_interopRequireDefault(_sugarDate);Object.defineProperty(exports,'__esModule',{value:!0});function _interopRequireDefault(a){return a&&a.__esModule?a:{default:a}}function _classCallCheck(a,b){if(!(a instanceof b))throw new TypeError('Cannot call a class as a function')}var DateTimeUtils=function(){function a(){_classCallCheck(this,a)}return _createClass(a,[{key:'getMonth',value:function getMonth(){var b=0<arguments.length&&void 0!==arguments[0]?arguments[0]:'',c=new Date(b);return c.getMonth()+1}},{key:'getDay',value:function getDay(){var b=0<arguments.length&&void 0!==arguments[0]?arguments[0]:'',c=new Date(b);return c.getDate()}},{key:'getYear',value:function getYear(){var b=0<arguments.length&&void 0!==arguments[0]?arguments[0]:'',c=new Date(b);return c.getFullYear()}},{key:'getHours',value:function getHours(){var b=0<arguments.length&&void 0!==arguments[0]?arguments[0]:'',c=new Date(b);return c.getHours()}},{key:'getMinutes',value:function getMinutes(){var b=0<arguments.length&&void 0!==arguments[0]?arguments[0]:'',c=new Date(b);return c.getMinutes()}},{key:'getTime',value:function getTime(){var b=0<arguments.length&&void 0!==arguments[0]?arguments[0]:'',c=parseInt(this.getHours(b)),d=parseInt(this.getMinutes(b)),e='am';return 12<c&&(c-=12,e='pm'),12===c&&(e='pm'),0===c&&(c=12),24<c&&(c=0,e='am'),c+':'+this.addZero(d)+' '+e.toUpperCase()}},{key:'getDate',value:function getDate(){var b=0<arguments.length&&void 0!==arguments[0]?arguments[0]:'',c=parseInt(this.getMonth(b)),d=parseInt(this.getDay(b)),e=parseInt(this.getYear(b));return this.addZero(c)+'/'+this.addZero(d)+'/'+e}},{key:'isValidTime',value:function isValidTime(){var b=0<arguments.length&&void 0!==arguments[0]?arguments[0]:'';if(''===b)return!1;var c=b.toUpperCase().replace(' ',':'),d='AM',e=!0;if(/nan/i.test(b))return!1;if('undefined'!=typeof c){var f=c.split(':');0===f.length&&0<c&&2359>=c&&(e=!0);var g=parseInt(f[0]),h=parseInt(f[1]);d=1<f.length?f[2]:d,12<g&&(g-=g,d='PM'),(12<g||59<h)&&(e=!1)}return e}},{key:'isValidDate',value:function isValidDate(b){if(!b)return!1;var c=new Date(b);return!isNaN(c)}},{key:'addZero',value:function addZero(){var b=0<arguments.length&&void 0!==arguments[0]?arguments[0]:0;return 10>b&&(b='0'+b),b}},{key:'getRandomDate',value:function getRandomDate(b,c){return new Date(b.getTime()+Math.random()*(c.getTime()-b.getTime()))}},{key:'convertHumanDate',value:function convertHumanDate(b){var c=_sugarDate2.default.Date.create(b);return isNaN(c)?null:c}},{key:'formatDateTime',value:function formatDateTime(b){var c=_sugarDate2.default.Date(b);return c.hasOwnProperty('raw')?c.full().raw:null}}]),a}();exports.default=DateTimeUtils;
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _sugarDate = __webpack_require__(60);
+
+var _sugarDate2 = _interopRequireDefault(_sugarDate);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DateTimeUtils = function () {
+  function DateTimeUtils() {
+    _classCallCheck(this, DateTimeUtils);
+  }
+
+  _createClass(DateTimeUtils, [{
+    key: 'getMonth',
+    value: function getMonth() {
+      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+      var dt = new Date(datetime);
+      return dt.getMonth() + 1;
+    }
+  }, {
+    key: 'getDay',
+    value: function getDay() {
+      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+      var dt = new Date(datetime);
+      return dt.getDate();
+    }
+  }, {
+    key: 'getYear',
+    value: function getYear() {
+      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+      var dt = new Date(datetime);
+      return dt.getFullYear();
+    }
+  }, {
+    key: 'getHours',
+    value: function getHours() {
+      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+      var dt = new Date(datetime);
+      return dt.getHours();
+    }
+  }, {
+    key: 'getMinutes',
+    value: function getMinutes() {
+      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+      var dt = new Date(datetime);
+      return dt.getMinutes();
+    }
+  }, {
+    key: 'getTime',
+    value: function getTime() {
+      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+      var hours = parseInt(this.getHours(datetime));
+      var mins = parseInt(this.getMinutes(datetime));
+      var ampm = 'am';
+
+      if (hours > 12) {
+        hours -= 12;
+        ampm = 'pm';
+      }
+
+      if (hours === 12) {
+        ampm = 'pm';
+      }
+
+      if (hours === 0) {
+        hours = 12;
+      }
+
+      if (hours > 24) {
+        hours = 0;
+        ampm = 'am';
+      }
+
+      return hours + ':' + this.addZero(mins) + ' ' + ampm.toUpperCase();
+    }
+  }, {
+    key: 'getDate',
+    value: function getDate() {
+      var datetime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+      var mon = parseInt(this.getMonth(datetime));
+      var day = parseInt(this.getDay(datetime));
+      var year = parseInt(this.getYear(datetime));
+      return this.addZero(mon) + '/' + this.addZero(day) + '/' + year;
+    }
+  }, {
+    key: 'isValidTime',
+    value: function isValidTime() {
+      var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+      if (value === '') {
+        return false;
+      }
+      var timeValue = value.toUpperCase().replace(' ', ':');
+      var ampm = 'AM';
+      var isValidTime = true;
+
+      if (/nan/i.test(value)) {
+        return false;
+      }
+
+      if (typeof timeValue !== 'undefined') {
+        var parts = timeValue.split(':');
+        if (parts.length === 0) {
+          if (timeValue > 0 && timeValue <= 2359) {
+            isValidTime = true;
+          }
+        }
+
+        var hours = parseInt(parts[0]);
+        var mins = parseInt(parts[1]);
+        ampm = parts.length > 1 ? parts[2] : ampm;
+
+        if (hours > 12) {
+          hours -= hours;
+          ampm = 'PM';
+        }
+        if (hours > 12 || mins > 59) {
+          isValidTime = false;
+        }
+      }
+
+      return isValidTime;
+    }
+  }, {
+    key: 'isValidDate',
+    value: function isValidDate(datetime) {
+      // this needs further validation but this will suffice for now
+      if (!datetime) {
+        return false;
+      }
+      var dt = new Date(datetime);
+      return !isNaN(dt);
+    }
+  }, {
+    key: 'addZero',
+    value: function addZero() {
+      var val = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+      if (val < 10) {
+        val = '0' + val;
+      }
+      return val;
+    }
+  }, {
+    key: 'getRandomDate',
+    value: function getRandomDate(from, to) {
+      return new Date(from.getTime() + Math.random() * (to.getTime() - from.getTime()));
+    }
+  }, {
+    key: 'convertHumanDate',
+    value: function convertHumanDate(val) {
+      var dtResult = _sugarDate2.default.Date.create(val);
+      if (!isNaN(dtResult)) {
+        return dtResult;
+      }
+      return null;
+    }
+  }, {
+    key: 'formatDateTime',
+    value: function formatDateTime(val) {
+      var dtResult = _sugarDate2.default.Date(val);
+      if (dtResult.hasOwnProperty('raw')) {
+        return dtResult.full().raw;
+      }
+      return null;
+    }
+  }]);
+
+  return DateTimeUtils;
+}();
+
+exports.default = DateTimeUtils;
 
 /***/ }),
 /* 96 */
@@ -10471,7 +10658,173 @@ module.exports = g;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-var _datetimePickerTemplate=__webpack_require__(96),_datetimePickerTemplate2=_interopRequireDefault(_datetimePickerTemplate),_DateTimeUtils=__webpack_require__(95),_DateTimeUtils2=_interopRequireDefault(_DateTimeUtils),_sugarDate=__webpack_require__(60),_sugarDate2=_interopRequireDefault(_sugarDate);__webpack_require__(97),__webpack_require__(98),__webpack_require__(99);function _interopRequireDefault(a){return a&&a.__esModule?a:{default:a}}var dateTimeUtils=new _DateTimeUtils2.default;angular.module('cd-datetime-picker',[]).directive('cdDatetimePicker',DateTimePickerDirective);function DateTimePickerController(a){var d=this;d.dpShow=a.dpShow===void 0||a.dpShow,d.tpShow=a.tpShow===void 0||a.tpShow,''===a.datetimeValue&&(a.datetimeValue=new Date().toString()),d.dateValue=dateTimeUtils.getDate(a.datetimeValue),d.timeValue=dateTimeUtils.getTime(a.datetimeValue),d.onDateBlur=function(e){var f=dateTimeUtils.convertHumanDate(e.target.value);d.dateValue=dateTimeUtils.isValidDate(f)?dateTimeUtils.getDate(f):e.target.value,a.datetimeValue=dateTimeUtils.formatDateTime(d.dateValue+' '+d.timeValue),a.$emit('dp.updateDateTime',{dateValue:d.dateValue,timeValue:d.timeValue})},d.onDateKeyUp=function(){},d.onTimeBlur=function(e){d.timeValue=e.target.value,a.datetimeValue=dateTimeUtils.formatDateTime(d.dateValue+' '+d.timeValue),a.$emit('dp.updateDateTime',{dateValue:d.dateValue,timeValue:d.timeValue})},a.$on('dp.dateChange',function(e,f){d.dateValue=f.dateValue,a.datetimeValue=dateTimeUtils.formatDateTime(d.dateValue+' '+d.timeValue),a.$emit('dp.updateDateTime',{dateValue:d.dateValue,timeValue:d.timeValue})}),a.$on('destroy',function(){$(element).find('span.time-picker-icon').unbind('click'),$(element).find('span.date-picker-icon').unbind('click')})}function DateTimePickerDirective(){return{restrict:'E',require:'^ngModel',scope:{dpOptions:'<',tpOptions:'<',dpShow:'<',tpShow:'<',datetimeValue:'=ngModel'},link:DateTimePickerLinker,controller:DateTimePickerController,controllerAs:'$dateTimeCtrl',template:_datetimePickerTemplate2.default}}function DateTimePickerLinker(a,b,c,d){var e={todayBtn:'linked',autoclose:!0,todayHighlight:!0,weekStart:0,forceParse:!1,startDate:new Date},g=angular.extend(e,a.dpOptions),h=angular.extend({scrollDefault:'now',timeFormat:'g:i A',step:15},a.tpOptions),i=$(b).find('input.time-picker'),j=$(b).find('input.date-picker');i.timepicker(h),j.datepicker(g),$(b).find('span.time-picker-icon').on('click',function(){i.timepicker('show')}),$(b).find('span.date-picker-icon').on('click',function(){j.datepicker('show')});var k=dateTimeUtils.getDate(a.datetimeValue),l=dateTimeUtils.getTime(a.datetimeValue);j.datepicker('setDate',k),i.timepicker('setTime',l),j.datepicker().on('changeDate',function(m){var n=m.target.value;0===n.length&&(n=dateTimeUtils.getDate(a.datetimeValue)),a.$broadcast('dp.dateChange',{dateValue:n})}),d.$render=function(){var m=dateTimeUtils.getDate(d.$viewValue),n=dateTimeUtils.getTime(d.$viewValue);dateTimeUtils.isValidTime(n)&&(a.$dateTimeCtrl.timeValue=n,i.timepicker('setTime',n)),dateTimeUtils.isValidDate(m)&&(a.$dateTimeCtrl.dateValue=m,j.datepicker('setDate',m))}}
+
+
+var _datetimePickerTemplate = __webpack_require__(96);
+
+var _datetimePickerTemplate2 = _interopRequireDefault(_datetimePickerTemplate);
+
+var _DateTimeUtils = __webpack_require__(95);
+
+var _DateTimeUtils2 = _interopRequireDefault(_DateTimeUtils);
+
+var _sugarDate = __webpack_require__(60);
+
+var _sugarDate2 = _interopRequireDefault(_sugarDate);
+
+__webpack_require__(97);
+
+__webpack_require__(98);
+
+__webpack_require__(99);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var dateTimeUtils = new _DateTimeUtils2.default();
+
+angular.module('cd-datetime-picker', []).directive('cdDatetimePicker', DateTimePickerDirective);
+
+/* @ngInject */
+function DateTimePickerController($scope, $element, $attrs) {
+
+  var $dateTimeCtrl = this;
+
+  $dateTimeCtrl.dpShow = $scope.dpShow === undefined || $scope.dpShow;
+  $dateTimeCtrl.tpShow = $scope.tpShow === undefined || $scope.tpShow;
+
+  if ($scope.datetimeValue === '') {
+    $scope.datetimeValue = new Date().toString();
+  }
+  $dateTimeCtrl.dateValue = dateTimeUtils.getDate($scope.datetimeValue);
+  $dateTimeCtrl.timeValue = dateTimeUtils.getTime($scope.datetimeValue);
+
+  $dateTimeCtrl.onDateBlur = function (evt) {
+    var result = dateTimeUtils.convertHumanDate(evt.target.value);
+    if (dateTimeUtils.isValidDate(result)) {
+      $dateTimeCtrl.dateValue = dateTimeUtils.getDate(result);
+    } else {
+      $dateTimeCtrl.dateValue = evt.target.value;
+    }
+    $scope.datetimeValue = dateTimeUtils.formatDateTime($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
+    $scope.$emit('dp.updateDateTime', { dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue });
+  };
+
+  $dateTimeCtrl.onDateKeyUp = function (evt) {
+    // TODO: *** NOT WORKING AS OF YET ***
+    //$dateTimeCtrl.onDateBlur(evt);
+  };
+
+  $dateTimeCtrl.onTimeBlur = function (evt) {
+    $dateTimeCtrl.timeValue = evt.target.value;
+    $scope.datetimeValue = dateTimeUtils.formatDateTime($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
+    $scope.$emit('dp.updateDateTime', { dateValue: $dateTimeCtrl.dateValue, timeValue: $dateTimeCtrl.timeValue });
+  };
+
+  $scope.$on('dp.dateChange', function (evt, value) {
+    $dateTimeCtrl.dateValue = value.dateValue;
+    $scope.datetimeValue = dateTimeUtils.formatDateTime($dateTimeCtrl.dateValue + ' ' + $dateTimeCtrl.timeValue);
+
+    // broadcast datetime change to controller
+    $scope.$emit('dp.updateDateTime', {
+      dateValue: $dateTimeCtrl.dateValue,
+      timeValue: $dateTimeCtrl.timeValue
+    });
+  });
+
+  $scope.$on('destroy', function () {
+    $(element).find('span.time-picker-icon').unbind('click');
+    $(element).find('span.date-picker-icon').unbind('click');
+  });
+}
+
+function DateTimePickerDirective() {
+  return {
+    restrict: 'E',
+    require: '^ngModel',
+    scope: {
+      dpOptions: '<',
+      tpOptions: '<',
+      dpShow: '<',
+      tpShow: '<',
+      datetimeValue: '=ngModel'
+    },
+    link: DateTimePickerLinker,
+    controller: DateTimePickerController,
+    controllerAs: '$dateTimeCtrl',
+    template: _datetimePickerTemplate2.default
+  };
+}
+
+function DateTimePickerLinker(scope, element, attrs, ngModel) {
+
+  var dpDefaultOpts = {
+    todayBtn: 'linked',
+    autoclose: true,
+    todayHighlight: true,
+    weekStart: 0,
+    forceParse: false, // this is required to support human entry
+    startDate: new Date()
+  };
+
+  var tpDefaultOpts = {
+    'scrollDefault': 'now',
+    'timeFormat': 'g:i A',
+    'step': 15
+  };
+
+  // picker option defaults
+  var dpOpts = angular.extend(dpDefaultOpts, scope.dpOptions);
+  var tpOpts = angular.extend(tpDefaultOpts, scope.tpOptions);
+
+  // setup date and time pickers with config options from attributes
+  var tp = $(element).find('input.time-picker');
+  var dp = $(element).find('input.date-picker');
+  tp.timepicker(tpOpts);
+  dp.datepicker(dpOpts);
+  // dp.on('changeDate', () => {
+  // });
+
+  // setup click handler if time-icon is clicked
+  $(element).find('span.time-picker-icon').on('click', function () {
+    tp.timepicker('show');
+  });
+
+  // setup click handler if date-icon is clicked
+  $(element).find('span.date-picker-icon').on('click', function () {
+    dp.datepicker('show');
+  });
+
+  var defaultDate = dateTimeUtils.getDate(scope.datetimeValue);
+  var defaultTime = dateTimeUtils.getTime(scope.datetimeValue);
+
+  // set control default date (supplyed by ng-model)
+  dp.datepicker('setDate', defaultDate);
+  tp.timepicker('setTime', defaultTime);
+
+  // attach event listener triggered when date change occurs
+  dp.datepicker().on('changeDate', function (evt) {
+    var dateValue = evt.target.value;
+    if (dateValue.length === 0) {
+      dateValue = dateTimeUtils.getDate(scope.datetimeValue);
+    }
+    scope.$broadcast('dp.dateChange', { dateValue: dateValue });
+  });
+
+  ngModel.$render = function () {
+    var dateValue = dateTimeUtils.getDate(ngModel.$viewValue);
+    var timeValue = dateTimeUtils.getTime(ngModel.$viewValue);
+
+    if (dateTimeUtils.isValidTime(timeValue)) {
+      scope.$dateTimeCtrl.timeValue = timeValue;
+      tp.timepicker('setTime', timeValue);
+    }
+
+    if (dateTimeUtils.isValidDate(dateValue)) {
+      scope.$dateTimeCtrl.dateValue = dateValue;
+      dp.datepicker('setDate', dateValue);
+    }
+  };
+}
 
 /***/ })
 /******/ ]);

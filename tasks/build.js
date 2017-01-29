@@ -37,7 +37,7 @@ gulp.task('build:dev', () => {
     .pipe(concat('datetime-picker.directive.js'))
     .pipe(gulp.dest('./dist'))
     .pipe(gulp.dest('./demo/lib'))
-    .pipe(shell(['./node_modules/.bin/bump prerelease']))
+    .pipe(shell(['bump prerelease']))
     .on('end', () => {
       msg.log(chalk.green.bold(`==> ${chalk.cyan.bold(pkgInfo.name)} Development Bundle Built Successfully`));
     });
@@ -46,7 +46,7 @@ gulp.task('build:dev', () => {
 gulp.task('build:prod', () => {
   gulp.src(srcFiles)
     .pipe(concat('datetime-picker.directive.min.js'))
-    .pipe(uglify())
+    // .pipe(uglify())  // uglifying breaks this puppy, need to get uglify working with webpack 2
     .pipe(gulp.dest('./dist'))
     .pipe(gulp.dest('./demo/lib'))
     .on('end', () => {
