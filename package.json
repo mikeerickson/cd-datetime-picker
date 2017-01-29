@@ -1,11 +1,11 @@
 {
   "name": "cd-datetime-picker",
-  "version": "0.27.3-build.1",
+  "version": "0.27.3-build.3",
   "description": "angular-datetime-picker",
   "main": "index.js",
   "scripts": {
     "all": "npm run eslint && npm test && npm run karma",
-    "build:prod": "NODE_ENV=production ./node_modules/.bin/webpack --hide-modules",
+    "build:prod": "NODE_ENV=production ./node_modules/.bin/webpack --hide-modules && rimraf ./build",
     "build:vendor": "gulp build:vendor",
     "build": "npm run build:dev && npm run build:prod",
     "build:dev": "node -r babel-register ./node_modules/.bin/webpack --hide-modules --config webpack.config.babel.js",
